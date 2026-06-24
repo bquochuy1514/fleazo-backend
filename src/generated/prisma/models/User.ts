@@ -45,8 +45,8 @@ export type UserMinAggregateOutputType = {
   codeId: string | null
   codeExpiration: Date | null
   isActive: boolean | null
-  codeOTP: string | null
-  codeOTPExpiration: Date | null
+  codeOtp: string | null
+  codeOtpExpiration: Date | null
   isOtpVerified: boolean | null
   hashedRefreshToken: string | null
   createdAt: Date | null
@@ -64,8 +64,8 @@ export type UserMaxAggregateOutputType = {
   codeId: string | null
   codeExpiration: Date | null
   isActive: boolean | null
-  codeOTP: string | null
-  codeOTPExpiration: Date | null
+  codeOtp: string | null
+  codeOtpExpiration: Date | null
   isOtpVerified: boolean | null
   hashedRefreshToken: string | null
   createdAt: Date | null
@@ -83,8 +83,8 @@ export type UserCountAggregateOutputType = {
   codeId: number
   codeExpiration: number
   isActive: number
-  codeOTP: number
-  codeOTPExpiration: number
+  codeOtp: number
+  codeOtpExpiration: number
   isOtpVerified: number
   hashedRefreshToken: number
   createdAt: number
@@ -112,8 +112,8 @@ export type UserMinAggregateInputType = {
   codeId?: true
   codeExpiration?: true
   isActive?: true
-  codeOTP?: true
-  codeOTPExpiration?: true
+  codeOtp?: true
+  codeOtpExpiration?: true
   isOtpVerified?: true
   hashedRefreshToken?: true
   createdAt?: true
@@ -131,8 +131,8 @@ export type UserMaxAggregateInputType = {
   codeId?: true
   codeExpiration?: true
   isActive?: true
-  codeOTP?: true
-  codeOTPExpiration?: true
+  codeOtp?: true
+  codeOtpExpiration?: true
   isOtpVerified?: true
   hashedRefreshToken?: true
   createdAt?: true
@@ -150,8 +150,8 @@ export type UserCountAggregateInputType = {
   codeId?: true
   codeExpiration?: true
   isActive?: true
-  codeOTP?: true
-  codeOTPExpiration?: true
+  codeOtp?: true
+  codeOtpExpiration?: true
   isOtpVerified?: true
   hashedRefreshToken?: true
   createdAt?: true
@@ -256,8 +256,8 @@ export type UserGroupByOutputType = {
   codeId: string | null
   codeExpiration: Date | null
   isActive: boolean
-  codeOTP: string | null
-  codeOTPExpiration: Date | null
+  codeOtp: string | null
+  codeOtpExpiration: Date | null
   isOtpVerified: boolean
   hashedRefreshToken: string | null
   createdAt: Date
@@ -298,8 +298,8 @@ export type UserWhereInput = {
   codeId?: Prisma.StringNullableFilter<"User"> | string | null
   codeExpiration?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   isActive?: Prisma.BoolFilter<"User"> | boolean
-  codeOTP?: Prisma.StringNullableFilter<"User"> | string | null
-  codeOTPExpiration?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  codeOtp?: Prisma.StringNullableFilter<"User"> | string | null
+  codeOtpExpiration?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   isOtpVerified?: Prisma.BoolFilter<"User"> | boolean
   hashedRefreshToken?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -317,8 +317,8 @@ export type UserOrderByWithRelationInput = {
   codeId?: Prisma.SortOrderInput | Prisma.SortOrder
   codeExpiration?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  codeOTP?: Prisma.SortOrderInput | Prisma.SortOrder
-  codeOTPExpiration?: Prisma.SortOrderInput | Prisma.SortOrder
+  codeOtp?: Prisma.SortOrderInput | Prisma.SortOrder
+  codeOtpExpiration?: Prisma.SortOrderInput | Prisma.SortOrder
   isOtpVerified?: Prisma.SortOrder
   hashedRefreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -339,8 +339,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   codeId?: Prisma.StringNullableFilter<"User"> | string | null
   codeExpiration?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   isActive?: Prisma.BoolFilter<"User"> | boolean
-  codeOTP?: Prisma.StringNullableFilter<"User"> | string | null
-  codeOTPExpiration?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  codeOtp?: Prisma.StringNullableFilter<"User"> | string | null
+  codeOtpExpiration?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   isOtpVerified?: Prisma.BoolFilter<"User"> | boolean
   hashedRefreshToken?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -358,8 +358,8 @@ export type UserOrderByWithAggregationInput = {
   codeId?: Prisma.SortOrderInput | Prisma.SortOrder
   codeExpiration?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  codeOTP?: Prisma.SortOrderInput | Prisma.SortOrder
-  codeOTPExpiration?: Prisma.SortOrderInput | Prisma.SortOrder
+  codeOtp?: Prisma.SortOrderInput | Prisma.SortOrder
+  codeOtpExpiration?: Prisma.SortOrderInput | Prisma.SortOrder
   isOtpVerified?: Prisma.SortOrder
   hashedRefreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -385,8 +385,8 @@ export type UserScalarWhereWithAggregatesInput = {
   codeId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   codeExpiration?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
-  codeOTP?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  codeOTPExpiration?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  codeOtp?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  codeOtpExpiration?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   isOtpVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   hashedRefreshToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -403,8 +403,8 @@ export type UserCreateInput = {
   codeId?: string | null
   codeExpiration?: Date | string | null
   isActive?: boolean
-  codeOTP?: string | null
-  codeOTPExpiration?: Date | string | null
+  codeOtp?: string | null
+  codeOtpExpiration?: Date | string | null
   isOtpVerified?: boolean
   hashedRefreshToken?: string | null
   createdAt?: Date | string
@@ -422,8 +422,8 @@ export type UserUncheckedCreateInput = {
   codeId?: string | null
   codeExpiration?: Date | string | null
   isActive?: boolean
-  codeOTP?: string | null
-  codeOTPExpiration?: Date | string | null
+  codeOtp?: string | null
+  codeOtpExpiration?: Date | string | null
   isOtpVerified?: boolean
   hashedRefreshToken?: string | null
   createdAt?: Date | string
@@ -440,8 +440,8 @@ export type UserUpdateInput = {
   codeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  codeOTP?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  codeOTPExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -459,8 +459,8 @@ export type UserUncheckedUpdateInput = {
   codeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  codeOTP?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  codeOTPExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -478,8 +478,8 @@ export type UserCreateManyInput = {
   codeId?: string | null
   codeExpiration?: Date | string | null
   isActive?: boolean
-  codeOTP?: string | null
-  codeOTPExpiration?: Date | string | null
+  codeOtp?: string | null
+  codeOtpExpiration?: Date | string | null
   isOtpVerified?: boolean
   hashedRefreshToken?: string | null
   createdAt?: Date | string
@@ -496,8 +496,8 @@ export type UserUpdateManyMutationInput = {
   codeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  codeOTP?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  codeOTPExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -515,8 +515,8 @@ export type UserUncheckedUpdateManyInput = {
   codeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  codeOTP?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  codeOTPExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -534,8 +534,8 @@ export type UserCountOrderByAggregateInput = {
   codeId?: Prisma.SortOrder
   codeExpiration?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  codeOTP?: Prisma.SortOrder
-  codeOTPExpiration?: Prisma.SortOrder
+  codeOtp?: Prisma.SortOrder
+  codeOtpExpiration?: Prisma.SortOrder
   isOtpVerified?: Prisma.SortOrder
   hashedRefreshToken?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -557,8 +557,8 @@ export type UserMaxOrderByAggregateInput = {
   codeId?: Prisma.SortOrder
   codeExpiration?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  codeOTP?: Prisma.SortOrder
-  codeOTPExpiration?: Prisma.SortOrder
+  codeOtp?: Prisma.SortOrder
+  codeOtpExpiration?: Prisma.SortOrder
   isOtpVerified?: Prisma.SortOrder
   hashedRefreshToken?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -576,8 +576,8 @@ export type UserMinOrderByAggregateInput = {
   codeId?: Prisma.SortOrder
   codeExpiration?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  codeOTP?: Prisma.SortOrder
-  codeOTPExpiration?: Prisma.SortOrder
+  codeOtp?: Prisma.SortOrder
+  codeOtpExpiration?: Prisma.SortOrder
   isOtpVerified?: Prisma.SortOrder
   hashedRefreshToken?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -633,8 +633,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   codeId?: boolean
   codeExpiration?: boolean
   isActive?: boolean
-  codeOTP?: boolean
-  codeOTPExpiration?: boolean
+  codeOtp?: boolean
+  codeOtpExpiration?: boolean
   isOtpVerified?: boolean
   hashedRefreshToken?: boolean
   createdAt?: boolean
@@ -652,8 +652,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   codeId?: boolean
   codeExpiration?: boolean
   isActive?: boolean
-  codeOTP?: boolean
-  codeOTPExpiration?: boolean
+  codeOtp?: boolean
+  codeOtpExpiration?: boolean
   isOtpVerified?: boolean
   hashedRefreshToken?: boolean
   createdAt?: boolean
@@ -671,8 +671,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   codeId?: boolean
   codeExpiration?: boolean
   isActive?: boolean
-  codeOTP?: boolean
-  codeOTPExpiration?: boolean
+  codeOtp?: boolean
+  codeOtpExpiration?: boolean
   isOtpVerified?: boolean
   hashedRefreshToken?: boolean
   createdAt?: boolean
@@ -690,15 +690,15 @@ export type UserSelectScalar = {
   codeId?: boolean
   codeExpiration?: boolean
   isActive?: boolean
-  codeOTP?: boolean
-  codeOTPExpiration?: boolean
+  codeOtp?: boolean
+  codeOtpExpiration?: boolean
   isOtpVerified?: boolean
   hashedRefreshToken?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "fullName" | "phone" | "avatar" | "role" | "codeId" | "codeExpiration" | "isActive" | "codeOTP" | "codeOTPExpiration" | "isOtpVerified" | "hashedRefreshToken" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "fullName" | "phone" | "avatar" | "role" | "codeId" | "codeExpiration" | "isActive" | "codeOtp" | "codeOtpExpiration" | "isOtpVerified" | "hashedRefreshToken" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
@@ -714,8 +714,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     codeId: string | null
     codeExpiration: Date | null
     isActive: boolean
-    codeOTP: string | null
-    codeOTPExpiration: Date | null
+    codeOtp: string | null
+    codeOtpExpiration: Date | null
     isOtpVerified: boolean
     hashedRefreshToken: string | null
     createdAt: Date
@@ -1153,8 +1153,8 @@ export interface UserFieldRefs {
   readonly codeId: Prisma.FieldRef<"User", 'String'>
   readonly codeExpiration: Prisma.FieldRef<"User", 'DateTime'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
-  readonly codeOTP: Prisma.FieldRef<"User", 'String'>
-  readonly codeOTPExpiration: Prisma.FieldRef<"User", 'DateTime'>
+  readonly codeOtp: Prisma.FieldRef<"User", 'String'>
+  readonly codeOtpExpiration: Prisma.FieldRef<"User", 'DateTime'>
   readonly isOtpVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly hashedRefreshToken: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>

@@ -17,6 +17,7 @@ and an AI-powered shopping chatbot as the core thesis novelty.
 - Auth: JWT (access + refresh token rotation) + Google OAuth
 - Payment: PayOS
 - Realtime: WebSocket (chat between buyer and seller)
+- Email: Nodemailer with Gmail SMTP
 
 ## Project Structure
 
@@ -26,6 +27,7 @@ src/
 │   └── prisma/           # Auto-generated Prisma Client (do not edit manually)
 ├── modules/
 │   ├── auth/             # JWT auth, Google OAuth, email verification, OTP reset
+│   ├── mail/             # Email service (Nodemailer + Gmail SMTP)
 │   ├── users/            # User profile, avatar upload
 │   ├── products/         # CRUD listings, image upload, quality scoring
 │   ├── categories/       # Product categories
@@ -39,7 +41,8 @@ src/
 │   ├── guards/           # Auth guards (JwtAuthGuard, RolesGuard)
 │   ├── filters/          # Global exception filters
 │   ├── interceptors/     # Response transform interceptor
-│   └── pipes/            # Validation pipes
+│   ├── pipes/            # Validation pipes
+│   └── utils/            # Shared utilities (e.g. hash.util.ts)
 ├── config/               # App config, env validation
 ├── prisma.service.ts     # PrismaService (single file, no separate module)
 └── main.ts
@@ -51,6 +54,8 @@ src/
 - Output: `src/generated/prisma` (inside src, same level as modules)
 - Config: `prisma.config.ts` at root (contains DATABASE_URL)
 - `generated/` is gitignored — run `npx prisma generate` after cloning
+- Model names use PascalCase with `@@map` for snake_case table names
+- Field names use camelCase with `@map` for snake_case DB columns
 - To use Prisma in a module, add `PrismaService` directly to providers:
 
 ```typescript
@@ -80,6 +85,13 @@ export class XxxModule {}
 - Google OAuth for social login
 - Password reset via OTP sent to email
 
+## Mail Service
+
+- Package: `nodemailer` with Gmail SMTP
+- OTP emails sent during register and password reset
+- Fire-and-forget pattern: mail is not awaited, errors are caught and logged
+- Gmail App Password required (not account password)
+
 ## Key Conventions
 
 - All modules follow NestJS standard structure: module / controller / service
@@ -87,15 +99,21 @@ export class XxxModule {}
 - Responses are wrapped in a standard format: { statusCode, message, data }
 - snake_case in DB, camelCase in TypeScript code
 - ESLint unsafe rules disabled for class-validator decorator patterns
+- Password hashing: argon2 (not bcrypt)
+- `dotenv/config` imported at top of `main.ts` to load `.env` before NestJS bootstraps
 
 ## Current Status
 
-Core setup done. Auth module in progress — register endpoint being built.
+- Core setup: ✅ Done
+- Auth module: 🚧 In progress — register + OTP email done, verify OTP next
 
 ## Commit Convention
 
 Follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
 <type>(<scope>): <subject>
+```
 
 **Types:**
 
@@ -108,18 +126,17 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 - `style` — format, lint (không ảnh hưởng logic)
 
 **Scope** — tên module liên quan (optional nhưng khuyến khích):
-`auth`, `users`, `products`, `orders`, `chat`, `recommendation`, `chatbot`, `prisma`, `config`
+`auth`, `users`, `mail`, `products`, `orders`, `chat`, `recommendation`, `chatbot`, `prisma`, `config`
 
 **Examples:**
+
+```
 feat(auth): add register endpoint with email OTP verification
-
 fix(auth): handle expired refresh token edge case
-
 chore(prisma): add User model and run initial migration
-
 refactor(products): extract quality scoring into separate service
-
 docs: update AGENTS.md with commit convention
+```
 
 **Rules:**
 

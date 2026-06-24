@@ -14,6 +14,7 @@ Backend service for **Fleazo** — a secondhand marketplace platform for Vietnam
 | Auth      | JWT (access + refresh token rotation), Google OAuth |
 | Payment   | PayOS                                               |
 | Realtime  | WebSocket                                           |
+| Email     | Nodemailer (Gmail SMTP)                             |
 
 ## Prerequisites
 
@@ -50,6 +51,7 @@ npm run start:dev
 src/
 ├── modules/
 │   ├── auth/             # JWT auth, Google OAuth, email OTP
+│   ├── mail/             # Email service (Nodemailer + Gmail SMTP)
 │   ├── users/            # User profile, avatar upload
 │   ├── products/         # Listings, image upload, quality scoring
 │   ├── categories/       # Product categories
@@ -58,7 +60,7 @@ src/
 │   ├── reviews/          # Rating and review
 │   ├── recommendation/   # Session-based + content-based engine
 │   └── chatbot/          # LLM shopping assistant (function calling)
-├── common/               # Decorators, guards, filters, interceptors, pipes
+├── common/               # Decorators, guards, filters, interceptors, pipes, utils
 ├── config/               # App config, env validation
 ├── generated/prisma/     # Auto-generated Prisma Client (gitignored)
 ├── prisma.service.ts
@@ -71,16 +73,17 @@ src/
 DATABASE_URL=postgresql://user:password@localhost:5432/fleazo
 JWT_ACCESS_SECRET=
 JWT_REFRESH_SECRET=
-JWT_ACCESS_EXPIRES_IN=15m
+JWT_ACCESS_EXPIRES_IN=1h
 JWT_REFRESH_EXPIRES_IN=7d
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 PAYOS_CLIENT_ID=
 PAYOS_API_KEY=
 PAYOS_CHECKSUM_KEY=
-MAIL_HOST=
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
 MAIL_USER=
-MAIL_PASS=
+MAIL_PASSWORD=
 ```
 
 ## API Documentation

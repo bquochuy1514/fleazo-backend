@@ -1,11 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
   moduleFormat = "cjs"
 }
 
@@ -13,35 +8,28 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id                  Int       @id @default(autoincrement())
+  email               String    @unique
+  password            String?
+  fullName            String    @map("full_name")
+  phone               String?   @db.VarChar(20)
+  avatar              String    @default("/images/users/default_avatar.jpg")
+  role                UserRole  @default(CUSTOMER)
+  codeId              String?   @map("code_id")
+  codeExpiration      DateTime? @map("code_expiration")
+  isActive            Boolean   @default(false) @map("is_active")
+  codeOtp             String?   @db.VarChar(6) @map("code_otp")
+  codeOtpExpiration   DateTime? @map("code_otp_expiration")
+  isOtpVerified       Boolean   @default(false) @map("is_otp_verified")
+  hashedRefreshToken  String?   @map("hashed_refresh_token")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
 enum UserRole {
   CUSTOMER
   ADMIN
-}
-
-model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
-  password String?
-  fullName String   @map("full_name")
-  phone    String?  @db.VarChar(20)
-  avatar   String   @default("/images/users/default_avatar.jpg")
-  role     UserRole @default(CUSTOMER)
-
-  // Auth - email verification
-  codeId         String?   @map("code_id")
-  codeExpiration DateTime? @map("code_expiration")
-  isActive       Boolean   @default(false) @map("is_active")
-
-  // Auth - password reset OTP
-  codeOTP           String?   @map("code_otp") @db.VarChar(6)
-  codeOTPExpiration DateTime? @map("code_otp_expiration")
-  isOtpVerified     Boolean   @default(false) @map("is_otp_verified")
-
-  // Auth - refresh token
-  hashedRefreshToken String? @map("hashed_refresh_token")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("users")
 }
