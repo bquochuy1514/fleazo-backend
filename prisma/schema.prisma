@@ -14,30 +14,30 @@ enum UserRole {
 }
 model User {
   // — Identity —
-  id                  Int    @id @default(autoincrement())
-  email               String @unique
+  id                  Int           @id @default(autoincrement())
+  email               String        @unique
   password            String?
 
   // — Profile —
-  fullName            String  @map("full_name")
-  phone               String? @db.VarChar(20)
-  avatar              String  @default("/images/users/default_avatar.jpg")
-  role                UserRole @default(CUSTOMER)
+  fullName            String        @map("full_name")
+  phone               String?       @db.VarChar(20)
+  avatar              String        @default("https://res.cloudinary.com/dazcuspid/image/upload/default_avatar_nj9oa5.avif")
+  role                UserRole      @default(CUSTOMER)
 
   // — Account activation (email OTP) —
-  isActive          Boolean   @default(false) @map("is_active")
-  codeOtp           String?   @db.VarChar(6) @map("code_otp")
-  codeOtpExpiration DateTime? @map("code_otp_expiration")
+  isActive            Boolean       @default(false) @map("is_active")
+  codeOtp             String?       @db.VarChar(6) @map("code_otp")
+  codeOtpExpiration   DateTime?     @map("code_otp_expiration")
 
   // — Password reset —
-  isOtpVerified    Boolean   @default(false) @map("is_otp_verified")
+  isOtpVerified       Boolean       @default(false) @map("is_otp_verified")
 
   // — Auth tokens —
-  hashedRefreshToken String? @map("hashed_refresh_token")
+  hashedRefreshToken  String?       @map("hashed_refresh_token")
 
   // — Timestamps —
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt            DateTime     @default(now()) @map("created_at")
+  updatedAt            DateTime     @updatedAt @map("updated_at")
 
   @@map("users")
 }

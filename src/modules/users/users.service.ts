@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
 import { Prisma } from '../../generated/prisma/client';
 import { JwtPayload } from '../../common/types/jwt-payload.type';
@@ -82,18 +86,33 @@ export class UsersService {
     return safeUser;
   }
 
-  // users.service.ts
   async handleUpdateAvatar(userId: number, file: Express.Multer.File) {
-    // 1. Upload to Cloudinary
+    // 1. Get current avatar URL
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw new BadRequestException('Không tìm thấy người dùng.');
+    }
+
+    // 2. Delete old avatar from Cloudinary (skip if default)
+    const defaultAvatar =
+      'https://res.cloudinary.com/dazcuspid/image/upload/default_avatar_nj9oa5.avif';
+    if (user.avatar && user.avatar !== defaultAvatar) {
+      const afterUpload = user.avatar.split('/upload/')[1]; // "v1234/fleazo/avatars/abc.jpg"
+      const withoutVersion = afterUpload.replace(/^v\d+\//, ''); // "fleazo/avatars/abc.jpg"
+      const publicId = withoutVersion.replace(/\.[^/.]+$/, ''); // "fleazo/avatars/abc"
+      await this.uploadService.deleteImage(publicId);
+    }
+
+    // 3. Upload new avatar
     const result = await this.uploadService.uploadImage(file, 'fleazo/avatars');
 
-    // 2. Update user avatar URL
+    // 4. Update user avatar URL
     await this.prisma.user.update({
       where: { id: userId },
       data: { avatar: result.secure_url },
     });
 
-    // 3. Return new avatar URL
+    // 5. Return new avatar URL
     return { avatar: result.secure_url };
   }
 }
