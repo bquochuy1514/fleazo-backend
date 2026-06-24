@@ -205,7 +205,8 @@ async handleRegister(registerDto: RegisterDto) {
 ## Current Status
 
 - Core setup: ✅ Done
-- Auth module: 🚧 In progress — register, verify OTP, resend OTP, login, refresh token, logout, forgot password done. Google OAuth next.
+- Auth module: ✅ Done
+- Next: Users module
 
 ## Agent Behavior
 

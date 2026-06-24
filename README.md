@@ -77,6 +77,7 @@ JWT_ACCESS_EXPIRES_IN=1h
 JWT_REFRESH_EXPIRES_IN=7d
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
+GOOGLE_CALLBACK_URL=http://localhost:8080/api/auth/google/callback
 PAYOS_CLIENT_ID=
 PAYOS_API_KEY=
 PAYOS_CHECKSUM_KEY=
@@ -88,21 +89,21 @@ MAIL_PASSWORD=
 
 ## API Documentation
 
-> Coming soon — will be available at `/api/docs` (Swagger) once core modules are complete.
+Available at `/api/docs` (Swagger UI) when the server is running.
 
 ## Development Status
 
-| Module         | Status      |
-| -------------- | ----------- |
-| Auth           | In progress |
-| Users          | Planned     |
-| Products       | Planned     |
-| Categories     | Planned     |
-| Orders         | Planned     |
-| Chat           | Planned     |
-| Reviews        | Planned     |
-| Recommendation | Planned     |
-| Chatbot        | Planned     |
+| Module         | Status  |
+| -------------- | ------- |
+| Auth           | Done    |
+| Users          | Planned |
+| Products       | Planned |
+| Categories     | Planned |
+| Orders         | Planned |
+| Chat           | Planned |
+| Reviews        | Planned |
+| Recommendation | Planned |
+| Chatbot        | Planned |
 
 ## License
 
