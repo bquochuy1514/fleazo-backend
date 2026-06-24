@@ -27,6 +27,8 @@ src/
 │   └── prisma/           # Auto-generated Prisma Client (do not edit manually)
 ├── modules/
 │   ├── auth/             # JWT auth, Google OAuth, email verification, OTP reset
+│   │   ├── guards/       # JwtAuthGuard, RefreshAuthGuard
+│   │   └── strategies/   # JwtStrategy, RefreshJwtStrategy
 │   ├── mail/             # Email service (Nodemailer + Gmail SMTP)
 │   ├── users/            # User profile, avatar upload
 │   ├── products/         # CRUD listings, image upload, quality scoring
@@ -109,6 +111,7 @@ Rules:
 - Login returns access_token (short-lived) + refresh_token (long-lived, hashed in DB)
 - Google OAuth for social login
 - Password reset via OTP sent to email
+- No LocalStrategy/LocalAuthGuard — validation is handled directly in AuthService.validateUser()
 
 ## Mail Service
 
@@ -122,6 +125,24 @@ Rules:
 ### Module structure
 
 All modules follow NestJS standard structure: module / controller / service
+
+### Module config convention
+
+Always use `registerAsync` (not `register`) when a module needs values from `.env`.
+This ensures ConfigService is fully loaded before the module initializes:
+
+```typescript
+JwtModule.registerAsync({
+  imports: [ConfigModule],
+  inject: [ConfigService],
+  useFactory: (config: ConfigService) => ({
+    secret: config.get<string>('JWT_ACCESS_SECRET'),
+    signOptions: {
+      expiresIn: (config.get<string>('JWT_ACCESS_EXPIRES_IN') ?? '15m') as any,
+    },
+  }),
+}),
+```
 
 ### DTO convention
 
@@ -161,7 +182,7 @@ async handleRegister(registerDto: RegisterDto) {
 ## Current Status
 
 - Core setup: ✅ Done
-- Auth module: 🚧 In progress — register + OTP email done, verify OTP next
+- Auth module: 🚧 In progress — register, verify OTP, resend OTP, login, refresh token, logout done. Forgot password + Google OAuth next.
 
 ## Commit Convention
 

@@ -92,17 +92,17 @@ MAIL_PASSWORD=
 
 ## Development Status
 
-| Module         | Status         |
-| -------------- | -------------- |
-| Auth           | 🚧 In progress |
-| Users          | ⬜ Planned     |
-| Products       | ⬜ Planned     |
-| Categories     | ⬜ Planned     |
-| Orders         | ⬜ Planned     |
-| Chat           | ⬜ Planned     |
-| Reviews        | ⬜ Planned     |
-| Recommendation | ⬜ Planned     |
-| Chatbot        | ⬜ Planned     |
+| Module         | Status      |
+| -------------- | ----------- |
+| Auth           | In progress |
+| Users          | Planned     |
+| Products       | Planned     |
+| Categories     | Planned     |
+| Orders         | Planned     |
+| Chat           | Planned     |
+| Reviews        | Planned     |
+| Recommendation | Planned     |
+| Chatbot        | Planned     |
 
 ## License
 
