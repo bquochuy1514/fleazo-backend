@@ -7,7 +7,8 @@ import { RefreshJwtStrategy } from './strategies/refresh-jwt.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import jwtConfig from '../../config/jwt.config';
+import { ConfigType } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -15,17 +16,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     MailModule,
     PassportModule,
     JwtModule.registerAsync({
-      useFactory: (config: ConfigService) => {
-        return {
-          secret: config.get<string>('JWT_ACCESS_SECRET'),
-          signOptions: {
-            expiresIn: (config.get<string>('JWT_ACCESS_EXPIRES_IN') ??
-              '15m') as any,
-          },
-        };
-      },
-      imports: [ConfigModule],
-      inject: [ConfigService],
+      inject: [jwtConfig.KEY],
+      useFactory: (config: ConfigType<typeof jwtConfig>) => ({
+        secret: config.accessSecret,
+        signOptions: { expiresIn: config.accessExpiresIn as any },
+      }),
     }),
   ],
   controllers: [AuthController],

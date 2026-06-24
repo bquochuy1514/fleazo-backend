@@ -2,16 +2,23 @@
 // src/modules/auth/strategies/refresh-jwt.strategy.ts
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 import { AuthService } from '../auth.service';
+import jwtConfig from '../../../config/jwt.config';
+import type { ConfigType } from '@nestjs/config';
 
+// RefreshJwtStrategy
 @Injectable()
 export class RefreshJwtStrategy extends PassportStrategy(
   Strategy,
   'refresh-jwt',
 ) {
-  constructor(private authService: AuthService) {
+  constructor(
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
+    private authService: AuthService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req: Request) => {
@@ -22,7 +29,7 @@ export class RefreshJwtStrategy extends PassportStrategy(
         },
       ]),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_REFRESH_SECRET,
+      secretOrKey: jwtConfiguration.refreshSecret,
       passReqToCallback: true,
     });
   }
@@ -32,7 +39,6 @@ export class RefreshJwtStrategy extends PassportStrategy(
     const refreshToken = req.headers.authorization
       ?.replace('Bearer', '')
       .trim();
-
     if (!refreshToken) {
       throw new UnauthorizedException('Missing refresh token.');
     }

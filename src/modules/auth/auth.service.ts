@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BadRequestException,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -19,10 +20,14 @@ import { JwtService } from '@nestjs/jwt';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { VerifyForgotOtpDto } from './dto/verify-forgot-otp.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import jwtConfig from '../../config/jwt.config';
+import type { ConfigType } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
     private readonly usersService: UsersService,
     private readonly mailService: MailService,
     private readonly jwtService: JwtService,
@@ -201,8 +206,8 @@ export class AuthService {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload),
       this.jwtService.signAsync(payload, {
-        secret: process.env.JWT_REFRESH_SECRET,
-        expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN ?? '7d') as any,
+        secret: this.jwtConfiguration.refreshSecret,
+        expiresIn: this.jwtConfiguration.refreshExpiresIn as any,
       }),
     ]);
 
@@ -340,5 +345,26 @@ export class AuthService {
     });
 
     return { message: 'Đặt lại mật khẩu thành công! Vui lòng đăng nhập.' };
+  }
+
+  async validateGoogleUser(googleUser: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    avatarUrl: string;
+  }) {
+    // 1. Check if user already exists
+    const existingUser = await this.usersService.findUserByEmail(
+      googleUser.email,
+    );
+    if (existingUser) return existingUser;
+
+    // 2. Create new user if not exists
+    return this.usersService.createUser({
+      email: googleUser.email,
+      fullName: `${googleUser.firstName} ${googleUser.lastName}`,
+      avatar: googleUser.avatarUrl,
+      isActive: true,
+    });
   }
 }
