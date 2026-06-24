@@ -15,4 +15,11 @@ export class UsersService {
   async createUser(data: Prisma.UserCreateInput) {
     return this.prisma.user.create({ data });
   }
+
+  async updateUser(id: number, data: Prisma.UserUpdateInput) {
+    return this.prisma.user.update({
+      where: { id },
+      data,
+    });
+  }
 }

@@ -54,8 +54,6 @@ src/
 - Output: `src/generated/prisma` (inside src, same level as modules)
 - Config: `prisma.config.ts` at root (contains DATABASE_URL)
 - `generated/` is gitignored — run `npx prisma generate` after cloning
-- Model names use PascalCase with `@@map` for snake_case table names
-- Field names use camelCase with `@map` for snake_case DB columns
 - To use Prisma in a module, add `PrismaService` directly to providers:
 
 ```typescript
@@ -78,6 +76,33 @@ export class XxxModule {}
   - `npx prisma generate` — regenerate Prisma Client after schema change
   - `npx prisma studio` — visual DB browser
 
+## Prisma Model Convention
+
+Model names use PascalCase, table names use snake_case via `@@map`.
+Field names use camelCase, column names use snake_case via `@map`.
+Always include `createdAt` and `updatedAt` with `@updatedAt` on updatedAt.
+
+```prisma
+model User {
+  id        Int      @id @default(autoincrement())
+  fullName  String   @map("full_name")
+  isActive  Boolean  @default(false) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+```
+
+Rules:
+
+- Model name: `User`, `Product`, `Order` (PascalCase singular)
+- Table name: `users`, `products`, `orders` (snake_case plural via `@@map`)
+- Field: `fullName`, `isActive`, `codeOtp` (camelCase)
+- Column: `full_name`, `is_active`, `code_otp` (snake_case via `@map`)
+- Optional fields use `?`, never omit nullability
+- Use `@db.VarChar(n)` for fixed-length strings (e.g. phone, OTP)
+
 ## Auth Flow
 
 - Register → email verification (OTP code) → login
@@ -94,12 +119,43 @@ export class XxxModule {}
 
 ## Key Conventions
 
-- All modules follow NestJS standard structure: module / controller / service
-- DTOs use class-validator decorators for validation
-- Responses are wrapped in a standard format: { statusCode, message, data }
+### Module structure
+
+All modules follow NestJS standard structure: module / controller / service
+
+### DTO convention
+
+- DTOs use `class-validator` decorators for validation
+- Every decorator must include a Vietnamese error message:
+
+```typescript
+@IsEmail({}, { message: 'Email phải có định dạng hợp lệ' })
+@IsNotEmpty({ message: 'Email không được để trống' })
+email: string;
+```
+
+### Service function convention
+
+Every service function must annotate each logical step with a numbered comment:
+
+```typescript
+async handleRegister(registerDto: RegisterDto) {
+  // 1. Check existing user
+  // 2. Hash password
+  // 3. Generate OTP
+  // 4. Create user
+  // 5. Send OTP email
+}
+```
+
+### Other conventions
+
+- Responses wrapped in standard format: `{ statusCode, message, data }`
 - snake_case in DB, camelCase in TypeScript code
 - ESLint unsafe rules disabled for class-validator decorator patterns
 - Password hashing: argon2 (not bcrypt)
+- OTP generation: `randomInt` from Node `crypto` (not `Math.random`)
+- Date manipulation: `dayjs` (not raw `Date.now()` arithmetic)
 - `dotenv/config` imported at top of `main.ts` to load `.env` before NestJS bootstraps
 
 ## Current Status
