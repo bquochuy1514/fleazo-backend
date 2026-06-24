@@ -1,98 +1,106 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Fleazo Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend service for **Fleazo** — a secondhand marketplace platform for Vietnamese university students, featuring an AI-powered recommendation engine and shopping chatbot.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+> Frontend: `fleazo-frontend` · AI Service: `fleazo-ai`
 
-## Description
+## Tech Stack
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+| Layer     | Technology                                          |
+| --------- | --------------------------------------------------- |
+| Framework | NestJS (Node.js + TypeScript)                       |
+| Database  | PostgreSQL                                          |
+| ORM       | Prisma v7                                           |
+| Auth      | JWT (access + refresh token rotation), Google OAuth |
+| Payment   | PayOS                                               |
+| Realtime  | WebSocket                                           |
 
-## Project setup
+## Prerequisites
+
+- Node.js >= 20
+- PostgreSQL >= 15
+- npm or yarn
+
+## Getting Started
 
 ```bash
-$ npm install
+# 1. Clone the repo
+git clone https://github.com/your-username/fleazo-backend.git
+cd fleazo-backend
+
+# 2. Install dependencies
+npm install
+
+# 3. Copy env file and fill in values
+cp .env.example .env
+
+# 4. Generate Prisma Client
+npx prisma generate
+
+# 5. Push schema to database
+npx prisma db push
+
+# 6. Start dev server
+npm run start:dev
 ```
 
-## Compile and run the project
+## Project Structure
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```
+src/
+├── modules/
+│   ├── auth/             # JWT auth, Google OAuth, email OTP
+│   ├── users/            # User profile, avatar upload
+│   ├── products/         # Listings, image upload, quality scoring
+│   ├── categories/       # Product categories
+│   ├── orders/           # Transactions, PayOS webhook
+│   ├── chat/             # Realtime WebSocket chat
+│   ├── reviews/          # Rating and review
+│   ├── recommendation/   # Session-based + content-based engine
+│   └── chatbot/          # LLM shopping assistant (function calling)
+├── common/               # Decorators, guards, filters, interceptors, pipes
+├── config/               # App config, env validation
+├── generated/prisma/     # Auto-generated Prisma Client (gitignored)
+├── prisma.service.ts
+└── main.ts
 ```
 
-## Run tests
+## Environment Variables
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/fleazo
+JWT_ACCESS_SECRET=
+JWT_REFRESH_SECRET=
+JWT_ACCESS_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+PAYOS_CLIENT_ID=
+PAYOS_API_KEY=
+PAYOS_CHECKSUM_KEY=
+MAIL_HOST=
+MAIL_USER=
+MAIL_PASS=
 ```
 
-## Deployment
+## API Documentation
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+> Coming soon — will be available at `/api/docs` (Swagger) once core modules are complete.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Development Status
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+| Module         | Status         |
+| -------------- | -------------- |
+| Auth           | 🚧 In progress |
+| Users          | ⬜ Planned     |
+| Products       | ⬜ Planned     |
+| Categories     | ⬜ Planned     |
+| Orders         | ⬜ Planned     |
+| Chat           | ⬜ Planned     |
+| Reviews        | ⬜ Planned     |
+| Recommendation | ⬜ Planned     |
+| Chatbot        | ⬜ Planned     |
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+MIT
