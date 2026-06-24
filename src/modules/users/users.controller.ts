@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -14,6 +15,7 @@ import type { JwtPayload } from '../../common/types/jwt-payload.type';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
 
 @Controller('users')
 export class UsersController {
@@ -34,14 +36,16 @@ export class UsersController {
     return this.usersService.handleUpdateProfile(user.id, updateProfileDto);
   }
 
-  // users.controller.ts
   @UseGuards(JwtAuthGuard)
   @Put('me/avatar')
-  @UseInterceptors(FileInterceptor('avatar'))
+  @UseInterceptors(FileInterceptor('avatar', { storage: memoryStorage() }))
   async updateAvatar(
     @CurrentUser() user: JwtPayload,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    if (!file) {
+      throw new BadRequestException('Vui lòng chọn ảnh để tải lên.');
+    }
     return this.usersService.handleUpdateAvatar(user.id, file);
   }
 }
