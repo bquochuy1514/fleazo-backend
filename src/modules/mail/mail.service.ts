@@ -36,4 +36,23 @@ export class MailService {
       `,
     });
   }
+
+  async sendForgotPasswordOtp(email: string, otp: string) {
+    await this.transporter.sendMail({
+      from: `"Fleazo" <${process.env.MAIL_USER}>`,
+      to: email,
+      subject: '[Fleazo] Mã OTP đặt lại mật khẩu',
+      html: `
+      <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto;">
+        <h2>Đặt lại mật khẩu Fleazo</h2>
+        <p>Mã OTP của bạn là:</p>
+        <div style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #16a34a; margin: 24px 0;">
+          ${otp}
+        </div>
+        <p>Mã có hiệu lực trong <strong>5 phút</strong>.</p>
+        <p>Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này.</p>
+      </div>
+    `,
+    });
+  }
 }

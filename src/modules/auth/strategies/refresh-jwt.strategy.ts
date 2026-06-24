@@ -32,6 +32,7 @@ export class RefreshJwtStrategy extends PassportStrategy(
     const refreshToken = req.headers.authorization
       ?.replace('Bearer', '')
       .trim();
+
     if (!refreshToken) {
       throw new UnauthorizedException('Missing refresh token.');
     }

@@ -84,11 +84,33 @@ Model names use PascalCase, table names use snake_case via `@@map`.
 Field names use camelCase, column names use snake_case via `@map`.
 Always include `createdAt` and `updatedAt` with `@updatedAt` on updatedAt.
 
+Group fields into sections with `// — Section name —` comments:
+
 ```prisma
 model User {
-  id        Int      @id @default(autoincrement())
-  fullName  String   @map("full_name")
-  isActive  Boolean  @default(false) @map("is_active")
+  // — Identity —
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
+  password String?
+
+  // — Profile —
+  fullName String   @map("full_name")
+  phone    String?  @db.VarChar(20)
+  avatar   String   @default("/images/users/default_avatar.jpg")
+  role     UserRole @default(CUSTOMER)
+
+  // — Account activation (email OTP) —
+  isActive          Boolean   @default(false) @map("is_active")
+  codeOtp           String?   @db.VarChar(6) @map("code_otp")
+  codeOtpExpiration DateTime? @map("code_otp_expiration")
+
+  // — Password reset —
+  isOtpVerified Boolean @default(false) @map("is_otp_verified")
+
+  // — Auth tokens —
+  hashedRefreshToken String? @map("hashed_refresh_token")
+
+  // — Timestamps —
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -104,13 +126,14 @@ Rules:
 - Column: `full_name`, `is_active`, `code_otp` (snake_case via `@map`)
 - Optional fields use `?`, never omit nullability
 - Use `@db.VarChar(n)` for fixed-length strings (e.g. phone, OTP)
+- Always end with a `// — Timestamps —` section containing `createdAt` and `updatedAt`
 
 ## Auth Flow
 
 - Register → email verification (OTP code) → login
 - Login returns access_token (short-lived) + refresh_token (long-lived, hashed in DB)
+- Forgot password: forgot-password → verify-forgot-otp → reset-password
 - Google OAuth for social login
-- Password reset via OTP sent to email
 - No LocalStrategy/LocalAuthGuard — validation is handled directly in AuthService.validateUser()
 
 ## Mail Service
@@ -182,7 +205,7 @@ async handleRegister(registerDto: RegisterDto) {
 ## Current Status
 
 - Core setup: ✅ Done
-- Auth module: 🚧 In progress — register, verify OTP, resend OTP, login, refresh token, logout done. Forgot password + Google OAuth next.
+- Auth module: 🚧 In progress — register, verify OTP, resend OTP, login, refresh token, logout, forgot password done. Google OAuth next.
 
 ## Commit Convention
 

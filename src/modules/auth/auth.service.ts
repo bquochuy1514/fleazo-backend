@@ -16,6 +16,9 @@ import { ResendOtpDto } from './dto/resend-otp.dto';
 import { LoginDto } from './dto/login.dto';
 import * as argon2 from 'argon2';
 import { JwtService } from '@nestjs/jwt';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { VerifyForgotOtpDto } from './dto/verify-forgot-otp.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -245,5 +248,90 @@ export class AuthService {
     await this.usersService.updateUser(userId, { hashedRefreshToken: null });
 
     return { message: 'Đăng xuất thành công.' };
+  }
+
+  async handleForgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    const { email } = forgotPasswordDto;
+
+    // 1. Find user
+    const user = await this.usersService.findUserByEmail(email);
+    if (!user) {
+      throw new BadRequestException('Email không tồn tại trong hệ thống.');
+    }
+
+    // 2. Generate OTP
+    const codeOtp = randomInt(100000, 999999).toString();
+    const codeOtpExpiration = dayjs().add(5, 'minutes').toDate();
+
+    // 3. Save OTP to DB
+    await this.usersService.updateUser(user.id, {
+      codeOtp,
+      codeOtpExpiration,
+      isOtpVerified: false,
+    });
+
+    // 4. Send OTP email
+    this.mailService.sendForgotPasswordOtp(email, codeOtp).catch((err) => {
+      console.error('Failed to send forgot password OTP email:', err);
+    });
+
+    return { message: 'Vui lòng kiểm tra email để nhận mã OTP.' };
+  }
+
+  async handleVerifyForgotOtp(verifyForgotOtpDto: VerifyForgotOtpDto) {
+    const { email, codeOtp } = verifyForgotOtpDto;
+
+    // 1. Find user
+    const user = await this.usersService.findUserByEmail(email);
+    if (!user) {
+      throw new BadRequestException('Mã OTP không hợp lệ hoặc đã hết hạn.');
+    }
+
+    // 2. Check OTP match
+    if (user.codeOtp !== codeOtp) {
+      throw new BadRequestException('Mã OTP không hợp lệ hoặc đã hết hạn.');
+    }
+
+    // 3. Check OTP expiration
+    if (!user.codeOtpExpiration || dayjs().isAfter(user.codeOtpExpiration)) {
+      throw new BadRequestException('Mã OTP không hợp lệ hoặc đã hết hạn.');
+    }
+
+    // 4. Mark OTP as verified
+    await this.usersService.updateUser(user.id, {
+      codeOtp: null,
+      codeOtpExpiration: null,
+      isOtpVerified: true,
+    });
+
+    return { message: 'Xác thực OTP thành công.' };
+  }
+
+  async handleResetPassword(resetPasswordDto: ResetPasswordDto) {
+    const { email, password } = resetPasswordDto;
+
+    // 1. Find user
+    const user = await this.usersService.findUserByEmail(email);
+    if (!user) {
+      throw new BadRequestException('Email không tồn tại trong hệ thống.');
+    }
+
+    // 2. Check OTP verified
+    if (!user.isOtpVerified) {
+      throw new BadRequestException(
+        'Vui lòng xác thực mã OTP trước khi đổi mật khẩu.',
+      );
+    }
+
+    // 3. Hash new password
+    const hashedPassword = await hashPassword(password);
+
+    // 4. Update password and reset OTP verified flag
+    await this.usersService.updateUser(user.id, {
+      password: hashedPassword,
+      isOtpVerified: false,
+    });
+
+    return { message: 'Đặt lại mật khẩu thành công! Vui lòng đăng nhập.' };
   }
 }

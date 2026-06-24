@@ -6,6 +6,9 @@ import { ResendOtpDto } from './dto/resend-otp.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshAuthGuard } from './guards/refresh-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { VerifyForgotOtpDto } from './dto/verify-forgot-otp.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -41,5 +44,20 @@ export class AuthController {
   @Post('logout')
   async logout(@Request() req) {
     return this.authService.handleLogout(req.user.id);
+  }
+
+  @Post('forgot-password')
+  forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    return this.authService.handleForgotPassword(forgotPasswordDto);
+  }
+
+  @Post('verify-forgot-otp')
+  verifyForgotOtp(@Body() verifyForgotOtpDto: VerifyForgotOtpDto) {
+    return this.authService.handleVerifyForgotOtp(verifyForgotOtpDto);
+  }
+
+  @Post('reset-password')
+  resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    return this.authService.handleResetPassword(resetPasswordDto);
   }
 }
