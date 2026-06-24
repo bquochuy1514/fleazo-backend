@@ -259,18 +259,25 @@ export class AuthService {
       throw new BadRequestException('Email không tồn tại trong hệ thống.');
     }
 
-    // 2. Generate OTP
+    // 2. Check active
+    if (!user.isActive) {
+      throw new BadRequestException(
+        'Tài khoản chưa được kích hoạt. Vui lòng xác thực email trước.',
+      );
+    }
+
+    // 3. Generate OTP
     const codeOtp = randomInt(100000, 999999).toString();
     const codeOtpExpiration = dayjs().add(5, 'minutes').toDate();
 
-    // 3. Save OTP to DB
+    // 4. Save OTP to DB
     await this.usersService.updateUser(user.id, {
       codeOtp,
       codeOtpExpiration,
       isOtpVerified: false,
     });
 
-    // 4. Send OTP email
+    // 5. Send OTP email
     this.mailService.sendForgotPasswordOtp(email, codeOtp).catch((err) => {
       console.error('Failed to send forgot password OTP email:', err);
     });

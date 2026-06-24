@@ -207,6 +207,22 @@ async handleRegister(registerDto: RegisterDto) {
 - Core setup: ✅ Done
 - Auth module: 🚧 In progress — register, verify OTP, resend OTP, login, refresh token, logout, forgot password done. Google OAuth next.
 
+## Agent Behavior
+
+After completing any meaningful unit of work (feature, fix, refactor, docs update), always provide a suggested commit message at the end of the response. This helps avoid forgotten commits.
+
+Example format:
+
+```
+Commit message:
+```
+
+feat(auth): add forgot password flow
+
+```
+
+```
+
 ## Commit Convention
 
 Follow [Conventional Commits](https://www.conventionalcommits.org/):
