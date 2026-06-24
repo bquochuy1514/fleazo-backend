@@ -367,4 +367,21 @@ export class AuthService {
       isActive: true,
     });
   }
+
+  async loginWithGoogle(user: any) {
+    // 1. Generate tokens
+    const { accessToken, refreshToken } = await this.generateTokens(user);
+
+    // 2. Hash refresh token and save to DB
+    const hashedRefreshToken = await argon2.hash(refreshToken);
+    await this.usersService.updateUser(user.id, { hashedRefreshToken });
+
+    // 3. Return tokens
+    return {
+      message: 'Đăng nhập Google thành công.',
+      user,
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    };
+  }
 }
