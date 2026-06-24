@@ -1,33 +1,24 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
-import { v2 as cloudinary } from 'cloudinary';
+// src/modules/upload/upload.service.ts
+import { Injectable } from '@nestjs/common';
+import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import { Readable } from 'stream';
-
-interface MulterFile {
-  buffer: Buffer;
-  originalname: string;
-  mimetype: string;
-  size: number;
-}
 
 @Injectable()
 export class UploadService {
-  async uploadImage(file: MulterFile, folder: string): Promise<string> {
-    if (!file) throw new BadRequestException('No file provided');
-
+  async uploadImage(
+    file: Express.Multer.File,
+    folder: string,
+  ): Promise<UploadApiResponse> {
     return new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          folder: `fleazo/${folder}`,
-          transformation: [{ width: 500, height: 500, crop: 'fill' }],
-        },
+      const upload = cloudinary.uploader.upload_stream(
+        { folder },
         (error, result) => {
-          if (error) reject(new BadRequestException(error.message));
-          else if (!result) reject(new BadRequestException('Upload failed'));
-          else resolve(result.secure_url);
+          if (error) reject(new Error(error.message));
+          else if (result) resolve(result);
+          else reject(new Error('Upload failed: no result returned'));
         },
       );
-
-      Readable.from(file.buffer).pipe(uploadStream);
+      Readable.from(file.buffer).pipe(upload);
     });
   }
 

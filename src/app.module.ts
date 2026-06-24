@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import jwtConfig from './config/jwt.config';
 import googleConfig from './config/google.config';
 import mailConfig from './config/mail.config';
+import cloudinaryConfig from './config/cloudinary.config';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import mailConfig from './config/mail.config';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
-      load: [jwtConfig, googleConfig, mailConfig],
+      load: [jwtConfig, googleConfig, mailConfig, cloudinaryConfig],
     }),
   ],
   controllers: [AppController],

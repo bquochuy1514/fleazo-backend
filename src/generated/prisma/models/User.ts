@@ -42,8 +42,6 @@ export type UserMinAggregateOutputType = {
   phone: string | null
   avatar: string | null
   role: $Enums.UserRole | null
-  codeId: string | null
-  codeExpiration: Date | null
   isActive: boolean | null
   codeOtp: string | null
   codeOtpExpiration: Date | null
@@ -61,8 +59,6 @@ export type UserMaxAggregateOutputType = {
   phone: string | null
   avatar: string | null
   role: $Enums.UserRole | null
-  codeId: string | null
-  codeExpiration: Date | null
   isActive: boolean | null
   codeOtp: string | null
   codeOtpExpiration: Date | null
@@ -80,8 +76,6 @@ export type UserCountAggregateOutputType = {
   phone: number
   avatar: number
   role: number
-  codeId: number
-  codeExpiration: number
   isActive: number
   codeOtp: number
   codeOtpExpiration: number
@@ -109,8 +103,6 @@ export type UserMinAggregateInputType = {
   phone?: true
   avatar?: true
   role?: true
-  codeId?: true
-  codeExpiration?: true
   isActive?: true
   codeOtp?: true
   codeOtpExpiration?: true
@@ -128,8 +120,6 @@ export type UserMaxAggregateInputType = {
   phone?: true
   avatar?: true
   role?: true
-  codeId?: true
-  codeExpiration?: true
   isActive?: true
   codeOtp?: true
   codeOtpExpiration?: true
@@ -147,8 +137,6 @@ export type UserCountAggregateInputType = {
   phone?: true
   avatar?: true
   role?: true
-  codeId?: true
-  codeExpiration?: true
   isActive?: true
   codeOtp?: true
   codeOtpExpiration?: true
@@ -253,8 +241,6 @@ export type UserGroupByOutputType = {
   phone: string | null
   avatar: string
   role: $Enums.UserRole
-  codeId: string | null
-  codeExpiration: Date | null
   isActive: boolean
   codeOtp: string | null
   codeOtpExpiration: Date | null
@@ -295,8 +281,6 @@ export type UserWhereInput = {
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   avatar?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
-  codeId?: Prisma.StringNullableFilter<"User"> | string | null
-  codeExpiration?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   isActive?: Prisma.BoolFilter<"User"> | boolean
   codeOtp?: Prisma.StringNullableFilter<"User"> | string | null
   codeOtpExpiration?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -314,8 +298,6 @@ export type UserOrderByWithRelationInput = {
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  codeId?: Prisma.SortOrderInput | Prisma.SortOrder
-  codeExpiration?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   codeOtp?: Prisma.SortOrderInput | Prisma.SortOrder
   codeOtpExpiration?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -336,8 +318,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   avatar?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
-  codeId?: Prisma.StringNullableFilter<"User"> | string | null
-  codeExpiration?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   isActive?: Prisma.BoolFilter<"User"> | boolean
   codeOtp?: Prisma.StringNullableFilter<"User"> | string | null
   codeOtpExpiration?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -355,8 +335,6 @@ export type UserOrderByWithAggregationInput = {
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  codeId?: Prisma.SortOrderInput | Prisma.SortOrder
-  codeExpiration?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   codeOtp?: Prisma.SortOrderInput | Prisma.SortOrder
   codeOtpExpiration?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -382,8 +360,6 @@ export type UserScalarWhereWithAggregatesInput = {
   phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   avatar?: Prisma.StringWithAggregatesFilter<"User"> | string
   role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
-  codeId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  codeExpiration?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   codeOtp?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   codeOtpExpiration?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
@@ -400,8 +376,6 @@ export type UserCreateInput = {
   phone?: string | null
   avatar?: string
   role?: $Enums.UserRole
-  codeId?: string | null
-  codeExpiration?: Date | string | null
   isActive?: boolean
   codeOtp?: string | null
   codeOtpExpiration?: Date | string | null
@@ -419,8 +393,6 @@ export type UserUncheckedCreateInput = {
   phone?: string | null
   avatar?: string
   role?: $Enums.UserRole
-  codeId?: string | null
-  codeExpiration?: Date | string | null
   isActive?: boolean
   codeOtp?: string | null
   codeOtpExpiration?: Date | string | null
@@ -437,8 +409,6 @@ export type UserUpdateInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  codeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  codeExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -456,8 +426,6 @@ export type UserUncheckedUpdateInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  codeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  codeExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -475,8 +443,6 @@ export type UserCreateManyInput = {
   phone?: string | null
   avatar?: string
   role?: $Enums.UserRole
-  codeId?: string | null
-  codeExpiration?: Date | string | null
   isActive?: boolean
   codeOtp?: string | null
   codeOtpExpiration?: Date | string | null
@@ -493,8 +459,6 @@ export type UserUpdateManyMutationInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  codeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  codeExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -512,8 +476,6 @@ export type UserUncheckedUpdateManyInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-  codeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  codeExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -531,8 +493,6 @@ export type UserCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  codeId?: Prisma.SortOrder
-  codeExpiration?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   codeOtp?: Prisma.SortOrder
   codeOtpExpiration?: Prisma.SortOrder
@@ -554,8 +514,6 @@ export type UserMaxOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  codeId?: Prisma.SortOrder
-  codeExpiration?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   codeOtp?: Prisma.SortOrder
   codeOtpExpiration?: Prisma.SortOrder
@@ -573,8 +531,6 @@ export type UserMinOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  codeId?: Prisma.SortOrder
-  codeExpiration?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   codeOtp?: Prisma.SortOrder
   codeOtpExpiration?: Prisma.SortOrder
@@ -600,12 +556,12 @@ export type EnumUserRoleFieldUpdateOperationsInput = {
   set?: $Enums.UserRole
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -630,8 +586,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   phone?: boolean
   avatar?: boolean
   role?: boolean
-  codeId?: boolean
-  codeExpiration?: boolean
   isActive?: boolean
   codeOtp?: boolean
   codeOtpExpiration?: boolean
@@ -649,8 +603,6 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   phone?: boolean
   avatar?: boolean
   role?: boolean
-  codeId?: boolean
-  codeExpiration?: boolean
   isActive?: boolean
   codeOtp?: boolean
   codeOtpExpiration?: boolean
@@ -668,8 +620,6 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   phone?: boolean
   avatar?: boolean
   role?: boolean
-  codeId?: boolean
-  codeExpiration?: boolean
   isActive?: boolean
   codeOtp?: boolean
   codeOtpExpiration?: boolean
@@ -687,8 +637,6 @@ export type UserSelectScalar = {
   phone?: boolean
   avatar?: boolean
   role?: boolean
-  codeId?: boolean
-  codeExpiration?: boolean
   isActive?: boolean
   codeOtp?: boolean
   codeOtpExpiration?: boolean
@@ -698,7 +646,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "fullName" | "phone" | "avatar" | "role" | "codeId" | "codeExpiration" | "isActive" | "codeOtp" | "codeOtpExpiration" | "isOtpVerified" | "hashedRefreshToken" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "fullName" | "phone" | "avatar" | "role" | "isActive" | "codeOtp" | "codeOtpExpiration" | "isOtpVerified" | "hashedRefreshToken" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
@@ -711,8 +659,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     phone: string | null
     avatar: string
     role: $Enums.UserRole
-    codeId: string | null
-    codeExpiration: Date | null
     isActive: boolean
     codeOtp: string | null
     codeOtpExpiration: Date | null
@@ -1150,8 +1096,6 @@ export interface UserFieldRefs {
   readonly phone: Prisma.FieldRef<"User", 'String'>
   readonly avatar: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'UserRole'>
-  readonly codeId: Prisma.FieldRef<"User", 'String'>
-  readonly codeExpiration: Prisma.FieldRef<"User", 'DateTime'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
   readonly codeOtp: Prisma.FieldRef<"User", 'String'>
   readonly codeOtpExpiration: Prisma.FieldRef<"User", 'DateTime'>
