@@ -18,6 +18,7 @@ and an AI-powered shopping chatbot as the core thesis novelty.
 - Payment: PayOS
 - Realtime: WebSocket (chat between buyer and seller)
 - Email: Nodemailer with Gmail SMTP
+- File storage: Cloudinary (avatars, product images)
 
 ## Project Structure
 
@@ -27,9 +28,10 @@ src/
 │   └── prisma/           # Auto-generated Prisma Client (do not edit manually)
 ├── modules/
 │   ├── auth/             # JWT auth, Google OAuth, email verification, OTP reset
-│   │   ├── guards/       # JwtAuthGuard, RefreshAuthGuard
-│   │   └── strategies/   # JwtStrategy, RefreshJwtStrategy
+│   │   ├── guards/       # JwtAuthGuard, RefreshAuthGuard, GoogleAuthGuard
+│   │   └── strategies/   # JwtStrategy, RefreshJwtStrategy, GoogleStrategy
 │   ├── mail/             # Email service (Nodemailer + Gmail SMTP)
+│   ├── upload/           # Cloudinary upload service
 │   ├── users/            # User profile, avatar upload
 │   ├── products/         # CRUD listings, image upload, quality scoring
 │   ├── categories/       # Product categories
@@ -39,13 +41,14 @@ src/
 │   ├── recommendation/   # Session-based + content-based recommendation engine
 │   └── chatbot/          # LLM-powered shopping assistant (function calling)
 ├── common/
-│   ├── decorators/       # Custom decorators (e.g. @CurrentUser)
+│   ├── decorators/       # Custom decorators (@CurrentUser)
 │   ├── guards/           # Auth guards (JwtAuthGuard, RolesGuard)
 │   ├── filters/          # Global exception filters
 │   ├── interceptors/     # Response transform interceptor
 │   ├── pipes/            # Validation pipes
-│   └── utils/            # Shared utilities (e.g. hash.util.ts)
-├── config/               # App config, env validation
+│   ├── types/            # Shared types (JwtPayload)
+│   └── utils/            # Shared utilities (hash.util.ts)
+├── config/               # Typed config files (jwt, google, mail, cloudinary)
 ├── prisma.service.ts     # PrismaService (single file, no separate module)
 └── main.ts
 ```
@@ -96,7 +99,7 @@ model User {
   // — Profile —
   fullName String   @map("full_name")
   phone    String?  @db.VarChar(20)
-  avatar   String   @default("/images/users/default_avatar.jpg")
+  avatar   String   @default("https://res.cloudinary.com/dazcuspid/image/upload/default_avatar_nj9oa5.avif")
   role     UserRole @default(CUSTOMER)
 
   // — Account activation (email OTP) —
@@ -142,6 +145,15 @@ Rules:
 - OTP emails sent during register and password reset
 - Fire-and-forget pattern: mail is not awaited, errors are caught and logged
 - Gmail App Password required (not account password)
+
+## Cloudinary
+
+- Package: `cloudinary` + `multer` (memoryStorage)
+- Folder structure:
+  - `fleazo/avatars/` — user avatars
+  - `fleazo/products/` — product images
+- Always delete old image before uploading new one (extract public_id from URL)
+- public_id extraction: strip version (`v\d+/`) and extension from URL after `/upload/`
 
 ## Key Conventions
 
@@ -201,12 +213,15 @@ async handleRegister(registerDto: RegisterDto) {
 - OTP generation: `randomInt` from Node `crypto` (not `Math.random`)
 - Date manipulation: `dayjs` (not raw `Date.now()` arithmetic)
 - `dotenv/config` imported at top of `main.ts` to load `.env` before NestJS bootstraps
+- Use `@CurrentUser()` decorator instead of `@Req() req` to get current user
+- Always use `import type` for `ConfigType` due to `isolatedModules`
 
 ## Current Status
 
 - Core setup: ✅ Done
 - Auth module: ✅ Done
-- Next: Users module
+- Users module: 🚧 In progress — get profile, update profile, update avatar done. Change password + get public profile next.
+- Next: Products module
 
 ## Agent Behavior
 
@@ -215,13 +230,7 @@ After completing any meaningful unit of work (feature, fix, refactor, docs updat
 Example format:
 
 ```
-Commit message:
-```
-
 feat(auth): add forgot password flow
-
-```
-
 ```
 
 ## Commit Convention
@@ -243,7 +252,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 - `style` — format, lint (không ảnh hưởng logic)
 
 **Scope** — tên module liên quan (optional nhưng khuyến khích):
-`auth`, `users`, `mail`, `products`, `orders`, `chat`, `recommendation`, `chatbot`, `prisma`, `config`
+`auth`, `users`, `upload`, `mail`, `products`, `orders`, `chat`, `recommendation`, `chatbot`, `prisma`, `config`
 
 **Examples:**
 

@@ -6,15 +6,16 @@ Backend service for **Fleazo** — a secondhand marketplace platform for Vietnam
 
 ## Tech Stack
 
-| Layer     | Technology                                          |
-| --------- | --------------------------------------------------- |
-| Framework | NestJS (Node.js + TypeScript)                       |
-| Database  | PostgreSQL                                          |
-| ORM       | Prisma v7                                           |
-| Auth      | JWT (access + refresh token rotation), Google OAuth |
-| Payment   | PayOS                                               |
-| Realtime  | WebSocket                                           |
-| Email     | Nodemailer (Gmail SMTP)                             |
+| Layer        | Technology                                          |
+| ------------ | --------------------------------------------------- |
+| Framework    | NestJS (Node.js + TypeScript)                       |
+| Database     | PostgreSQL                                          |
+| ORM          | Prisma v7                                           |
+| Auth         | JWT (access + refresh token rotation), Google OAuth |
+| Payment      | PayOS                                               |
+| Realtime     | WebSocket                                           |
+| Email        | Nodemailer (Gmail SMTP)                             |
+| File Storage | Cloudinary                                          |
 
 ## Prerequisites
 
@@ -52,6 +53,7 @@ src/
 ├── modules/
 │   ├── auth/             # JWT auth, Google OAuth, email OTP
 │   ├── mail/             # Email service (Nodemailer + Gmail SMTP)
+│   ├── upload/           # Cloudinary upload service
 │   ├── users/            # User profile, avatar upload
 │   ├── products/         # Listings, image upload, quality scoring
 │   ├── categories/       # Product categories
@@ -60,8 +62,8 @@ src/
 │   ├── reviews/          # Rating and review
 │   ├── recommendation/   # Session-based + content-based engine
 │   └── chatbot/          # LLM shopping assistant (function calling)
-├── common/               # Decorators, guards, filters, interceptors, pipes, utils
-├── config/               # App config, env validation
+├── common/               # Decorators, guards, filters, interceptors, pipes, utils, types
+├── config/               # Typed config files (jwt, google, mail, cloudinary)
 ├── generated/prisma/     # Auto-generated Prisma Client (gitignored)
 ├── prisma.service.ts
 └── main.ts
@@ -85,6 +87,9 @@ MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USER=
 MAIL_PASSWORD=
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 ```
 
 ## API Documentation
@@ -93,17 +98,17 @@ Available at `/api/docs` (Swagger UI) when the server is running.
 
 ## Development Status
 
-| Module         | Status  |
-| -------------- | ------- |
-| Auth           | Done    |
-| Users          | Planned |
-| Products       | Planned |
-| Categories     | Planned |
-| Orders         | Planned |
-| Chat           | Planned |
-| Reviews        | Planned |
-| Recommendation | Planned |
-| Chatbot        | Planned |
+| Module         | Status      |
+| -------------- | ----------- |
+| Auth           | Done        |
+| Users          | In progress |
+| Products       | Planned     |
+| Categories     | Planned     |
+| Orders         | Planned     |
+| Chat           | Planned     |
+| Reviews        | Planned     |
+| Recommendation | Planned     |
+| Chatbot        | Planned     |
 
 ## License
 
