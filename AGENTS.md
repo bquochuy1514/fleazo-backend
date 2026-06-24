@@ -215,6 +215,7 @@ async handleRegister(registerDto: RegisterDto) {
 - `dotenv/config` imported at top of `main.ts` to load `.env` before NestJS bootstraps
 - Use `@CurrentUser()` decorator instead of `@Req() req` to get current user
 - Always use `import type` for `ConfigType` due to `isolatedModules`
+- `.env` variables must be grouped into named sections using `# ===========================` dividers. When adding new env vars without a existing section, always create a new named section.
 
 ## Current Status
 
