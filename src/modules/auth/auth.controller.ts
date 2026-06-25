@@ -14,12 +14,12 @@ import { RegisterDto } from './dto/register.dto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { ResendOtpDto } from './dto/resend-otp.dto';
 import { LoginDto } from './dto/login.dto';
-import { RefreshAuthGuard } from './guards/refresh-auth.guard';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { RefreshAuthGuard } from '../../common/guards/refresh-auth.guard';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { VerifyForgotOtpDto } from './dto/verify-forgot-otp.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
-import { GoogleAuthGuard } from './guards/google-auth.guard';
+import { GoogleAuthGuard } from '../../common/guards/google-auth.guard';
 
 @Controller('auth')
 export class AuthController {

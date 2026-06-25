@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BadRequestException,
+  ForbiddenException,
   Inject,
   Injectable,
   UnauthorizedException,
@@ -188,7 +189,12 @@ export class AuthService {
       );
     }
 
-    // 4. Return user without sensitive fields
+    // 4. Check account banned
+    if (user.isBanned) {
+      throw new ForbiddenException('Tài khoản của bạn đã bị khóa.');
+    }
+
+    // 5. Return user without sensitive fields
     const {
       password: _,
       hashedRefreshToken,
@@ -357,7 +363,12 @@ export class AuthService {
     const existingUser = await this.usersService.findUserByEmail(
       googleUser.email,
     );
-    if (existingUser) return existingUser;
+    if (existingUser) {
+      if (existingUser.isBanned) {
+        throw new ForbiddenException('Tài khoản của bạn đã bị khóa.');
+      }
+      return existingUser;
+    }
 
     // 2. Create new user if not exists
     return this.usersService.createUser({

@@ -43,6 +43,7 @@ export type UserMinAggregateOutputType = {
   avatar: string | null
   role: $Enums.UserRole | null
   isActive: boolean | null
+  isBanned: boolean | null
   codeOtp: string | null
   codeOtpExpiration: Date | null
   isOtpVerified: boolean | null
@@ -60,6 +61,7 @@ export type UserMaxAggregateOutputType = {
   avatar: string | null
   role: $Enums.UserRole | null
   isActive: boolean | null
+  isBanned: boolean | null
   codeOtp: string | null
   codeOtpExpiration: Date | null
   isOtpVerified: boolean | null
@@ -77,6 +79,7 @@ export type UserCountAggregateOutputType = {
   avatar: number
   role: number
   isActive: number
+  isBanned: number
   codeOtp: number
   codeOtpExpiration: number
   isOtpVerified: number
@@ -104,6 +107,7 @@ export type UserMinAggregateInputType = {
   avatar?: true
   role?: true
   isActive?: true
+  isBanned?: true
   codeOtp?: true
   codeOtpExpiration?: true
   isOtpVerified?: true
@@ -121,6 +125,7 @@ export type UserMaxAggregateInputType = {
   avatar?: true
   role?: true
   isActive?: true
+  isBanned?: true
   codeOtp?: true
   codeOtpExpiration?: true
   isOtpVerified?: true
@@ -138,6 +143,7 @@ export type UserCountAggregateInputType = {
   avatar?: true
   role?: true
   isActive?: true
+  isBanned?: true
   codeOtp?: true
   codeOtpExpiration?: true
   isOtpVerified?: true
@@ -242,6 +248,7 @@ export type UserGroupByOutputType = {
   avatar: string
   role: $Enums.UserRole
   isActive: boolean
+  isBanned: boolean
   codeOtp: string | null
   codeOtpExpiration: Date | null
   isOtpVerified: boolean
@@ -282,6 +289,7 @@ export type UserWhereInput = {
   avatar?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   isActive?: Prisma.BoolFilter<"User"> | boolean
+  isBanned?: Prisma.BoolFilter<"User"> | boolean
   codeOtp?: Prisma.StringNullableFilter<"User"> | string | null
   codeOtpExpiration?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   isOtpVerified?: Prisma.BoolFilter<"User"> | boolean
@@ -299,6 +307,7 @@ export type UserOrderByWithRelationInput = {
   avatar?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isBanned?: Prisma.SortOrder
   codeOtp?: Prisma.SortOrderInput | Prisma.SortOrder
   codeOtpExpiration?: Prisma.SortOrderInput | Prisma.SortOrder
   isOtpVerified?: Prisma.SortOrder
@@ -319,6 +328,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   avatar?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   isActive?: Prisma.BoolFilter<"User"> | boolean
+  isBanned?: Prisma.BoolFilter<"User"> | boolean
   codeOtp?: Prisma.StringNullableFilter<"User"> | string | null
   codeOtpExpiration?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   isOtpVerified?: Prisma.BoolFilter<"User"> | boolean
@@ -336,6 +346,7 @@ export type UserOrderByWithAggregationInput = {
   avatar?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isBanned?: Prisma.SortOrder
   codeOtp?: Prisma.SortOrderInput | Prisma.SortOrder
   codeOtpExpiration?: Prisma.SortOrderInput | Prisma.SortOrder
   isOtpVerified?: Prisma.SortOrder
@@ -361,6 +372,7 @@ export type UserScalarWhereWithAggregatesInput = {
   avatar?: Prisma.StringWithAggregatesFilter<"User"> | string
   role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  isBanned?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   codeOtp?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   codeOtpExpiration?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   isOtpVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
@@ -377,6 +389,7 @@ export type UserCreateInput = {
   avatar?: string
   role?: $Enums.UserRole
   isActive?: boolean
+  isBanned?: boolean
   codeOtp?: string | null
   codeOtpExpiration?: Date | string | null
   isOtpVerified?: boolean
@@ -394,6 +407,7 @@ export type UserUncheckedCreateInput = {
   avatar?: string
   role?: $Enums.UserRole
   isActive?: boolean
+  isBanned?: boolean
   codeOtp?: string | null
   codeOtpExpiration?: Date | string | null
   isOtpVerified?: boolean
@@ -410,6 +424,7 @@ export type UserUpdateInput = {
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -427,6 +442,7 @@ export type UserUncheckedUpdateInput = {
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -444,6 +460,7 @@ export type UserCreateManyInput = {
   avatar?: string
   role?: $Enums.UserRole
   isActive?: boolean
+  isBanned?: boolean
   codeOtp?: string | null
   codeOtpExpiration?: Date | string | null
   isOtpVerified?: boolean
@@ -460,6 +477,7 @@ export type UserUpdateManyMutationInput = {
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -477,6 +495,7 @@ export type UserUncheckedUpdateManyInput = {
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -494,6 +513,7 @@ export type UserCountOrderByAggregateInput = {
   avatar?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isBanned?: Prisma.SortOrder
   codeOtp?: Prisma.SortOrder
   codeOtpExpiration?: Prisma.SortOrder
   isOtpVerified?: Prisma.SortOrder
@@ -515,6 +535,7 @@ export type UserMaxOrderByAggregateInput = {
   avatar?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isBanned?: Prisma.SortOrder
   codeOtp?: Prisma.SortOrder
   codeOtpExpiration?: Prisma.SortOrder
   isOtpVerified?: Prisma.SortOrder
@@ -532,6 +553,7 @@ export type UserMinOrderByAggregateInput = {
   avatar?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  isBanned?: Prisma.SortOrder
   codeOtp?: Prisma.SortOrder
   codeOtpExpiration?: Prisma.SortOrder
   isOtpVerified?: Prisma.SortOrder
@@ -587,6 +609,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   avatar?: boolean
   role?: boolean
   isActive?: boolean
+  isBanned?: boolean
   codeOtp?: boolean
   codeOtpExpiration?: boolean
   isOtpVerified?: boolean
@@ -604,6 +627,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   avatar?: boolean
   role?: boolean
   isActive?: boolean
+  isBanned?: boolean
   codeOtp?: boolean
   codeOtpExpiration?: boolean
   isOtpVerified?: boolean
@@ -621,6 +645,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   avatar?: boolean
   role?: boolean
   isActive?: boolean
+  isBanned?: boolean
   codeOtp?: boolean
   codeOtpExpiration?: boolean
   isOtpVerified?: boolean
@@ -638,6 +663,7 @@ export type UserSelectScalar = {
   avatar?: boolean
   role?: boolean
   isActive?: boolean
+  isBanned?: boolean
   codeOtp?: boolean
   codeOtpExpiration?: boolean
   isOtpVerified?: boolean
@@ -646,7 +672,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "fullName" | "phone" | "avatar" | "role" | "isActive" | "codeOtp" | "codeOtpExpiration" | "isOtpVerified" | "hashedRefreshToken" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "fullName" | "phone" | "avatar" | "role" | "isActive" | "isBanned" | "codeOtp" | "codeOtpExpiration" | "isOtpVerified" | "hashedRefreshToken" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
@@ -660,6 +686,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     avatar: string
     role: $Enums.UserRole
     isActive: boolean
+    isBanned: boolean
     codeOtp: string | null
     codeOtpExpiration: Date | null
     isOtpVerified: boolean
@@ -1097,6 +1124,7 @@ export interface UserFieldRefs {
   readonly avatar: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'UserRole'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
+  readonly isBanned: Prisma.FieldRef<"User", 'Boolean'>
   readonly codeOtp: Prisma.FieldRef<"User", 'String'>
   readonly codeOtpExpiration: Prisma.FieldRef<"User", 'DateTime'>
   readonly isOtpVerified: Prisma.FieldRef<"User", 'Boolean'>

@@ -3,6 +3,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -14,11 +15,15 @@ import {
 import { UsersService } from './users.service';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { JwtPayload } from '../../common/types/jwt-payload.type';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../common//guards/jwt-auth.guard';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
+import { UserRole } from '../../generated/prisma/client';
+import { AdminUpdateUserDto } from './dto/admin-update-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -64,5 +69,29 @@ export class UsersController {
   @Get(':id/public')
   async getPublicProfile(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.handleGetPublicProfile(id);
+  }
+
+  @Get('admin/all')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async adminGetAllUsers() {
+    return this.usersService.handleAdminGetAllUsers();
+  }
+
+  @Put('admin/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async adminUpdateUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: AdminUpdateUserDto,
+  ) {
+    return this.usersService.handleAdminUpdateUser(id, dto);
+  }
+
+  @Delete('admin/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  async adminDeleteUser(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.handleAdminDeleteUser(id);
   }
 }

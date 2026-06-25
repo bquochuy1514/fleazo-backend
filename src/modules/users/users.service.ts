@@ -12,6 +12,7 @@ import { UploadService } from '../upload/upload.service';
 import * as argon2 from 'argon2';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { comparePassword } from '../../common/utils/hash.util';
+import { AdminUpdateUserDto } from './dto/admin-update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -162,8 +163,63 @@ export class UsersService {
       id: user.id,
       fullName: user.fullName,
       avatar: user.avatar,
-      role: user.role,
       createdAt: user.createdAt,
     };
+  }
+
+  async handleAdminGetAllUsers() {
+    // 1. Fetch all users
+    const users = await this.prisma.user.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+
+    // 2. Strip sensitive fields from each user
+    return users.map(
+      ({
+        password,
+        hashedRefreshToken,
+        codeOtp,
+        codeOtpExpiration,
+        isOtpVerified,
+        ...safe
+      }) => safe,
+    );
+  }
+
+  async handleAdminUpdateUser(targetId: number, dto: AdminUpdateUserDto) {
+    // 1. Check user exists
+    const user = await this.prisma.user.findUnique({ where: { id: targetId } });
+    if (!user) throw new NotFoundException('Người dùng không tồn tại.');
+
+    // 2. Apply update
+    const updated = await this.prisma.user.update({
+      where: { id: targetId },
+      data: dto,
+    });
+
+    // 3. Strip sensitive fields
+    const {
+      password,
+      hashedRefreshToken,
+      codeOtp,
+      codeOtpExpiration,
+      isOtpVerified,
+      ...safe
+    } = updated;
+    return safe;
+  }
+
+  async handleAdminDeleteUser(targetId: number) {
+    // 1. Check user exists
+    const user = await this.prisma.user.findUnique({ where: { id: targetId } });
+    if (!user) throw new NotFoundException('Người dùng không tồn tại.');
+
+    // 2. Soft delete — deactivate account
+    await this.prisma.user.update({
+      where: { id: targetId },
+      data: { isActive: false },
+    });
+
+    return { message: 'Tài khoản đã bị vô hiệu hóa.' };
   }
 }

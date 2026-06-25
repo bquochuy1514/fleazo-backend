@@ -101,8 +101,8 @@ Available at `/api/docs` (Swagger UI) when the server is running.
 | Module         | Status      |
 | -------------- | ----------- |
 | Auth           | Done        |
-| Users          | In progress |
-| Products       | Planned     |
+| Users          | Done        |
+| Products       | In progress |
 | Categories     | Planned     |
 | Orders         | Planned     |
 | Chat           | Planned     |

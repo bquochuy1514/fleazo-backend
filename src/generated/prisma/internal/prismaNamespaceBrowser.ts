@@ -79,6 +79,7 @@ export const UserScalarFieldEnum = {
   avatar: 'avatar',
   role: 'role',
   isActive: 'isActive',
+  isBanned: 'isBanned',
   codeOtp: 'codeOtp',
   codeOtpExpiration: 'codeOtpExpiration',
   isOtpVerified: 'isOtpVerified',
