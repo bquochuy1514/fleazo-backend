@@ -27,7 +27,7 @@ Backend service for **Fleazo** — a secondhand marketplace platform for Vietnam
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/your-username/fleazo-backend.git
+git clone https://github.com/bquochuy1514/fleazo-backend.git
 cd fleazo-backend
 
 # 2. Install dependencies

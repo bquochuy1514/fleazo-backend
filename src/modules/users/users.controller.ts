@@ -4,6 +4,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  ParseIntPipe,
   Put,
   UploadedFile,
   UseGuards,
@@ -16,6 +18,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Controller('users')
 export class UsersController {
@@ -47,5 +50,19 @@ export class UsersController {
       throw new BadRequestException('Vui lòng chọn ảnh để tải lên.');
     }
     return this.usersService.handleUpdateAvatar(user.id, file);
+  }
+
+  @Put('me/change-password')
+  @UseGuards(JwtAuthGuard)
+  async changePassword(
+    @CurrentUser() user: JwtPayload,
+    @Body() dto: ChangePasswordDto,
+  ) {
+    return this.usersService.handleChangePassword(user.id, dto);
+  }
+
+  @Get(':id/public')
+  async getPublicProfile(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.handleGetPublicProfile(id);
   }
 }
