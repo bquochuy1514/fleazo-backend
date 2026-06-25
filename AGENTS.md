@@ -41,7 +41,7 @@ src/
 │   ├── recommendation/   # Session-based + content-based recommendation engine
 │   └── chatbot/          # LLM-powered shopping assistant (function calling)
 ├── common/
-│   ├── decorators/       # Custom decorators (@CurrentUser)
+│   ├── decorators/       # Custom decorators (@CurrentUser, @Match)
 │   ├── guards/           # Auth guards (JwtAuthGuard, RolesGuard)
 │   ├── filters/          # Global exception filters
 │   ├── interceptors/     # Response transform interceptor
@@ -179,6 +179,16 @@ JwtModule.registerAsync({
 }),
 ```
 
+## Common Utilities & Decorators
+
+Always check for existing utilities before writing new code:
+
+| Path                                              | Export                            | Use when                                        |
+| ------------------------------------------------- | --------------------------------- | ----------------------------------------------- |
+| `src/common/utils/hash.util.ts`                   | `hashPassword`, `comparePassword` | Hash or verify passwords with argon2            |
+| `src/common/decorators/match.decorator.ts`        | `@Match(field)`                   | Cross-field validation (e.g. confirmPassword)   |
+| `src/common/decorators/current-user.decorator.ts` | `@CurrentUser()`                  | Extract JWT payload from request in controllers |
+
 ### DTO convention
 
 - DTOs use `class-validator` decorators for validation
@@ -215,13 +225,13 @@ async handleRegister(registerDto: RegisterDto) {
 - `dotenv/config` imported at top of `main.ts` to load `.env` before NestJS bootstraps
 - Use `@CurrentUser()` decorator instead of `@Req() req` to get current user
 - Always use `import type` for `ConfigType` due to `isolatedModules`
-- `.env` variables must be grouped into named sections using `# ===========================` dividers. When adding new env vars without a existing section, always create a new named section.
+- `.env` variables must be grouped into named sections using `# ===========================` dividers. When adding new env vars, always create a new named section if one does not exist.
 
 ## Current Status
 
 - Core setup: ✅ Done
 - Auth module: ✅ Done
-- Users module: 🚧 In progress — get profile, update profile, update avatar done. Change password + get public profile next.
+- Users module: ✅ Done — get profile, update profile, update avatar, change password, get public profile
 - Next: Products module
 
 ## Agent Behavior
@@ -244,15 +254,15 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 **Types:**
 
-- `feat` — tính năng mới
+- `feat` — new feature
 - `fix` — bug fix
-- `chore` — config, tooling, dependencies (không ảnh hưởng logic)
-- `refactor` — refactor code, không thêm feature hay fix bug
-- `docs` — chỉ thay đổi documentation
-- `test` — thêm hoặc sửa test
-- `style` — format, lint (không ảnh hưởng logic)
+- `chore` — config, tooling, dependencies (no logic change)
+- `refactor` — code refactor, no new feature or bug fix
+- `docs` — documentation changes only
+- `test` — add or update tests
+- `style` — formatting, lint (no logic change)
 
-**Scope** — tên module liên quan (optional nhưng khuyến khích):
+**Scope** — related module name (optional but encouraged):
 `auth`, `users`, `upload`, `mail`, `products`, `orders`, `chat`, `recommendation`, `chatbot`, `prisma`, `config`
 
 **Examples:**
@@ -267,7 +277,7 @@ docs: update AGENTS.md with commit convention
 
 **Rules:**
 
-- Subject dùng tiếng Anh, imperative mood ("add" không phải "added")
-- Không viết hoa chữ đầu subject
-- Không có dấu chấm cuối subject
-- Subject tối đa 72 ký tự
+- Subject in English, imperative mood ("add" not "added")
+- Do not capitalize the first letter of the subject
+- No trailing period in subject
+- Subject max 72 characters
