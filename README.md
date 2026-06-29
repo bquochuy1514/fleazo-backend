@@ -6,16 +6,28 @@ Backend service for **Fleazo** — a secondhand marketplace platform for Vietnam
 
 ## Tech Stack
 
-| Layer        | Technology                                          |
-| ------------ | --------------------------------------------------- |
-| Framework    | NestJS (Node.js + TypeScript)                       |
-| Database     | PostgreSQL                                          |
-| ORM          | Prisma v7                                           |
-| Auth         | JWT (access + refresh token rotation), Google OAuth |
-| Payment      | PayOS                                               |
-| Realtime     | WebSocket                                           |
-| Email        | Nodemailer (Gmail SMTP)                             |
-| File Storage | Cloudinary                                          |
+| Layer        | Technology                                                              |
+| ------------ | ----------------------------------------------------------------------- |
+| Framework    | NestJS (Node.js + TypeScript)                                           |
+| Database     | PostgreSQL                                                              |
+| ORM          | Prisma v7                                                               |
+| Auth         | JWT (access + refresh token rotation), Google OAuth                     |
+| Payment      | PayOS                                                                   |
+| Realtime     | WebSocket                                                               |
+| Email        | Nodemailer (Gmail SMTP)                                                 |
+| File Storage | Cloudinary                                                              |
+| Address API  | provinces.open-api.vn (Tỉnh/Quận/Phường)                                |
+| AI/ML        | Recommendation Engine (session-based + content-based + quality scoring) |
+| Chatbot      | LLM-powered shopping assistant (function calling)                       |
+
+## Core Features
+
+- **Secondhand marketplace** — students buy and sell within the university community
+- **Recommendation engine** — session-based filtering for cold-start/anonymous users, content-based filtering ranked by Quality Score
+- **Quality Score** — automatic listing scoring based on image count, description completeness, seller reputation, engagement, and freshness. Prevents spam and surfaces genuinely good listings
+- **Listing monetization** — membership tiers (Free/Basic/Premium), boost (temporary feed priority), extend (renew expired listing without re-posting)
+- **LLM chatbot** — natural language shopping assistant using function calling into the recommendation engine (powered by `fleazo-ai` Python FastAPI service)
+- **Realtime chat** — WebSocket-based messaging between buyer and seller
 
 ## Prerequisites
 
