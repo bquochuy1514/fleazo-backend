@@ -10,10 +10,6 @@ export class CreateCategoryDto {
   slug: string;
 
   @IsOptional()
-  @IsString({ message: 'Icon phải là chuỗi ký tự' })
-  icon?: string;
-
-  @IsOptional()
   @IsInt({ message: 'parentId phải là số nguyên' })
   parentId?: number;
 }

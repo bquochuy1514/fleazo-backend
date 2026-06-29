@@ -254,6 +254,7 @@ Rules:
 - Folder structure:
   - `fleazo/avatars/` — user avatars
   - `fleazo/products/` — product images
+  - `fleazo/categories/` — category icons
 - Always delete old image before uploading new one (extract public_id from URL)
 - public_id extraction: strip version (`v\d+/`) and extension from URL after `/upload/`
 
@@ -304,7 +305,7 @@ email: string;
 
 ### Service function convention
 
-Every service function must annotate each logical step with a numbered comment:
+Every service function must annotate each logical step with a numbered comment in **English**:
 
 ```typescript
 async handleRegister(registerDto: RegisterDto) {
@@ -318,7 +319,9 @@ async handleRegister(registerDto: RegisterDto) {
 
 ### Other conventions
 
-- Responses wrapped in standard format: `{ statusCode, message, data }`
+- Always use **relative imports** (`../../`) — never `src/` absolute paths
+- Prisma enum import path: `../../generated/prisma/client` (not `../../generated/prisma`)
+- **Response format**: controllers return the service result directly — no wrapping. Services return plain data or `{ message }` when there is no meaningful data to return. Do NOT wrap responses in `{ statusCode, message, data }` at the controller level.
 - snake_case in DB, camelCase in TypeScript code
 - ESLint unsafe rules disabled for class-validator decorator patterns
 - Password hashing: argon2 (not bcrypt)

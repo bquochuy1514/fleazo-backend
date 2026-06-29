@@ -69,10 +69,10 @@ model User {
 
 model Category {
   // — Identity —
-  id   Int     @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
   name String
-  slug String  @unique
-  icon String?
+  slug String @unique
+  icon String @default("https://res.cloudinary.com/dazcuspid/image/upload/default_category_qswbed.jpg")
 
   // — Hierarchy —
   parentId Int?       @map("parent_id")

@@ -1,14 +1,19 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
+  Put,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -23,44 +28,49 @@ export class CategoriesController {
 
   @Get()
   async findAll() {
-    const data = await this.categoriesService.findAll();
-    return {
-      statusCode: 200,
-      message: 'Lấy danh sách danh mục thành công',
-      data,
-    };
+    return this.categoriesService.findAll();
   }
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    const data = await this.categoriesService.findOne(id);
-    return { statusCode: 200, message: 'Lấy danh mục thành công', data };
+    return this.categoriesService.findOne(id);
   }
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async create(@Body() dto: CreateCategoryDto) {
-    const data = await this.categoriesService.create(dto);
-    return { statusCode: 201, message: 'Tạo danh mục thành công', data };
+    return this.categoriesService.create(dto);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateCategoryDto,
   ) {
-    const data = await this.categoriesService.update(id, dto);
-    return { statusCode: 200, message: 'Cập nhật danh mục thành công', data };
+    return this.categoriesService.update(id, dto);
+  }
+
+  @Put(':id/icon')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @UseInterceptors(FileInterceptor('icon', { storage: memoryStorage() }))
+  async updateIcon(
+    @Param('id', ParseIntPipe) id: number,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) {
+      throw new BadRequestException('Vui lòng chọn ảnh để tải lên.');
+    }
+    return this.categoriesService.updateIcon(id, file);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   async remove(@Param('id', ParseIntPipe) id: number) {
-    await this.categoriesService.remove(id);
-    return { statusCode: 200, message: 'Xóa danh mục thành công', data: null };
+    return this.categoriesService.remove(id);
   }
 }
