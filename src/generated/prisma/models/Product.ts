@@ -49,7 +49,9 @@ export type ProductMinAggregateOutputType = {
   title: string | null
   description: string | null
   price: runtime.Decimal | null
-  location: string | null
+  province: string | null
+  district: string | null
+  ward: string | null
   condition: $Enums.ProductCondition | null
   status: $Enums.ProductStatus | null
   rejectedReason: string | null
@@ -68,7 +70,9 @@ export type ProductMaxAggregateOutputType = {
   title: string | null
   description: string | null
   price: runtime.Decimal | null
-  location: string | null
+  province: string | null
+  district: string | null
+  ward: string | null
   condition: $Enums.ProductCondition | null
   status: $Enums.ProductStatus | null
   rejectedReason: string | null
@@ -87,7 +91,9 @@ export type ProductCountAggregateOutputType = {
   title: number
   description: number
   price: number
-  location: number
+  province: number
+  district: number
+  ward: number
   condition: number
   status: number
   rejectedReason: number
@@ -126,7 +132,9 @@ export type ProductMinAggregateInputType = {
   title?: true
   description?: true
   price?: true
-  location?: true
+  province?: true
+  district?: true
+  ward?: true
   condition?: true
   status?: true
   rejectedReason?: true
@@ -145,7 +153,9 @@ export type ProductMaxAggregateInputType = {
   title?: true
   description?: true
   price?: true
-  location?: true
+  province?: true
+  district?: true
+  ward?: true
   condition?: true
   status?: true
   rejectedReason?: true
@@ -164,7 +174,9 @@ export type ProductCountAggregateInputType = {
   title?: true
   description?: true
   price?: true
-  location?: true
+  province?: true
+  district?: true
+  ward?: true
   condition?: true
   status?: true
   rejectedReason?: true
@@ -270,7 +282,9 @@ export type ProductGroupByOutputType = {
   title: string
   description: string
   price: runtime.Decimal
-  location: string | null
+  province: string
+  district: string
+  ward: string | null
   condition: $Enums.ProductCondition
   status: $Enums.ProductStatus
   rejectedReason: string | null
@@ -312,7 +326,9 @@ export type ProductWhereInput = {
   title?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
   price?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: Prisma.StringNullableFilter<"Product"> | string | null
+  province?: Prisma.StringFilter<"Product"> | string
+  district?: Prisma.StringFilter<"Product"> | string
+  ward?: Prisma.StringNullableFilter<"Product"> | string | null
   condition?: Prisma.EnumProductConditionFilter<"Product"> | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
   rejectedReason?: Prisma.StringNullableFilter<"Product"> | string | null
@@ -334,7 +350,9 @@ export type ProductOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
-  location?: Prisma.SortOrderInput | Prisma.SortOrder
+  province?: Prisma.SortOrder
+  district?: Prisma.SortOrder
+  ward?: Prisma.SortOrderInput | Prisma.SortOrder
   condition?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rejectedReason?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -359,7 +377,9 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
   price?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: Prisma.StringNullableFilter<"Product"> | string | null
+  province?: Prisma.StringFilter<"Product"> | string
+  district?: Prisma.StringFilter<"Product"> | string
+  ward?: Prisma.StringNullableFilter<"Product"> | string | null
   condition?: Prisma.EnumProductConditionFilter<"Product"> | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
   rejectedReason?: Prisma.StringNullableFilter<"Product"> | string | null
@@ -381,7 +401,9 @@ export type ProductOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
-  location?: Prisma.SortOrderInput | Prisma.SortOrder
+  province?: Prisma.SortOrder
+  district?: Prisma.SortOrder
+  ward?: Prisma.SortOrderInput | Prisma.SortOrder
   condition?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rejectedReason?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -408,7 +430,9 @@ export type ProductScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"Product"> | string
   description?: Prisma.StringWithAggregatesFilter<"Product"> | string
   price?: Prisma.DecimalWithAggregatesFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
+  province?: Prisma.StringWithAggregatesFilter<"Product"> | string
+  district?: Prisma.StringWithAggregatesFilter<"Product"> | string
+  ward?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
   condition?: Prisma.EnumProductConditionWithAggregatesFilter<"Product"> | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusWithAggregatesFilter<"Product"> | $Enums.ProductStatus
   rejectedReason?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
@@ -426,7 +450,9 @@ export type ProductCreateInput = {
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: string | null
+  province: string
+  district: string
+  ward?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -446,7 +472,9 @@ export type ProductUncheckedCreateInput = {
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: string | null
+  province: string
+  district: string
+  ward?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -465,7 +493,9 @@ export type ProductUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -485,7 +515,9 @@ export type ProductUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -505,7 +537,9 @@ export type ProductCreateManyInput = {
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: string | null
+  province: string
+  district: string
+  ward?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -523,7 +557,9 @@ export type ProductUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -540,7 +576,9 @@ export type ProductUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -569,7 +607,9 @@ export type ProductCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
-  location?: Prisma.SortOrder
+  province?: Prisma.SortOrder
+  district?: Prisma.SortOrder
+  ward?: Prisma.SortOrder
   condition?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rejectedReason?: Prisma.SortOrder
@@ -597,7 +637,9 @@ export type ProductMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
-  location?: Prisma.SortOrder
+  province?: Prisma.SortOrder
+  district?: Prisma.SortOrder
+  ward?: Prisma.SortOrder
   condition?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rejectedReason?: Prisma.SortOrder
@@ -616,7 +658,9 @@ export type ProductMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   price?: Prisma.SortOrder
-  location?: Prisma.SortOrder
+  province?: Prisma.SortOrder
+  district?: Prisma.SortOrder
+  ward?: Prisma.SortOrder
   condition?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rejectedReason?: Prisma.SortOrder
@@ -770,7 +814,9 @@ export type ProductCreateWithoutSellerInput = {
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: string | null
+  province: string
+  district: string
+  ward?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -789,7 +835,9 @@ export type ProductUncheckedCreateWithoutSellerInput = {
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: string | null
+  province: string
+  district: string
+  ward?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -837,7 +885,9 @@ export type ProductScalarWhereInput = {
   title?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
   price?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: Prisma.StringNullableFilter<"Product"> | string | null
+  province?: Prisma.StringFilter<"Product"> | string
+  district?: Prisma.StringFilter<"Product"> | string
+  ward?: Prisma.StringNullableFilter<"Product"> | string | null
   condition?: Prisma.EnumProductConditionFilter<"Product"> | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
   rejectedReason?: Prisma.StringNullableFilter<"Product"> | string | null
@@ -855,7 +905,9 @@ export type ProductCreateWithoutCategoryInput = {
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: string | null
+  province: string
+  district: string
+  ward?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -874,7 +926,9 @@ export type ProductUncheckedCreateWithoutCategoryInput = {
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: string | null
+  province: string
+  district: string
+  ward?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -918,7 +972,9 @@ export type ProductCreateWithoutImagesInput = {
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: string | null
+  province: string
+  district: string
+  ward?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -937,7 +993,9 @@ export type ProductUncheckedCreateWithoutImagesInput = {
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: string | null
+  province: string
+  district: string
+  ward?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -971,7 +1029,9 @@ export type ProductUpdateWithoutImagesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -990,7 +1050,9 @@ export type ProductUncheckedUpdateWithoutImagesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1009,7 +1071,9 @@ export type ProductCreateManySellerInput = {
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: string | null
+  province: string
+  district: string
+  ward?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -1026,7 +1090,9 @@ export type ProductUpdateWithoutSellerInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1045,7 +1111,9 @@ export type ProductUncheckedUpdateWithoutSellerInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1064,7 +1132,9 @@ export type ProductUncheckedUpdateManyWithoutSellerInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1082,7 +1152,9 @@ export type ProductCreateManyCategoryInput = {
   title: string
   description: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: string | null
+  province: string
+  district: string
+  ward?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -1099,7 +1171,9 @@ export type ProductUpdateWithoutCategoryInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1118,7 +1192,9 @@ export type ProductUncheckedUpdateWithoutCategoryInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1137,7 +1213,9 @@ export type ProductUncheckedUpdateManyWithoutCategoryInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1186,7 +1264,9 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   title?: boolean
   description?: boolean
   price?: boolean
-  location?: boolean
+  province?: boolean
+  district?: boolean
+  ward?: boolean
   condition?: boolean
   status?: boolean
   rejectedReason?: boolean
@@ -1209,7 +1289,9 @@ export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   title?: boolean
   description?: boolean
   price?: boolean
-  location?: boolean
+  province?: boolean
+  district?: boolean
+  ward?: boolean
   condition?: boolean
   status?: boolean
   rejectedReason?: boolean
@@ -1230,7 +1312,9 @@ export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   title?: boolean
   description?: boolean
   price?: boolean
-  location?: boolean
+  province?: boolean
+  district?: boolean
+  ward?: boolean
   condition?: boolean
   status?: boolean
   rejectedReason?: boolean
@@ -1251,7 +1335,9 @@ export type ProductSelectScalar = {
   title?: boolean
   description?: boolean
   price?: boolean
-  location?: boolean
+  province?: boolean
+  district?: boolean
+  ward?: boolean
   condition?: boolean
   status?: boolean
   rejectedReason?: boolean
@@ -1265,7 +1351,7 @@ export type ProductSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "price" | "location" | "condition" | "status" | "rejectedReason" | "qualityScore" | "expiresAt" | "boostExpiresAt" | "renewCount" | "sellerId" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "price" | "province" | "district" | "ward" | "condition" | "status" | "rejectedReason" | "qualityScore" | "expiresAt" | "boostExpiresAt" | "renewCount" | "sellerId" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -1293,7 +1379,9 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     title: string
     description: string
     price: runtime.Decimal
-    location: string | null
+    province: string
+    district: string
+    ward: string | null
     condition: $Enums.ProductCondition
     status: $Enums.ProductStatus
     rejectedReason: string | null
@@ -1735,7 +1823,9 @@ export interface ProductFieldRefs {
   readonly title: Prisma.FieldRef<"Product", 'String'>
   readonly description: Prisma.FieldRef<"Product", 'String'>
   readonly price: Prisma.FieldRef<"Product", 'Decimal'>
-  readonly location: Prisma.FieldRef<"Product", 'String'>
+  readonly province: Prisma.FieldRef<"Product", 'String'>
+  readonly district: Prisma.FieldRef<"Product", 'String'>
+  readonly ward: Prisma.FieldRef<"Product", 'String'>
   readonly condition: Prisma.FieldRef<"Product", 'ProductCondition'>
   readonly status: Prisma.FieldRef<"Product", 'ProductStatus'>
   readonly rejectedReason: Prisma.FieldRef<"Product", 'String'>

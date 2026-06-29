@@ -286,11 +286,20 @@ JwtModule.registerAsync({
 
 Always check for existing utilities before writing new code:
 
-| Path                                              | Export                            | Use when                                        |
-| ------------------------------------------------- | --------------------------------- | ----------------------------------------------- |
-| `src/common/utils/hash.util.ts`                   | `hashPassword`, `comparePassword` | Hash or verify passwords with argon2            |
-| `src/common/decorators/match.decorator.ts`        | `@Match(field)`                   | Cross-field validation (e.g. confirmPassword)   |
-| `src/common/decorators/current-user.decorator.ts` | `@CurrentUser()`                  | Extract JWT payload from request in controllers |
+| Path                                                | Export                            | Use when                                    |
+| --------------------------------------------------- | --------------------------------- | ------------------------------------------- |
+| `src/common/utils/hash.util.ts`                     | `hashPassword`, `comparePassword` | argon2 hash/verify                          |
+| `src/common/decorators/match.decorator.ts`          | `@Match(field)`                   | cross-field validation                      |
+| `src/common/decorators/current-user.decorator.ts`   | `@CurrentUser()`                  | get JWT payload in controller               |
+| `src/common/decorators/roles.decorator.ts`          | `@Roles(...roles)`, `ROLES_KEY`   | restrict endpoint by role                   |
+| `src/common/guards/jwt-auth.guard.ts`               | `JwtAuthGuard`                    | require valid access token                  |
+| `src/common/guards/refresh-auth.guard.ts`           | `RefreshAuthGuard`                | refresh token endpoint                      |
+| `src/common/guards/google-auth.guard.ts`            | `GoogleAuthGuard`                 | Google OAuth callback                       |
+| `src/common/guards/roles.guard.ts`                  | `RolesGuard`                      | enforce `@Roles()` (pair with JwtAuthGuard) |
+| `src/common/filters/validation-exception.filter.ts` | `ValidationExceptionFilter`       | global class-validator errors               |
+| `src/common/types/jwt-payload.type.ts`              | `JwtPayload`                      | decoded JWT payload type                    |
+
+> ⚠️ Whenever a new file is added to `src/common/`, update this table immediately.
 
 ### DTO convention
 
