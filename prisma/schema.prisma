@@ -12,10 +12,29 @@ enum UserRole {
   CUSTOMER
   ADMIN
 }
+
+enum ProductCondition {
+  NEW
+  LIKE_NEW
+  GOOD
+  FAIR
+  POOR
+}
+
+enum ProductStatus {
+  DRAFT
+  PENDING
+  ACTIVE
+  REJECTED
+  SOLD
+  EXPIRED
+  BANNED
+}
+
 model User {
   // — Identity —
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
   password String?
 
   // — Profile —
@@ -25,11 +44,11 @@ model User {
   role     UserRole @default(CUSTOMER)
 
   // — Account status —
-  isActive  Boolean @default(false) @map("is_active")
-  isBanned  Boolean @default(false) @map("is_banned")
+  isActive Boolean @default(false) @map("is_active")
+  isBanned Boolean @default(false) @map("is_banned")
 
   // — Account activation (email OTP) —
-  codeOtp           String?   @db.VarChar(6) @map("code_otp")
+  codeOtp           String?   @map("code_otp") @db.VarChar(6)
   codeOtpExpiration DateTime? @map("code_otp_expiration")
 
   // — Password reset —
@@ -38,6 +57,9 @@ model User {
   // — Auth tokens —
   hashedRefreshToken String? @map("hashed_refresh_token")
 
+  // — Relations —
+  products Product[]
+
   // — Timestamps —
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -45,3 +67,79 @@ model User {
   @@map("users")
 }
 
+model Category {
+  // — Identity —
+  id   Int     @id @default(autoincrement())
+  name String
+  slug String  @unique
+  icon String?
+
+  // — Hierarchy —
+  parentId Int?       @map("parent_id")
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryTree")
+
+  // — Relations —
+  products Product[]
+
+  // — Timestamps —
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("categories")
+}
+
+model Product {
+  // — Identity —
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String  @db.Text
+  price       Decimal @db.Decimal(12, 0)
+  province    String
+  district    String
+  ward        String?
+
+  // — Condition & status —
+  condition      ProductCondition
+  status         ProductStatus    @default(DRAFT)
+  rejectedReason String?          @map("rejected_reason")
+
+  // — Quality Score (recommendation engine) —
+  qualityScore Float @default(0) @map("quality_score")
+
+  // — Monetization —
+  expiresAt      DateTime? @map("expires_at")
+  boostExpiresAt DateTime? @map("boost_expires_at")
+  renewCount     Int       @default(0) @map("renew_count")
+
+  // — Relations —
+  sellerId   Int            @map("seller_id")
+  seller     User           @relation(fields: [sellerId], references: [id])
+  categoryId Int            @map("category_id")
+  category   Category       @relation(fields: [categoryId], references: [id])
+  images     ProductImage[]
+
+  // — Timestamps —
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("products")
+}
+
+model ProductImage {
+  // — Identity —
+  id       Int    @id @default(autoincrement())
+  url      String
+  publicId String @map("public_id")
+  order    Int    @default(0)
+
+  // — Relations —
+  productId Int     @map("product_id")
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  // — Timestamps —
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("product_images")
+}

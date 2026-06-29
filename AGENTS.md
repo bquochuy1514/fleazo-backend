@@ -9,6 +9,37 @@ Fleazo is a student secondhand marketplace platform built for Vietnamese univers
 It includes a recommendation engine (session-based + content-based + quality scoring)
 and an AI-powered shopping chatbot as the core thesis novelty.
 
+## Product Vision
+
+Fleazo is being built with three goals simultaneously:
+
+1. **Real product** — ship to actual Vietnamese university students, production-ready
+2. **Revenue-generating** — monetize through listing services and membership tiers
+3. **Graduation thesis** — novelty argument centers on the recommendation engine + AI chatbot
+
+**Never cut features just because it's a thesis.** Always design and implement for production quality and completeness. The thesis deadline is a constraint on time, not on ambition.
+
+### Monetization model
+
+> ⚠️ Parameters below are tentative and subject to change. Do not hardcode these values — they should be configurable.
+
+**Membership tiers (subscription):** 3 tiers — Free / Basic / Premium
+
+- Free: 3 active listings at a time, listings expire after 30 days, max 3 images per listing
+- Basic: more active listings, longer expiry, more images per listing (exact limits TBD)
+- Premium: even higher limits (exact limits TBD)
+
+**Boost (one-time, per listing):** pay to push a listing to the top of the feed
+
+- Multiple duration options (e.g. 24h / 48h / 72h) at different price points (TBD)
+- Integrates with the recommendation engine — boosted listings get a temporary priority score bump, but quality score still applies (no pure pay-to-win)
+- Payment via PayOS
+
+**Extend listing (one-time, per listing):** pay to renew an expired listing without re-posting
+
+- Preserves listing history, saved-by-users, and chat context
+- Flat fee per renewal (TBD)
+
 ## Tech Stack
 
 - Runtime: Node.js with NestJS framework
@@ -19,6 +50,64 @@ and an AI-powered shopping chatbot as the core thesis novelty.
 - Realtime: WebSocket (chat between buyer and seller)
 - Email: Nodemailer with Gmail SMTP
 - File storage: Cloudinary (avatars, product images)
+- Address API: [provinces.open-api.vn](https://provinces.open-api.vn) — free, no API key required (Tỉnh/Quận/Phường)
+
+## Recommendation Engine
+
+The recommendation engine is the core thesis novelty. It combines three techniques:
+
+### 1. Session-based Recommendation
+
+Tracks user behavior within the current session (clicks, views) to suggest relevant listings immediately — no login or history required. Solves the cold-start problem for anonymous and new users.
+
+### 2. Content-based Filtering + Quality Score
+
+Finds listings similar to what the user has viewed or purchased, ranked by a Quality Score.
+
+**Quality Score formula (0–100):**
+
+| Signal                 | Max points | Formula                         |
+| ---------------------- | ---------- | ------------------------------- |
+| Image count            | 15         | `min(count / 5, 1) × 15`        |
+| Description length     | 10         | `min(length / 200, 1) × 10`     |
+| Condition filled       | 5          | Boolean                         |
+| Seller avg rating      | 15         | `(avgRating / 5) × 15`          |
+| Seller completion rate | 12         | `completionRate × 12`           |
+| Seller response rate   | 8          | `responseRate × 8`              |
+| Save count             | 10         | `min(saveCount / 20, 1) × 10`   |
+| View count             | 10         | `min(viewCount / 100, 1) × 10`  |
+| Freshness              | 15         | `max(1 - daysOld / 30, 0) × 15` |
+
+> ⚠️ Weights above are tentative. Do not hardcode — make them configurable.
+
+**Boost multiplier (monetization integration):**
+
+```
+effectiveScore = qualityScore × (isCurrentlyBoosted ? 1.5 : 1.0)
+```
+
+Boosted listings get a temporary score bump, but quality score still applies — no pure pay-to-win.
+
+**Quality Score is recalculated on:**
+
+- Seller updates listing (images, description)
+- Order completed or cancelled
+- Save/view count changes (batched, not per-event)
+- Nightly cron job (for freshness decay)
+
+Score is stored in `Product.qualityScore` and read at query time via `ORDER BY effectiveScore DESC`.
+
+### 3. LLM Chatbot with Function Calling
+
+User describes what they want in natural language → chatbot calls real functions into the recommendation engine → returns actual listings. Implemented in `fleazo-ai` (Python FastAPI, future service).
+
+Example:
+
+```
+User: "tao cần laptop dưới 5 triệu để code, pin trâu"
+→ search_listings({ category: "Laptop", maxPrice: 5000000, keywords: ["pin", "lập trình"] })
+→ returns top matching listings from DB
+```
 
 ## Project Structure
 
@@ -130,6 +219,19 @@ Rules:
 - Optional fields use `?`, never omit nullability
 - Use `@db.VarChar(n)` for fixed-length strings (e.g. phone, OTP)
 - Always end with a `// — Timestamps —` section containing `createdAt` and `updatedAt`
+
+## Product Schema Decisions
+
+- `Product.province` / `Product.district` / `Product.ward` — structured address fields (not free text) to support location-based filtering and recommendation. Frontend uses [provinces.open-api.vn](https://provinces.open-api.vn) component (3-level: Tỉnh → Quận → Phường). `ward` is optional.
+- `Product.price` — `Decimal(12, 0)`, no decimal places (VNĐ has no cents), avoids float rounding errors.
+- `Product.qualityScore` — `Float @default(0)`, updated by recommendation engine, never by user input.
+- `Product.boostExpiresAt` — nullable DateTime; `null` means not currently boosted. No separate boost table needed for MVP.
+- `Product.renewCount` — tracks number of times a listing has been renewed (analytics + potential future limits).
+- `Product.rejectedReason` — nullable String; filled by admin when setting status to `REJECTED`.
+- `ProductImage.publicId` — Cloudinary public_id stored explicitly to avoid URL parsing on delete.
+- `ProductImage.order` — Int for drag-and-drop reordering; `order=0` is the thumbnail shown in feed.
+- `ProductImage` uses `onDelete: Cascade` — deleting a product removes all its images automatically.
+- `Category` uses self-relation (`"CategoryTree"`) for 2-level hierarchy (parent → children). `parentId = null` means root category.
 
 ## Auth Flow
 
