@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsEnum,
   IsInt,
@@ -17,6 +18,7 @@ export class CreateProductDto {
   @IsNotEmpty({ message: 'Mô tả không được để trống' })
   description: string;
 
+  @Type(() => Number)
   @IsInt({ message: 'Giá phải là số nguyên' })
   @Min(1, { message: 'Giá phải lớn hơn 0' })
   @IsNotEmpty({ message: 'Giá không được để trống' })
@@ -38,6 +40,7 @@ export class CreateProductDto {
   @IsNotEmpty({ message: 'Tình trạng sản phẩm không được để trống' })
   condition: ProductCondition;
 
+  @Type(() => Number)
   @IsInt({ message: 'Danh mục phải là số nguyên' })
   @IsNotEmpty({ message: 'Danh mục không được để trống' })
   categoryId: number;
