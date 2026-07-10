@@ -6,6 +6,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { ProductsModule } from './modules/products/products.module';
 import jwtConfig from './config/jwt.config';
 import googleConfig from './config/google.config';
 import mailConfig from './config/mail.config';
@@ -22,6 +23,7 @@ import cloudinaryConfig from './config/cloudinary.config';
       load: [jwtConfig, googleConfig, mailConfig, cloudinaryConfig],
     }),
     CategoriesModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

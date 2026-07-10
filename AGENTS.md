@@ -224,14 +224,33 @@ Rules:
 
 - `Product.province` / `Product.district` / `Product.ward` — structured address fields (not free text) to support location-based filtering and recommendation. Frontend uses [provinces.open-api.vn](https://provinces.open-api.vn) component (3-level: Tỉnh → Quận → Phường). `ward` is optional.
 - `Product.price` — `Decimal(12, 0)`, no decimal places (VNĐ has no cents), avoids float rounding errors.
-- `Product.qualityScore` — `Float @default(0)`, updated by recommendation engine, never by user input.
-- `Product.boostExpiresAt` — nullable DateTime; `null` means not currently boosted. No separate boost table needed for MVP.
-- `Product.renewCount` — tracks number of times a listing has been renewed (analytics + potential future limits).
 - `Product.rejectedReason` — nullable String; filled by admin when setting status to `REJECTED`.
 - `ProductImage.publicId` — Cloudinary public_id stored explicitly to avoid URL parsing on delete.
 - `ProductImage.order` — Int for drag-and-drop reordering; `order=0` is the thumbnail shown in feed.
 - `ProductImage` uses `onDelete: Cascade` — deleting a product removes all its images automatically.
 - `Category` uses self-relation (`"CategoryTree"`) for 2-level hierarchy (parent → children). `parentId = null` means root category.
+
+### Monetization fields
+
+- `Product.expiresAt` — nullable DateTime; only set once a listing reaches `ACTIVE` (based on seller's membership tier duration). Nightly cron flips expired `ACTIVE` listings to `EXPIRED`.
+- `Product.boostExpiresAt` — nullable DateTime; `null` means not currently boosted. No separate boost table needed for MVP.
+- `Product.renewCount` was considered and dropped — no rule currently consumes it. If a renew limit or a quality-score penalty for repeatedly-renewed listings is added later, reintroduce it alongside that rule (don't add derived counters without a consumer).
+
+### Quality Score & recommendation-engine fields
+
+- `Product.qualityScore` — `Float @default(0)`, updated by recommendation engine, never by user input.
+- `Product.viewCount` / `Product.saveCount` — cached aggregate counters, inputs to the Quality Score formula. Not the source of truth for behavior data — see `ProductView` / `SavedProduct` below.
+- `SavedProduct` — join table (`@@id([userId, productId])`) for the "save/favorite" button. Real-time toggle (insert on save, delete on unsave); no `updatedAt` since a row only ever exists or doesn't. `Product.saveCount` is a cache = `COUNT(*)` over this table.
+- `ProductView` — raw view-event log (`sessionId`, nullable `userId` for anonymous views, `viewedAt`). Feeds two things: (1) `Product.viewCount` via a batch job, not per-request increments, to prevent easy gaming (self-view spam, refresh-spam) — dedupe by `sessionId` + `productId` within a short window, and exclude views where `userId == product.sellerId`; (2) raw behavioral data for session-based recommendation (cold-start).
+- Seller-side signals (`avgRating`, `completionRate`, `responseRate` in the Quality Score formula) live on `User`, deferred — see below.
+
+### User: deferred seller-trust fields (placeholder, not yet wired up)
+
+- `User.avgRating`, `User.completionRate`, `User.responseRate` — added to the schema as placeholders (`Float @default(0)`) so the Quality Score formula's field references stay valid, but **no logic writes to them yet**. Each depends on a module that doesn't exist yet:
+  - `avgRating` — `AVG(rating)` from `Review` (Reviews module)
+  - `completionRate` — completed vs. cancelled ratio from `Order` (Orders module)
+  - `responseRate` — seller reply-within-window ratio from `Chat` (Chat module)
+- Wire up the real update logic when Orders/Reviews/Chat are implemented. Until then these stay at `0` for every seller — do not use them for ranking/UI yet.
 
 ## Auth Flow
 
@@ -311,6 +330,16 @@ Always check for existing utilities before writing new code:
 @IsNotEmpty({ message: 'Email không được để trống' })
 email: string;
 ```
+
+- **Decorator order matters** — class-validator evaluates decorators bottom-to-top (closest to the property runs first). Place the most important / most fundamental check closest to the property, e.g. existence checks (`@IsNotEmpty`) should be right above the field; type/format checks (`@IsString`, `@IsEmail`, `@IsEnum`) go above that:
+
+```typescript
+@IsString({ message: 'Tiêu đề phải là chuỗi ký tự' })
+@IsNotEmpty({ message: 'Tiêu đề không được để trống' })
+title: string;
+```
+
+This runs `@IsNotEmpty` first, then `@IsString`.
 
 ### Service function convention
 
