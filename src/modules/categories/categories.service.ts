@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
 import { UploadService } from '../upload/upload.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -36,13 +40,18 @@ export class CategoriesService {
   }
 
   async create(dto: CreateCategoryDto) {
-    // 1. If parentId provided, verify parent exists
+    // 1. If parentId provided, verify parent exists and is a root category
     if (dto.parentId) {
       const parent = await this.prisma.category.findUnique({
         where: { id: dto.parentId },
       });
       if (!parent) {
         throw new NotFoundException('Danh mục cha không tồn tại');
+      }
+      if (parent.parentId !== null) {
+        throw new BadRequestException(
+          'Chỉ hỗ trợ tối đa 2 cấp danh mục, không thể chọn danh mục con làm danh mục cha',
+        );
       }
     }
 
@@ -52,15 +61,34 @@ export class CategoriesService {
 
   async update(id: number, dto: UpdateCategoryDto) {
     // 1. Verify category exists
-    await this.findOne(id);
+    const category = await this.findOne(id);
 
-    // 2. If new parentId provided, verify parent exists
+    // 2. If new parentId provided, validate the 2-level constraint
     if (dto.parentId) {
+      // 2a. Cannot set itself as its own parent
+      if (dto.parentId === id) {
+        throw new BadRequestException('Danh mục không thể là cha của chính nó');
+      }
+
+      // 2b. Parent must exist and must be a root category
       const parent = await this.prisma.category.findUnique({
         where: { id: dto.parentId },
       });
       if (!parent) {
         throw new NotFoundException('Danh mục cha không tồn tại');
+      }
+      if (parent.parentId !== null) {
+        throw new BadRequestException(
+          'Chỉ hỗ trợ tối đa 2 cấp danh mục, không thể chọn danh mục con làm danh mục cha',
+        );
+      }
+
+      // 2c. Category being moved must not already have children,
+      // otherwise its children would drop to a 3rd level
+      if (category.children.length > 0) {
+        throw new BadRequestException(
+          'Không thể gán danh mục cha cho danh mục đang có danh mục con',
+        );
       }
     }
 
