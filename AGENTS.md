@@ -40,6 +40,22 @@ Fleazo is being built with three goals simultaneously:
 - Preserves listing history, saved-by-users, and chat context
 - Flat fee per renewal (TBD)
 
+## Money Flow — what PayOS does and does NOT cover
+
+**PayOS handles (money → Fleazo):** Membership subscription, Boost, Extend. These are the only real payments in the system.
+
+**PayOS does NOT handle product sales (buyer ↔ seller).** Money for a product transaction moves directly between buyer and seller outside the app (cash on meetup, direct bank transfer) — Fleazo never touches it. Reasons, in order of importance:
+
+1. **Legal** — holding buyer money and later releasing it to a seller is an intermediary-payment activity that requires an NHNN license in Vietnam. Fleazo doesn't have one and shouldn't build a flow that implies it does.
+2. **PayOS is a single-merchant collector**, not a marketplace payout system — it has no built-in mechanism to split/hold funds per individual seller.
+3. **Behavioral fit** — student C2C trades are mostly in-person meetups on campus; buyers want to inspect items before paying, so forcing payment through the app before meetup adds friction and pushes users off-platform entirely.
+
+**Consequence for the schema: there is no `Order` model.** A 2-way buyer/seller confirmation ("mark as sold" + "confirm received") was considered and dropped — in a C2C flow with no money custody, the app can never actually verify a transaction happened, so a 2-way confirmation only adds complexity without adding trust (both sides could confirm a trade that never happened, or a real trade could go unconfirmed). Instead:
+
+- Seller marks a listing `SOLD` directly on `Product` (single action, already motivated — see `completionRate` below and freeing up their listing slot).
+- `Review` is gated by an existing `Chat` thread between buyer and seller on that listing, not by an `Order` record.
+- `Product.status` (`SOLD` vs `EXPIRED`) is the only signal the system trusts for "did this seller actually sell things."
+
 ## Tech Stack
 
 - Runtime: Node.js with NestJS framework
@@ -91,7 +107,7 @@ Boosted listings get a temporary score bump, but quality score still applies —
 **Quality Score is recalculated on:**
 
 - Seller updates listing (images, description)
-- Order completed or cancelled
+- `Product.status` changes to `SOLD` or `EXPIRED` (feeds seller `completionRate` — see Money Flow)
 - Save/view count changes (batched, not per-event)
 - Nightly cron job (for freshness decay)
 
@@ -124,9 +140,9 @@ src/
 │   ├── users/            # User profile, avatar upload
 │   ├── products/         # CRUD listings, image upload, quality scoring
 │   ├── categories/       # Product categories
-│   ├── orders/           # Transactions, PayOS webhook
+│   ├── payments/         # PayOS transactions for Membership / Boost / Extend (NOT product sales — see Money Flow)
 │   ├── chat/             # Realtime WebSocket chat
-│   ├── reviews/          # Rating and review after transaction
+│   ├── reviews/          # Rating and review, gated by an existing Chat thread on the listing
 │   ├── recommendation/   # Session-based + content-based recommendation engine
 │   └── chatbot/          # LLM-powered shopping assistant (function calling)
 ├── common/
@@ -212,8 +228,8 @@ model User {
 
 Rules:
 
-- Model name: `User`, `Product`, `Order` (PascalCase singular)
-- Table name: `users`, `products`, `orders` (snake_case plural via `@@map`)
+- Model name: `User`, `Product`, `Review` (PascalCase singular)
+- Table name: `users`, `products`, `reviews` (snake_case plural via `@@map`)
 - Field: `fullName`, `isActive`, `codeOtp` (camelCase)
 - Column: `full_name`, `is_active`, `code_otp` (snake_case via `@map`)
 - Optional fields use `?`, never omit nullability
@@ -246,11 +262,12 @@ Rules:
 
 ### User: deferred seller-trust fields (placeholder, not yet wired up)
 
-- `User.avgRating`, `User.completionRate`, `User.responseRate` — added to the schema as placeholders (`Float @default(0)`) so the Quality Score formula's field references stay valid, but **no logic writes to them yet**. Each depends on a module that doesn't exist yet:
+- `User.avgRating`, `User.completionRate`, `User.responseRate` — added to the schema as placeholders (`Float @default(0)`) so the Quality Score formula's field references stay valid, but **no logic writes to them yet**. Each depends on a module/field that doesn't exist yet:
   - `avgRating` — `AVG(rating)` from `Review` (Reviews module)
-  - `completionRate` — completed vs. cancelled ratio from `Order` (Orders module)
+  - `completionRate` — `soldCount / (soldCount + expiredCount)`, counted directly off `Product.status` for that seller (only listings that reached `SOLD` or `EXPIRED`; `DRAFT`/`PENDING`/`ACTIVE` don't count — their lifecycle isn't finished). No `Order` model involved — see Money Flow. Needs `Product.soldAt` added to schema (nullable DateTime, set when status → `SOLD`) to distinguish "actively sold" from "just expired".
   - `responseRate` — seller reply-within-window ratio from `Chat` (Chat module)
-- Wire up the real update logic when Orders/Reviews/Chat are implemented. Until then these stay at `0` for every seller — do not use them for ranking/UI yet.
+- This is self-reported by the seller (they choose when to mark `SOLD`) and can be gamed downward (lazy seller lets listings expire instead of marking sold) but not meaningfully upward — safer failure mode than a 2-way confirmation.
+- Wire up the real update logic when Reviews/Chat are implemented and `Product.soldAt` exists. Until then these stay at `0` for every seller — do not use them for ranking/UI yet.
 
 ## Auth Flow
 
@@ -305,18 +322,19 @@ JwtModule.registerAsync({
 
 Always check for existing utilities before writing new code:
 
-| Path                                                | Export                            | Use when                                    |
-| --------------------------------------------------- | --------------------------------- | ------------------------------------------- |
-| `src/common/utils/hash.util.ts`                     | `hashPassword`, `comparePassword` | argon2 hash/verify                          |
-| `src/common/decorators/match.decorator.ts`          | `@Match(field)`                   | cross-field validation                      |
-| `src/common/decorators/current-user.decorator.ts`   | `@CurrentUser()`                  | get JWT payload in controller               |
-| `src/common/decorators/roles.decorator.ts`          | `@Roles(...roles)`, `ROLES_KEY`   | restrict endpoint by role                   |
-| `src/common/guards/jwt-auth.guard.ts`               | `JwtAuthGuard`                    | require valid access token                  |
-| `src/common/guards/refresh-auth.guard.ts`           | `RefreshAuthGuard`                | refresh token endpoint                      |
-| `src/common/guards/google-auth.guard.ts`            | `GoogleAuthGuard`                 | Google OAuth callback                       |
-| `src/common/guards/roles.guard.ts`                  | `RolesGuard`                      | enforce `@Roles()` (pair with JwtAuthGuard) |
-| `src/common/filters/validation-exception.filter.ts` | `ValidationExceptionFilter`       | global class-validator errors               |
-| `src/common/types/jwt-payload.type.ts`              | `JwtPayload`                      | decoded JWT payload type                    |
+| Path                                                | Export                            | Use when                                        |
+| --------------------------------------------------- | --------------------------------- | ----------------------------------------------- |
+| `src/common/utils/hash.util.ts`                     | `hashPassword`, `comparePassword` | argon2 hash/verify                              |
+| `src/common/utils/parse-json-array.util.ts`         | `parseJsonArray(raw, field)`      | parse JSON-array field from multipart form-data |
+| `src/common/decorators/match.decorator.ts`          | `@Match(field)`                   | cross-field validation                          |
+| `src/common/decorators/current-user.decorator.ts`   | `@CurrentUser()`                  | get JWT payload in controller                   |
+| `src/common/decorators/roles.decorator.ts`          | `@Roles(...roles)`, `ROLES_KEY`   | restrict endpoint by role                       |
+| `src/common/guards/jwt-auth.guard.ts`               | `JwtAuthGuard`                    | require valid access token                      |
+| `src/common/guards/refresh-auth.guard.ts`           | `RefreshAuthGuard`                | refresh token endpoint                          |
+| `src/common/guards/google-auth.guard.ts`            | `GoogleAuthGuard`                 | Google OAuth callback                           |
+| `src/common/guards/roles.guard.ts`                  | `RolesGuard`                      | enforce `@Roles()` (pair with JwtAuthGuard)     |
+| `src/common/filters/validation-exception.filter.ts` | `ValidationExceptionFilter`       | global class-validator errors                   |
+| `src/common/types/jwt-payload.type.ts`              | `JwtPayload`                      | decoded JWT payload type                        |
 
 > ⚠️ Whenever a new file is added to `src/common/`, update this table immediately.
 
@@ -375,7 +393,23 @@ async handleRegister(registerDto: RegisterDto) {
 - Core setup: ✅ Done
 - Auth module: ✅ Done
 - Users module: ✅ Done — get profile, update profile, update avatar, change password, get public profile
-- Next: Products module
+- Categories module: ✅ Done — CRUD, icon upload, 2-level hierarchy enforcement (`validateLeafCategory` used by Products for assignment)
+- Products module: ✅ Core CRUD done — create (PENDING, requires ≥1 image), create draft (DRAFT, image optional), update (combined text + image add/delete/reorder, atomic), list with filters + pagination, detail (ACTIVE only), admin approve/reject, save/unsave
+- Next: pick up one of the deferred items below, or start a new module (Reviews, Membership/Payments, Chat)
+
+### Deferred work — blocked on other modules not built yet
+
+Known gaps, left unimplemented because the blocking module doesn't exist yet. Schema fields may already exist with no service writing to them — expected until the module lands.
+
+- `ProductView` logging + `viewCount` cron aggregation — blocked on: recommendation engine work
+- `Product.qualityScore` calculation — blocked on: recommendation engine work
+- `User.avgRating` — blocked on: Reviews module
+- `User.completionRate` — blocked on: adding `Product.soldAt` to schema (no module dependency — see Money Flow, computed directly from `Product.status`)
+- `User.responseRate` — blocked on: Chat module
+- Per-tier image limit (`MAX_IMAGES_PER_UPLOAD` is a temporary hard cap of 10) — blocked on: Membership module
+- Per-tier `expiresAt` duration on approve (`DEFAULT_LISTING_DURATION_DAYS` is a flat 30-day placeholder) — blocked on: Membership module
+- Re-review flow when editing a field on an `ACTIVE` listing — not a missing module, just an undecided rule (which fields should revert status to `PENDING`)
+- Seller viewing their own `DRAFT`/`PENDING` listing detail — not built; `GET /products/:id` only returns `ACTIVE`
 
 ## Agent Behavior
 
@@ -406,7 +440,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 - `style` — formatting, lint (no logic change)
 
 **Scope** — related module name (optional but encouraged):
-`auth`, `users`, `upload`, `mail`, `products`, `orders`, `chat`, `recommendation`, `chatbot`, `prisma`, `config`
+`auth`, `users`, `upload`, `mail`, `products`, `payments`, `chat`, `reviews`, `recommendation`, `chatbot`, `prisma`, `config`
 
 **Examples:**
 
