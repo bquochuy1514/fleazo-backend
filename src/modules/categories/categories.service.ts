@@ -39,6 +39,20 @@ export class CategoriesService {
     return category;
   }
 
+  async validateLeafCategory(id: number) {
+    // 1. Reuse findOne — checks existence, throws 404 if not found
+    const category = await this.findOne(id);
+
+    // 2. Only leaf categories (parentId != null) can be assigned to a product
+    if (category.parentId === null) {
+      throw new BadRequestException(
+        'Vui lòng chọn danh mục con cụ thể, không thể đăng tin ở danh mục cha',
+      );
+    }
+
+    return category;
+  }
+
   async create(dto: CreateCategoryDto) {
     // 1. If parentId provided, verify parent exists and is a root category
     if (dto.parentId) {
@@ -126,9 +140,29 @@ export class CategoriesService {
 
   async remove(id: number) {
     // 1. Verify category exists
-    await this.findOne(id);
+    const category = await this.findOne(id);
 
-    // 2. Delete category
+    // 2. Cannot delete a category that still has children — force deleting
+    //    the children first to avoid silently orphaning them
+    if (category.children.length > 0) {
+      throw new BadRequestException(
+        'Không thể xoá danh mục đang có danh mục con, vui lòng xoá danh mục con trước',
+      );
+    }
+
+    // 3. Cannot delete a category that products are still assigned to —
+    //    Product.categoryId has no onDelete cascade/set-null, so this would
+    //    otherwise surface as a raw FK constraint error
+    const productCount = await this.prisma.product.count({
+      where: { categoryId: id },
+    });
+    if (productCount > 0) {
+      throw new BadRequestException(
+        'Không thể xoá danh mục đang có sản phẩm, vui lòng chuyển sản phẩm sang danh mục khác trước',
+      );
+    }
+
+    // 4. Delete category
     return this.prisma.category.delete({ where: { id } });
   }
 }

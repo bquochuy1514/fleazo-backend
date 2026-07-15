@@ -1,38 +1,30 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
 import { UploadService } from '../upload/upload.service';
+import { CategoriesService } from '../categories/categories.service';
+import { parseJsonArray } from '../../common/utils/parse-json-array.util';
 import { CreateProductDto } from './dto/create-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { Prisma, ProductStatus } from '../../generated/prisma/client';
+
+type ImageOrderItem =
+  | { type: 'existing'; id: number }
+  | { type: 'new'; fileIndex: number };
 
 @Injectable()
 export class ProductsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly uploadService: UploadService,
+    private readonly categoriesService: CategoriesService,
   ) {}
-
-  private async validateCategoryForProduct(categoryId: number) {
-    // 1. Check category exists
-    const category = await this.prisma.category.findUnique({
-      where: { id: categoryId },
-    });
-
-    if (!category) {
-      throw new NotFoundException('Danh mục không tồn tại');
-    }
-
-    // 2. Only leaf categories (parentId != null) can be assigned to a product
-    if (category.parentId === null) {
-      throw new BadRequestException(
-        'Vui lòng chọn danh mục con cụ thể, không thể đăng tin ở danh mục cha',
-      );
-    }
-  }
 
   private async uploadProductImages(files: Express.Multer.File[]) {
     // 1. Upload images one by one, tracking what succeeded so far
@@ -57,13 +49,92 @@ export class ProductsService {
     }
   }
 
+  private resolveImageChanges(
+    currentImages: { id: number; publicId: string; order: number }[],
+    deleteImageIdsRaw: string | undefined,
+    imagesOrderRaw: string | undefined,
+    newFilesCount: number,
+  ) {
+    // 1. Parse and validate deleteImageIds all belong to this product
+    const deleteImageIds = parseJsonArray<number>(
+      deleteImageIdsRaw,
+      'deleteImageIds',
+    );
+    const currentImageIds = new Set(currentImages.map((img) => img.id));
+    for (const id of deleteImageIds) {
+      if (!currentImageIds.has(id)) {
+        throw new BadRequestException(
+          `Ảnh id=${id} không thuộc sản phẩm này hoặc không tồn tại`,
+        );
+      }
+    }
+
+    const remainingImages = currentImages.filter(
+      (img) => !deleteImageIds.includes(img.id),
+    );
+
+    // 2. Parse and validate imagesOrder — if provided, it must be a complete,
+    //    exact mapping of every remaining existing image + every new file
+    const imagesOrder = parseJsonArray<ImageOrderItem>(
+      imagesOrderRaw,
+      'imagesOrder',
+    );
+
+    if (imagesOrder.length > 0) {
+      const remainingIds = new Set(remainingImages.map((img) => img.id));
+      const seenExistingIds = new Set<number>();
+      const seenFileIndexes = new Set<number>();
+
+      for (const item of imagesOrder) {
+        if (item.type === 'existing') {
+          if (item.id === undefined || !remainingIds.has(item.id)) {
+            throw new BadRequestException(
+              'imagesOrder chứa ảnh không hợp lệ hoặc đã bị xoá',
+            );
+          }
+          if (seenExistingIds.has(item.id)) {
+            throw new BadRequestException('imagesOrder chứa ảnh trùng lặp');
+          }
+          seenExistingIds.add(item.id);
+        } else if (item.type === 'new') {
+          if (
+            item.fileIndex === undefined ||
+            item.fileIndex < 0 ||
+            item.fileIndex >= newFilesCount
+          ) {
+            throw new BadRequestException(
+              'imagesOrder tham chiếu ảnh mới không hợp lệ',
+            );
+          }
+          if (seenFileIndexes.has(item.fileIndex)) {
+            throw new BadRequestException('imagesOrder chứa ảnh mới trùng lặp');
+          }
+          seenFileIndexes.add(item.fileIndex);
+        } else {
+          throw new BadRequestException('imagesOrder có type không hợp lệ');
+        }
+      }
+
+      if (
+        seenExistingIds.size !== remainingImages.length ||
+        seenFileIndexes.size !== newFilesCount
+      ) {
+        throw new BadRequestException(
+          'imagesOrder phải liệt kê đầy đủ tất cả ảnh cuối cùng',
+        );
+      }
+    }
+
+    return { deleteImageIds, remainingImages, imagesOrder };
+  }
+
   async createProduct(
     sellerId: number,
     dto: CreateProductDto,
     files: Express.Multer.File[],
   ) {
     // 1. Validate category exists and is a leaf category
-    await this.validateCategoryForProduct(dto.categoryId);
+    await this.categoriesService.validateLeafCategory(dto.categoryId);
 
     // 2. Submitting for review requires at least 1 image
     if (!files || files.length === 0) {
@@ -97,7 +168,7 @@ export class ProductsService {
     files: Express.Multer.File[],
   ) {
     // 1. Validate category exists and is a leaf category
-    await this.validateCategoryForProduct(dto.categoryId);
+    await this.categoriesService.validateLeafCategory(dto.categoryId);
 
     // 2. Images are optional for drafts — upload whatever was provided (can be none)
     const uploadedImages =
@@ -119,6 +190,115 @@ export class ProductsService {
       },
       include: { category: true, images: true },
     });
+  }
+
+  async updateProduct(
+    sellerId: number,
+    productId: number,
+    dto: UpdateProductDto,
+    files: Express.Multer.File[],
+  ) {
+    // 1. Fetch product with images, verify existence and ownership
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+      include: { images: true },
+    });
+
+    if (!product) {
+      throw new NotFoundException('Sản phẩm không tồn tại');
+    }
+    if (product.sellerId !== sellerId) {
+      throw new ForbiddenException('Bạn không có quyền chỉnh sửa sản phẩm này');
+    }
+
+    // 2. Validate category if it's being changed
+    if (dto.categoryId !== undefined) {
+      await this.categoriesService.validateLeafCategory(dto.categoryId);
+    }
+
+    // 3. Resolve delete/order instructions against the current image set
+    const newFilesCount = files?.length ?? 0;
+    const { deleteImageIds, remainingImages, imagesOrder } =
+      this.resolveImageChanges(
+        product.images,
+        dto.deleteImageIds,
+        dto.imagesOrder,
+        newFilesCount,
+      );
+
+    // 4. Enforce at least 1 image in the final result, unless still a draft
+    const finalImageCount = remainingImages.length + newFilesCount;
+    if (product.status !== ProductStatus.DRAFT && finalImageCount === 0) {
+      throw new BadRequestException(
+        'Sản phẩm phải có ít nhất 1 ảnh, không thể xoá hết ảnh',
+      );
+    }
+
+    // 5. Upload new images to Cloudinary, rolling back on partial failure
+    const uploadedImages =
+      newFilesCount > 0 ? await this.uploadProductImages(files) : [];
+
+    // 6. Final order — explicit imagesOrder if given, otherwise: kept images in
+    //    their current order, followed by new images in upload order
+    const finalOrder: ImageOrderItem[] =
+      imagesOrder.length > 0
+        ? imagesOrder
+        : [
+            ...remainingImages
+              .slice()
+              .sort((a, b) => a.order - b.order)
+              .map((img) => ({ type: 'existing' as const, id: img.id })),
+            ...uploadedImages.map((_, fileIndex) => ({
+              type: 'new' as const,
+              fileIndex,
+            })),
+          ];
+
+    // 7. Strip image-instruction fields out of dto before using it as Product data
+    const { deleteImageIds: _di, imagesOrder: _io, ...productFields } = dto;
+
+    // 8. Apply text update + image delete/reorder/create atomically
+    const updated = await this.prisma.$transaction(async (tx) => {
+      if (deleteImageIds.length > 0) {
+        await tx.productImage.deleteMany({
+          where: { id: { in: deleteImageIds } },
+        });
+      }
+
+      await Promise.all(
+        finalOrder.map((item, order) =>
+          item.type === 'existing'
+            ? tx.productImage.update({
+                where: { id: item.id },
+                data: { order },
+              })
+            : tx.productImage.create({
+                data: {
+                  productId,
+                  url: uploadedImages[item.fileIndex].secure_url,
+                  publicId: uploadedImages[item.fileIndex].public_id,
+                  order,
+                },
+              }),
+        ),
+      );
+
+      return tx.product.update({
+        where: { id: productId },
+        data: productFields,
+        include: { category: true, images: { orderBy: { order: 'asc' } } },
+      });
+    });
+
+    // 9. Clean up deleted images from Cloudinary only after the DB transaction commits
+    const deletedImages = product.images.filter((img) =>
+      deleteImageIds.includes(img.id),
+    );
+    await Promise.all(
+      deletedImages.map((img) => this.uploadService.deleteImage(img.publicId)),
+    );
+
+    return updated;
   }
 
   async findAll(query: QueryProductDto) {
