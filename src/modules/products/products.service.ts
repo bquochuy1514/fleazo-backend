@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import dayjs from 'dayjs';
 import { PrismaService } from '../../prisma.service';
 import { UploadService } from '../upload/upload.service';
 import { CategoriesService } from '../categories/categories.service';
@@ -13,6 +15,9 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Prisma, ProductStatus } from '../../generated/prisma/client';
+
+// Placeholder listing duration until the Membership tier module sets this per-tier
+const DEFAULT_LISTING_DURATION_DAYS = 30;
 
 type ImageOrderItem =
   | { type: 'existing'; id: number }
@@ -299,6 +304,126 @@ export class ProductsService {
     );
 
     return updated;
+  }
+
+  async findOne(id: number) {
+    // 1. Fetch product with category, images (ordered), and public seller info
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+      include: {
+        category: true,
+        images: { orderBy: { order: 'asc' } },
+        seller: { select: { id: true, fullName: true, avatar: true } },
+      },
+    });
+
+    // 2. Public detail page only ever shows ACTIVE products — same rule as findAll
+    if (!product || product.status !== ProductStatus.ACTIVE) {
+      throw new NotFoundException('Sản phẩm không tồn tại');
+    }
+
+    return product;
+  }
+
+  async approveProduct(id: number) {
+    // 1. Verify product exists
+    const product = await this.prisma.product.findUnique({ where: { id } });
+    if (!product) {
+      throw new NotFoundException('Sản phẩm không tồn tại');
+    }
+
+    // 2. Can only approve a product that's still awaiting review
+    if (product.status !== ProductStatus.PENDING) {
+      throw new BadRequestException('Chỉ có thể duyệt sản phẩm đang chờ duyệt');
+    }
+
+    // 3. Activate the listing, starting the listing duration countdown
+    return this.prisma.product.update({
+      where: { id },
+      data: {
+        status: ProductStatus.ACTIVE,
+        expiresAt: dayjs().add(DEFAULT_LISTING_DURATION_DAYS, 'day').toDate(),
+        rejectedReason: null,
+      },
+      include: { category: true, images: true },
+    });
+  }
+
+  async rejectProduct(id: number, reason: string) {
+    // 1. Verify product exists
+    const product = await this.prisma.product.findUnique({ where: { id } });
+    if (!product) {
+      throw new NotFoundException('Sản phẩm không tồn tại');
+    }
+
+    // 2. Can only reject a product that's still awaiting review
+    if (product.status !== ProductStatus.PENDING) {
+      throw new BadRequestException(
+        'Chỉ có thể từ chối sản phẩm đang chờ duyệt',
+      );
+    }
+
+    // 3. Reject with a reason so the seller knows what to fix
+    return this.prisma.product.update({
+      where: { id },
+      data: {
+        status: ProductStatus.REJECTED,
+        rejectedReason: reason,
+      },
+      include: { category: true, images: true },
+    });
+  }
+
+  async saveProduct(userId: number, productId: number) {
+    // 1. Only ACTIVE products can be saved
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+    });
+    if (!product || product.status !== ProductStatus.ACTIVE) {
+      throw new NotFoundException('Sản phẩm không tồn tại');
+    }
+
+    // 2. Prevent duplicate saves
+    const existing = await this.prisma.savedProduct.findUnique({
+      where: { userId_productId: { userId, productId } },
+    });
+    if (existing) {
+      throw new ConflictException('Sản phẩm đã được lưu trước đó');
+    }
+
+    // 3. Save and keep the saveCount cache in sync, atomically
+    await this.prisma.$transaction([
+      this.prisma.savedProduct.create({ data: { userId, productId } }),
+      this.prisma.product.update({
+        where: { id: productId },
+        data: { saveCount: { increment: 1 } },
+      }),
+    ]);
+
+    return { saved: true };
+  }
+
+  async unsaveProduct(userId: number, productId: number) {
+    // 1. Verify the save actually exists
+    const existing = await this.prisma.savedProduct.findUnique({
+      where: { userId_productId: { userId, productId } },
+    });
+    if (!existing) {
+      throw new NotFoundException('Bạn chưa lưu sản phẩm này');
+    }
+
+    // 2. Unsave and keep the saveCount cache in sync, atomically
+    await this.prisma.$transaction([
+      this.prisma.savedProduct.delete({
+        where: { userId_productId: { userId, productId } },
+      }),
+      this.prisma.product.update({
+        where: { id: productId },
+        data: { saveCount: { decrement: 1 } },
+      }),
+    ]);
+
+    return { saved: false };
   }
 
   async findAll(query: QueryProductDto) {

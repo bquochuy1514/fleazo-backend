@@ -54,7 +54,9 @@ export const ModelName = {
   User: 'User',
   Category: 'Category',
   Product: 'Product',
-  ProductImage: 'ProductImage'
+  ProductImage: 'ProductImage',
+  SavedProduct: 'SavedProduct',
+  ProductView: 'ProductView'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -87,6 +89,9 @@ export const UserScalarFieldEnum = {
   codeOtpExpiration: 'codeOtpExpiration',
   isOtpVerified: 'isOtpVerified',
   hashedRefreshToken: 'hashedRefreshToken',
+  avgRating: 'avgRating',
+  completionRate: 'completionRate',
+  responseRate: 'responseRate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -118,10 +123,11 @@ export const ProductScalarFieldEnum = {
   condition: 'condition',
   status: 'status',
   rejectedReason: 'rejectedReason',
-  qualityScore: 'qualityScore',
   expiresAt: 'expiresAt',
   boostExpiresAt: 'boostExpiresAt',
-  renewCount: 'renewCount',
+  qualityScore: 'qualityScore',
+  viewCount: 'viewCount',
+  saveCount: 'saveCount',
   sellerId: 'sellerId',
   categoryId: 'categoryId',
   createdAt: 'createdAt',
@@ -142,6 +148,26 @@ export const ProductImageScalarFieldEnum = {
 } as const
 
 export type ProductImageScalarFieldEnum = (typeof ProductImageScalarFieldEnum)[keyof typeof ProductImageScalarFieldEnum]
+
+
+export const SavedProductScalarFieldEnum = {
+  userId: 'userId',
+  productId: 'productId',
+  createdAt: 'createdAt'
+} as const
+
+export type SavedProductScalarFieldEnum = (typeof SavedProductScalarFieldEnum)[keyof typeof SavedProductScalarFieldEnum]
+
+
+export const ProductViewScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  productId: 'productId',
+  userId: 'userId',
+  viewedAt: 'viewedAt'
+} as const
+
+export type ProductViewScalarFieldEnum = (typeof ProductViewScalarFieldEnum)[keyof typeof ProductViewScalarFieldEnum]
 
 
 export const SortOrder = {

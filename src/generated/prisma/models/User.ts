@@ -28,10 +28,16 @@ export type AggregateUser = {
 
 export type UserAvgAggregateOutputType = {
   id: number | null
+  avgRating: number | null
+  completionRate: number | null
+  responseRate: number | null
 }
 
 export type UserSumAggregateOutputType = {
   id: number | null
+  avgRating: number | null
+  completionRate: number | null
+  responseRate: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -48,6 +54,9 @@ export type UserMinAggregateOutputType = {
   codeOtpExpiration: Date | null
   isOtpVerified: boolean | null
   hashedRefreshToken: string | null
+  avgRating: number | null
+  completionRate: number | null
+  responseRate: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -66,6 +75,9 @@ export type UserMaxAggregateOutputType = {
   codeOtpExpiration: Date | null
   isOtpVerified: boolean | null
   hashedRefreshToken: string | null
+  avgRating: number | null
+  completionRate: number | null
+  responseRate: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -84,6 +96,9 @@ export type UserCountAggregateOutputType = {
   codeOtpExpiration: number
   isOtpVerified: number
   hashedRefreshToken: number
+  avgRating: number
+  completionRate: number
+  responseRate: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -92,10 +107,16 @@ export type UserCountAggregateOutputType = {
 
 export type UserAvgAggregateInputType = {
   id?: true
+  avgRating?: true
+  completionRate?: true
+  responseRate?: true
 }
 
 export type UserSumAggregateInputType = {
   id?: true
+  avgRating?: true
+  completionRate?: true
+  responseRate?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -112,6 +133,9 @@ export type UserMinAggregateInputType = {
   codeOtpExpiration?: true
   isOtpVerified?: true
   hashedRefreshToken?: true
+  avgRating?: true
+  completionRate?: true
+  responseRate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -130,6 +154,9 @@ export type UserMaxAggregateInputType = {
   codeOtpExpiration?: true
   isOtpVerified?: true
   hashedRefreshToken?: true
+  avgRating?: true
+  completionRate?: true
+  responseRate?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -148,6 +175,9 @@ export type UserCountAggregateInputType = {
   codeOtpExpiration?: true
   isOtpVerified?: true
   hashedRefreshToken?: true
+  avgRating?: true
+  completionRate?: true
+  responseRate?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -253,6 +283,9 @@ export type UserGroupByOutputType = {
   codeOtpExpiration: Date | null
   isOtpVerified: boolean
   hashedRefreshToken: string | null
+  avgRating: number
+  completionRate: number
+  responseRate: number
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -294,9 +327,14 @@ export type UserWhereInput = {
   codeOtpExpiration?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   isOtpVerified?: Prisma.BoolFilter<"User"> | boolean
   hashedRefreshToken?: Prisma.StringNullableFilter<"User"> | string | null
+  avgRating?: Prisma.FloatFilter<"User"> | number
+  completionRate?: Prisma.FloatFilter<"User"> | number
+  responseRate?: Prisma.FloatFilter<"User"> | number
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   products?: Prisma.ProductListRelationFilter
+  savedProducts?: Prisma.SavedProductListRelationFilter
+  productViews?: Prisma.ProductViewListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -313,9 +351,14 @@ export type UserOrderByWithRelationInput = {
   codeOtpExpiration?: Prisma.SortOrderInput | Prisma.SortOrder
   isOtpVerified?: Prisma.SortOrder
   hashedRefreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
+  completionRate?: Prisma.SortOrder
+  responseRate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   products?: Prisma.ProductOrderByRelationAggregateInput
+  savedProducts?: Prisma.SavedProductOrderByRelationAggregateInput
+  productViews?: Prisma.ProductViewOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -335,9 +378,14 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   codeOtpExpiration?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   isOtpVerified?: Prisma.BoolFilter<"User"> | boolean
   hashedRefreshToken?: Prisma.StringNullableFilter<"User"> | string | null
+  avgRating?: Prisma.FloatFilter<"User"> | number
+  completionRate?: Prisma.FloatFilter<"User"> | number
+  responseRate?: Prisma.FloatFilter<"User"> | number
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   products?: Prisma.ProductListRelationFilter
+  savedProducts?: Prisma.SavedProductListRelationFilter
+  productViews?: Prisma.ProductViewListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -354,6 +402,9 @@ export type UserOrderByWithAggregationInput = {
   codeOtpExpiration?: Prisma.SortOrderInput | Prisma.SortOrder
   isOtpVerified?: Prisma.SortOrder
   hashedRefreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
+  completionRate?: Prisma.SortOrder
+  responseRate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -380,6 +431,9 @@ export type UserScalarWhereWithAggregatesInput = {
   codeOtpExpiration?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   isOtpVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   hashedRefreshToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  avgRating?: Prisma.FloatWithAggregatesFilter<"User"> | number
+  completionRate?: Prisma.FloatWithAggregatesFilter<"User"> | number
+  responseRate?: Prisma.FloatWithAggregatesFilter<"User"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -397,9 +451,14 @@ export type UserCreateInput = {
   codeOtpExpiration?: Date | string | null
   isOtpVerified?: boolean
   hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   products?: Prisma.ProductCreateNestedManyWithoutSellerInput
+  savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
+  productViews?: Prisma.ProductViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -416,9 +475,14 @@ export type UserUncheckedCreateInput = {
   codeOtpExpiration?: Date | string | null
   isOtpVerified?: boolean
   hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
+  savedProducts?: Prisma.SavedProductUncheckedCreateNestedManyWithoutUserInput
+  productViews?: Prisma.ProductViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -434,9 +498,14 @@ export type UserUpdateInput = {
   codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
+  savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
+  productViews?: Prisma.ProductViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -453,9 +522,14 @@ export type UserUncheckedUpdateInput = {
   codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
+  savedProducts?: Prisma.SavedProductUncheckedUpdateManyWithoutUserNestedInput
+  productViews?: Prisma.ProductViewUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -472,6 +546,9 @@ export type UserCreateManyInput = {
   codeOtpExpiration?: Date | string | null
   isOtpVerified?: boolean
   hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -489,6 +566,9 @@ export type UserUpdateManyMutationInput = {
   codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -507,6 +587,9 @@ export type UserUncheckedUpdateManyInput = {
   codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -525,12 +608,18 @@ export type UserCountOrderByAggregateInput = {
   codeOtpExpiration?: Prisma.SortOrder
   isOtpVerified?: Prisma.SortOrder
   hashedRefreshToken?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
+  completionRate?: Prisma.SortOrder
+  responseRate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
+  completionRate?: Prisma.SortOrder
+  responseRate?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -547,6 +636,9 @@ export type UserMaxOrderByAggregateInput = {
   codeOtpExpiration?: Prisma.SortOrder
   isOtpVerified?: Prisma.SortOrder
   hashedRefreshToken?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
+  completionRate?: Prisma.SortOrder
+  responseRate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -565,17 +657,28 @@ export type UserMinOrderByAggregateInput = {
   codeOtpExpiration?: Prisma.SortOrder
   isOtpVerified?: Prisma.SortOrder
   hashedRefreshToken?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
+  completionRate?: Prisma.SortOrder
+  responseRate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
+  completionRate?: Prisma.SortOrder
+  responseRate?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
   is?: Prisma.UserWhereInput
   isNot?: Prisma.UserWhereInput
+}
+
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -596,6 +699,14 @@ export type BoolFieldUpdateOperationsInput = {
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
+}
+
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -624,6 +735,36 @@ export type UserUpdateOneRequiredWithoutProductsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProductsInput, Prisma.UserUpdateWithoutProductsInput>, Prisma.UserUncheckedUpdateWithoutProductsInput>
 }
 
+export type UserCreateNestedOneWithoutSavedProductsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSavedProductsInput, Prisma.UserUncheckedCreateWithoutSavedProductsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSavedProductsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSavedProductsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSavedProductsInput, Prisma.UserUncheckedCreateWithoutSavedProductsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSavedProductsInput
+  upsert?: Prisma.UserUpsertWithoutSavedProductsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSavedProductsInput, Prisma.UserUpdateWithoutSavedProductsInput>, Prisma.UserUncheckedUpdateWithoutSavedProductsInput>
+}
+
+export type UserCreateNestedOneWithoutProductViewsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProductViewsInput, Prisma.UserUncheckedCreateWithoutProductViewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProductViewsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutProductViewsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProductViewsInput, Prisma.UserUncheckedCreateWithoutProductViewsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProductViewsInput
+  upsert?: Prisma.UserUpsertWithoutProductViewsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProductViewsInput, Prisma.UserUpdateWithoutProductViewsInput>, Prisma.UserUncheckedUpdateWithoutProductViewsInput>
+}
+
 export type UserCreateWithoutProductsInput = {
   email: string
   password?: string | null
@@ -637,8 +778,13 @@ export type UserCreateWithoutProductsInput = {
   codeOtpExpiration?: Date | string | null
   isOtpVerified?: boolean
   hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
+  productViews?: Prisma.ProductViewCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProductsInput = {
@@ -655,8 +801,13 @@ export type UserUncheckedCreateWithoutProductsInput = {
   codeOtpExpiration?: Date | string | null
   isOtpVerified?: boolean
   hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  savedProducts?: Prisma.SavedProductUncheckedCreateNestedManyWithoutUserInput
+  productViews?: Prisma.ProductViewUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProductsInput = {
@@ -688,8 +839,13 @@ export type UserUpdateWithoutProductsInput = {
   codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
+  productViews?: Prisma.ProductViewUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProductsInput = {
@@ -706,8 +862,225 @@ export type UserUncheckedUpdateWithoutProductsInput = {
   codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  savedProducts?: Prisma.SavedProductUncheckedUpdateManyWithoutUserNestedInput
+  productViews?: Prisma.ProductViewUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSavedProductsInput = {
+  email: string
+  password?: string | null
+  fullName: string
+  phone?: string | null
+  avatar?: string
+  role?: $Enums.UserRole
+  isActive?: boolean
+  isBanned?: boolean
+  codeOtp?: string | null
+  codeOtpExpiration?: Date | string | null
+  isOtpVerified?: boolean
+  hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  products?: Prisma.ProductCreateNestedManyWithoutSellerInput
+  productViews?: Prisma.ProductViewCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSavedProductsInput = {
+  id?: number
+  email: string
+  password?: string | null
+  fullName: string
+  phone?: string | null
+  avatar?: string
+  role?: $Enums.UserRole
+  isActive?: boolean
+  isBanned?: boolean
+  codeOtp?: string | null
+  codeOtpExpiration?: Date | string | null
+  isOtpVerified?: boolean
+  hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
+  productViews?: Prisma.ProductViewUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSavedProductsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSavedProductsInput, Prisma.UserUncheckedCreateWithoutSavedProductsInput>
+}
+
+export type UserUpsertWithoutSavedProductsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSavedProductsInput, Prisma.UserUncheckedUpdateWithoutSavedProductsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSavedProductsInput, Prisma.UserUncheckedCreateWithoutSavedProductsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSavedProductsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSavedProductsInput, Prisma.UserUncheckedUpdateWithoutSavedProductsInput>
+}
+
+export type UserUpdateWithoutSavedProductsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
+  productViews?: Prisma.ProductViewUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSavedProductsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
+  productViews?: Prisma.ProductViewUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutProductViewsInput = {
+  email: string
+  password?: string | null
+  fullName: string
+  phone?: string | null
+  avatar?: string
+  role?: $Enums.UserRole
+  isActive?: boolean
+  isBanned?: boolean
+  codeOtp?: string | null
+  codeOtpExpiration?: Date | string | null
+  isOtpVerified?: boolean
+  hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  products?: Prisma.ProductCreateNestedManyWithoutSellerInput
+  savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutProductViewsInput = {
+  id?: number
+  email: string
+  password?: string | null
+  fullName: string
+  phone?: string | null
+  avatar?: string
+  role?: $Enums.UserRole
+  isActive?: boolean
+  isBanned?: boolean
+  codeOtp?: string | null
+  codeOtpExpiration?: Date | string | null
+  isOtpVerified?: boolean
+  hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
+  savedProducts?: Prisma.SavedProductUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutProductViewsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProductViewsInput, Prisma.UserUncheckedCreateWithoutProductViewsInput>
+}
+
+export type UserUpsertWithoutProductViewsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProductViewsInput, Prisma.UserUncheckedUpdateWithoutProductViewsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProductViewsInput, Prisma.UserUncheckedCreateWithoutProductViewsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProductViewsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProductViewsInput, Prisma.UserUncheckedUpdateWithoutProductViewsInput>
+}
+
+export type UserUpdateWithoutProductViewsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
+  savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProductViewsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
+  savedProducts?: Prisma.SavedProductUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -717,10 +1090,14 @@ export type UserUncheckedUpdateWithoutProductsInput = {
 
 export type UserCountOutputType = {
   products: number
+  savedProducts: number
+  productViews: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   products?: boolean | UserCountOutputTypeCountProductsArgs
+  savedProducts?: boolean | UserCountOutputTypeCountSavedProductsArgs
+  productViews?: boolean | UserCountOutputTypeCountProductViewsArgs
 }
 
 /**
@@ -740,6 +1117,20 @@ export type UserCountOutputTypeCountProductsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.ProductWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSavedProductsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SavedProductWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountProductViewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProductViewWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -755,9 +1146,14 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   codeOtpExpiration?: boolean
   isOtpVerified?: boolean
   hashedRefreshToken?: boolean
+  avgRating?: boolean
+  completionRate?: boolean
+  responseRate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   products?: boolean | Prisma.User$productsArgs<ExtArgs>
+  savedProducts?: boolean | Prisma.User$savedProductsArgs<ExtArgs>
+  productViews?: boolean | Prisma.User$productViewsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -775,6 +1171,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   codeOtpExpiration?: boolean
   isOtpVerified?: boolean
   hashedRefreshToken?: boolean
+  avgRating?: boolean
+  completionRate?: boolean
+  responseRate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -793,6 +1192,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   codeOtpExpiration?: boolean
   isOtpVerified?: boolean
   hashedRefreshToken?: boolean
+  avgRating?: boolean
+  completionRate?: boolean
+  responseRate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -811,13 +1213,18 @@ export type UserSelectScalar = {
   codeOtpExpiration?: boolean
   isOtpVerified?: boolean
   hashedRefreshToken?: boolean
+  avgRating?: boolean
+  completionRate?: boolean
+  responseRate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "fullName" | "phone" | "avatar" | "role" | "isActive" | "isBanned" | "codeOtp" | "codeOtpExpiration" | "isOtpVerified" | "hashedRefreshToken" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "fullName" | "phone" | "avatar" | "role" | "isActive" | "isBanned" | "codeOtp" | "codeOtpExpiration" | "isOtpVerified" | "hashedRefreshToken" | "avgRating" | "completionRate" | "responseRate" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   products?: boolean | Prisma.User$productsArgs<ExtArgs>
+  savedProducts?: boolean | Prisma.User$savedProductsArgs<ExtArgs>
+  productViews?: boolean | Prisma.User$productViewsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -827,6 +1234,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "User"
   objects: {
     products: Prisma.$ProductPayload<ExtArgs>[]
+    savedProducts: Prisma.$SavedProductPayload<ExtArgs>[]
+    productViews: Prisma.$ProductViewPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -842,6 +1251,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     codeOtpExpiration: Date | null
     isOtpVerified: boolean
     hashedRefreshToken: string | null
+    avgRating: number
+    completionRate: number
+    responseRate: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1239,6 +1651,8 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   products<T extends Prisma.User$productsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$productsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  savedProducts<T extends Prisma.User$savedProductsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savedProductsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  productViews<T extends Prisma.User$productViewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$productViewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductViewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1281,6 +1695,9 @@ export interface UserFieldRefs {
   readonly codeOtpExpiration: Prisma.FieldRef<"User", 'DateTime'>
   readonly isOtpVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly hashedRefreshToken: Prisma.FieldRef<"User", 'String'>
+  readonly avgRating: Prisma.FieldRef<"User", 'Float'>
+  readonly completionRate: Prisma.FieldRef<"User", 'Float'>
+  readonly responseRate: Prisma.FieldRef<"User", 'Float'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -1697,6 +2114,54 @@ export type User$productsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.ProductScalarFieldEnum | Prisma.ProductScalarFieldEnum[]
+}
+
+/**
+ * User.savedProducts
+ */
+export type User$savedProductsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SavedProduct
+   */
+  select?: Prisma.SavedProductSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SavedProduct
+   */
+  omit?: Prisma.SavedProductOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SavedProductInclude<ExtArgs> | null
+  where?: Prisma.SavedProductWhereInput
+  orderBy?: Prisma.SavedProductOrderByWithRelationInput | Prisma.SavedProductOrderByWithRelationInput[]
+  cursor?: Prisma.SavedProductWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SavedProductScalarFieldEnum | Prisma.SavedProductScalarFieldEnum[]
+}
+
+/**
+ * User.productViews
+ */
+export type User$productViewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProductView
+   */
+  select?: Prisma.ProductViewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProductView
+   */
+  omit?: Prisma.ProductViewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProductViewInclude<ExtArgs> | null
+  where?: Prisma.ProductViewWhereInput
+  orderBy?: Prisma.ProductViewOrderByWithRelationInput | Prisma.ProductViewOrderByWithRelationInput[]
+  cursor?: Prisma.ProductViewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProductViewScalarFieldEnum | Prisma.ProductViewScalarFieldEnum[]
 }
 
 /**

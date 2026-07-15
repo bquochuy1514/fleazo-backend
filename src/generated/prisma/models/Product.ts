@@ -30,7 +30,8 @@ export type ProductAvgAggregateOutputType = {
   id: number | null
   price: runtime.Decimal | null
   qualityScore: number | null
-  renewCount: number | null
+  viewCount: number | null
+  saveCount: number | null
   sellerId: number | null
   categoryId: number | null
 }
@@ -39,7 +40,8 @@ export type ProductSumAggregateOutputType = {
   id: number | null
   price: runtime.Decimal | null
   qualityScore: number | null
-  renewCount: number | null
+  viewCount: number | null
+  saveCount: number | null
   sellerId: number | null
   categoryId: number | null
 }
@@ -55,10 +57,11 @@ export type ProductMinAggregateOutputType = {
   condition: $Enums.ProductCondition | null
   status: $Enums.ProductStatus | null
   rejectedReason: string | null
-  qualityScore: number | null
   expiresAt: Date | null
   boostExpiresAt: Date | null
-  renewCount: number | null
+  qualityScore: number | null
+  viewCount: number | null
+  saveCount: number | null
   sellerId: number | null
   categoryId: number | null
   createdAt: Date | null
@@ -76,10 +79,11 @@ export type ProductMaxAggregateOutputType = {
   condition: $Enums.ProductCondition | null
   status: $Enums.ProductStatus | null
   rejectedReason: string | null
-  qualityScore: number | null
   expiresAt: Date | null
   boostExpiresAt: Date | null
-  renewCount: number | null
+  qualityScore: number | null
+  viewCount: number | null
+  saveCount: number | null
   sellerId: number | null
   categoryId: number | null
   createdAt: Date | null
@@ -97,10 +101,11 @@ export type ProductCountAggregateOutputType = {
   condition: number
   status: number
   rejectedReason: number
-  qualityScore: number
   expiresAt: number
   boostExpiresAt: number
-  renewCount: number
+  qualityScore: number
+  viewCount: number
+  saveCount: number
   sellerId: number
   categoryId: number
   createdAt: number
@@ -113,7 +118,8 @@ export type ProductAvgAggregateInputType = {
   id?: true
   price?: true
   qualityScore?: true
-  renewCount?: true
+  viewCount?: true
+  saveCount?: true
   sellerId?: true
   categoryId?: true
 }
@@ -122,7 +128,8 @@ export type ProductSumAggregateInputType = {
   id?: true
   price?: true
   qualityScore?: true
-  renewCount?: true
+  viewCount?: true
+  saveCount?: true
   sellerId?: true
   categoryId?: true
 }
@@ -138,10 +145,11 @@ export type ProductMinAggregateInputType = {
   condition?: true
   status?: true
   rejectedReason?: true
-  qualityScore?: true
   expiresAt?: true
   boostExpiresAt?: true
-  renewCount?: true
+  qualityScore?: true
+  viewCount?: true
+  saveCount?: true
   sellerId?: true
   categoryId?: true
   createdAt?: true
@@ -159,10 +167,11 @@ export type ProductMaxAggregateInputType = {
   condition?: true
   status?: true
   rejectedReason?: true
-  qualityScore?: true
   expiresAt?: true
   boostExpiresAt?: true
-  renewCount?: true
+  qualityScore?: true
+  viewCount?: true
+  saveCount?: true
   sellerId?: true
   categoryId?: true
   createdAt?: true
@@ -180,10 +189,11 @@ export type ProductCountAggregateInputType = {
   condition?: true
   status?: true
   rejectedReason?: true
-  qualityScore?: true
   expiresAt?: true
   boostExpiresAt?: true
-  renewCount?: true
+  qualityScore?: true
+  viewCount?: true
+  saveCount?: true
   sellerId?: true
   categoryId?: true
   createdAt?: true
@@ -288,10 +298,11 @@ export type ProductGroupByOutputType = {
   condition: $Enums.ProductCondition
   status: $Enums.ProductStatus
   rejectedReason: string | null
-  qualityScore: number
   expiresAt: Date | null
   boostExpiresAt: Date | null
-  renewCount: number
+  qualityScore: number
+  viewCount: number
+  saveCount: number
   sellerId: number
   categoryId: number
   createdAt: Date
@@ -332,10 +343,11 @@ export type ProductWhereInput = {
   condition?: Prisma.EnumProductConditionFilter<"Product"> | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
   rejectedReason?: Prisma.StringNullableFilter<"Product"> | string | null
-  qualityScore?: Prisma.FloatFilter<"Product"> | number
   expiresAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
   boostExpiresAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
-  renewCount?: Prisma.IntFilter<"Product"> | number
+  qualityScore?: Prisma.FloatFilter<"Product"> | number
+  viewCount?: Prisma.IntFilter<"Product"> | number
+  saveCount?: Prisma.IntFilter<"Product"> | number
   sellerId?: Prisma.IntFilter<"Product"> | number
   categoryId?: Prisma.IntFilter<"Product"> | number
   createdAt?: Prisma.DateTimeFilter<"Product"> | Date | string
@@ -343,6 +355,8 @@ export type ProductWhereInput = {
   seller?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   images?: Prisma.ProductImageListRelationFilter
+  savedBy?: Prisma.SavedProductListRelationFilter
+  views?: Prisma.ProductViewListRelationFilter
 }
 
 export type ProductOrderByWithRelationInput = {
@@ -356,10 +370,11 @@ export type ProductOrderByWithRelationInput = {
   condition?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rejectedReason?: Prisma.SortOrderInput | Prisma.SortOrder
-  qualityScore?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   boostExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  renewCount?: Prisma.SortOrder
+  qualityScore?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  saveCount?: Prisma.SortOrder
   sellerId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -367,6 +382,8 @@ export type ProductOrderByWithRelationInput = {
   seller?: Prisma.UserOrderByWithRelationInput
   category?: Prisma.CategoryOrderByWithRelationInput
   images?: Prisma.ProductImageOrderByRelationAggregateInput
+  savedBy?: Prisma.SavedProductOrderByRelationAggregateInput
+  views?: Prisma.ProductViewOrderByRelationAggregateInput
 }
 
 export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -383,10 +400,11 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   condition?: Prisma.EnumProductConditionFilter<"Product"> | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
   rejectedReason?: Prisma.StringNullableFilter<"Product"> | string | null
-  qualityScore?: Prisma.FloatFilter<"Product"> | number
   expiresAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
   boostExpiresAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
-  renewCount?: Prisma.IntFilter<"Product"> | number
+  qualityScore?: Prisma.FloatFilter<"Product"> | number
+  viewCount?: Prisma.IntFilter<"Product"> | number
+  saveCount?: Prisma.IntFilter<"Product"> | number
   sellerId?: Prisma.IntFilter<"Product"> | number
   categoryId?: Prisma.IntFilter<"Product"> | number
   createdAt?: Prisma.DateTimeFilter<"Product"> | Date | string
@@ -394,6 +412,8 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   seller?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   images?: Prisma.ProductImageListRelationFilter
+  savedBy?: Prisma.SavedProductListRelationFilter
+  views?: Prisma.ProductViewListRelationFilter
 }, "id">
 
 export type ProductOrderByWithAggregationInput = {
@@ -407,10 +427,11 @@ export type ProductOrderByWithAggregationInput = {
   condition?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rejectedReason?: Prisma.SortOrderInput | Prisma.SortOrder
-  qualityScore?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   boostExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  renewCount?: Prisma.SortOrder
+  qualityScore?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  saveCount?: Prisma.SortOrder
   sellerId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -436,10 +457,11 @@ export type ProductScalarWhereWithAggregatesInput = {
   condition?: Prisma.EnumProductConditionWithAggregatesFilter<"Product"> | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusWithAggregatesFilter<"Product"> | $Enums.ProductStatus
   rejectedReason?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
-  qualityScore?: Prisma.FloatWithAggregatesFilter<"Product"> | number
   expiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
   boostExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
-  renewCount?: Prisma.IntWithAggregatesFilter<"Product"> | number
+  qualityScore?: Prisma.FloatWithAggregatesFilter<"Product"> | number
+  viewCount?: Prisma.IntWithAggregatesFilter<"Product"> | number
+  saveCount?: Prisma.IntWithAggregatesFilter<"Product"> | number
   sellerId?: Prisma.IntWithAggregatesFilter<"Product"> | number
   categoryId?: Prisma.IntWithAggregatesFilter<"Product"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Product"> | Date | string
@@ -456,15 +478,18 @@ export type ProductCreateInput = {
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
-  qualityScore?: number
   expiresAt?: Date | string | null
   boostExpiresAt?: Date | string | null
-  renewCount?: number
+  qualityScore?: number
+  viewCount?: number
+  saveCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   seller: Prisma.UserCreateNestedOneWithoutProductsInput
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
   images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
+  savedBy?: Prisma.SavedProductCreateNestedManyWithoutProductInput
+  views?: Prisma.ProductViewCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateInput = {
@@ -478,15 +503,18 @@ export type ProductUncheckedCreateInput = {
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
-  qualityScore?: number
   expiresAt?: Date | string | null
   boostExpiresAt?: Date | string | null
-  renewCount?: number
+  qualityScore?: number
+  viewCount?: number
+  saveCount?: number
   sellerId: number
   categoryId: number
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
+  savedBy?: Prisma.SavedProductUncheckedCreateNestedManyWithoutProductInput
+  views?: Prisma.ProductViewUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductUpdateInput = {
@@ -499,15 +527,18 @@ export type ProductUpdateInput = {
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   boostExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  renewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  saveCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   seller?: Prisma.UserUpdateOneRequiredWithoutProductsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
   images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
+  savedBy?: Prisma.SavedProductUpdateManyWithoutProductNestedInput
+  views?: Prisma.ProductViewUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateInput = {
@@ -521,15 +552,18 @@ export type ProductUncheckedUpdateInput = {
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   boostExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  renewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  saveCount?: Prisma.IntFieldUpdateOperationsInput | number
   sellerId?: Prisma.IntFieldUpdateOperationsInput | number
   categoryId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
+  savedBy?: Prisma.SavedProductUncheckedUpdateManyWithoutProductNestedInput
+  views?: Prisma.ProductViewUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateManyInput = {
@@ -543,10 +577,11 @@ export type ProductCreateManyInput = {
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
-  qualityScore?: number
   expiresAt?: Date | string | null
   boostExpiresAt?: Date | string | null
-  renewCount?: number
+  qualityScore?: number
+  viewCount?: number
+  saveCount?: number
   sellerId: number
   categoryId: number
   createdAt?: Date | string
@@ -563,10 +598,11 @@ export type ProductUpdateManyMutationInput = {
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   boostExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  renewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  saveCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -582,10 +618,11 @@ export type ProductUncheckedUpdateManyInput = {
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   boostExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  renewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  saveCount?: Prisma.IntFieldUpdateOperationsInput | number
   sellerId?: Prisma.IntFieldUpdateOperationsInput | number
   categoryId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -613,10 +650,11 @@ export type ProductCountOrderByAggregateInput = {
   condition?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rejectedReason?: Prisma.SortOrder
-  qualityScore?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   boostExpiresAt?: Prisma.SortOrder
-  renewCount?: Prisma.SortOrder
+  qualityScore?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  saveCount?: Prisma.SortOrder
   sellerId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -627,7 +665,8 @@ export type ProductAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   price?: Prisma.SortOrder
   qualityScore?: Prisma.SortOrder
-  renewCount?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  saveCount?: Prisma.SortOrder
   sellerId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
 }
@@ -643,10 +682,11 @@ export type ProductMaxOrderByAggregateInput = {
   condition?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rejectedReason?: Prisma.SortOrder
-  qualityScore?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   boostExpiresAt?: Prisma.SortOrder
-  renewCount?: Prisma.SortOrder
+  qualityScore?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  saveCount?: Prisma.SortOrder
   sellerId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -664,10 +704,11 @@ export type ProductMinOrderByAggregateInput = {
   condition?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rejectedReason?: Prisma.SortOrder
-  qualityScore?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   boostExpiresAt?: Prisma.SortOrder
-  renewCount?: Prisma.SortOrder
+  qualityScore?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  saveCount?: Prisma.SortOrder
   sellerId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -678,7 +719,8 @@ export type ProductSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   price?: Prisma.SortOrder
   qualityScore?: Prisma.SortOrder
-  renewCount?: Prisma.SortOrder
+  viewCount?: Prisma.SortOrder
+  saveCount?: Prisma.SortOrder
   sellerId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
 }
@@ -788,14 +830,6 @@ export type EnumProductStatusFieldUpdateOperationsInput = {
   set?: $Enums.ProductStatus
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type ProductCreateNestedOneWithoutImagesInput = {
   create?: Prisma.XOR<Prisma.ProductCreateWithoutImagesInput, Prisma.ProductUncheckedCreateWithoutImagesInput>
   connectOrCreate?: Prisma.ProductCreateOrConnectWithoutImagesInput
@@ -810,6 +844,34 @@ export type ProductUpdateOneRequiredWithoutImagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutImagesInput, Prisma.ProductUpdateWithoutImagesInput>, Prisma.ProductUncheckedUpdateWithoutImagesInput>
 }
 
+export type ProductCreateNestedOneWithoutSavedByInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutSavedByInput, Prisma.ProductUncheckedCreateWithoutSavedByInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutSavedByInput
+  connect?: Prisma.ProductWhereUniqueInput
+}
+
+export type ProductUpdateOneRequiredWithoutSavedByNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutSavedByInput, Prisma.ProductUncheckedCreateWithoutSavedByInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutSavedByInput
+  upsert?: Prisma.ProductUpsertWithoutSavedByInput
+  connect?: Prisma.ProductWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutSavedByInput, Prisma.ProductUpdateWithoutSavedByInput>, Prisma.ProductUncheckedUpdateWithoutSavedByInput>
+}
+
+export type ProductCreateNestedOneWithoutViewsInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutViewsInput, Prisma.ProductUncheckedCreateWithoutViewsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutViewsInput
+  connect?: Prisma.ProductWhereUniqueInput
+}
+
+export type ProductUpdateOneRequiredWithoutViewsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProductCreateWithoutViewsInput, Prisma.ProductUncheckedCreateWithoutViewsInput>
+  connectOrCreate?: Prisma.ProductCreateOrConnectWithoutViewsInput
+  upsert?: Prisma.ProductUpsertWithoutViewsInput
+  connect?: Prisma.ProductWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProductUpdateToOneWithWhereWithoutViewsInput, Prisma.ProductUpdateWithoutViewsInput>, Prisma.ProductUncheckedUpdateWithoutViewsInput>
+}
+
 export type ProductCreateWithoutSellerInput = {
   title: string
   description: string
@@ -820,14 +882,17 @@ export type ProductCreateWithoutSellerInput = {
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
-  qualityScore?: number
   expiresAt?: Date | string | null
   boostExpiresAt?: Date | string | null
-  renewCount?: number
+  qualityScore?: number
+  viewCount?: number
+  saveCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
   images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
+  savedBy?: Prisma.SavedProductCreateNestedManyWithoutProductInput
+  views?: Prisma.ProductViewCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutSellerInput = {
@@ -841,14 +906,17 @@ export type ProductUncheckedCreateWithoutSellerInput = {
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
-  qualityScore?: number
   expiresAt?: Date | string | null
   boostExpiresAt?: Date | string | null
-  renewCount?: number
+  qualityScore?: number
+  viewCount?: number
+  saveCount?: number
   categoryId: number
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
+  savedBy?: Prisma.SavedProductUncheckedCreateNestedManyWithoutProductInput
+  views?: Prisma.ProductViewUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutSellerInput = {
@@ -891,10 +959,11 @@ export type ProductScalarWhereInput = {
   condition?: Prisma.EnumProductConditionFilter<"Product"> | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
   rejectedReason?: Prisma.StringNullableFilter<"Product"> | string | null
-  qualityScore?: Prisma.FloatFilter<"Product"> | number
   expiresAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
   boostExpiresAt?: Prisma.DateTimeNullableFilter<"Product"> | Date | string | null
-  renewCount?: Prisma.IntFilter<"Product"> | number
+  qualityScore?: Prisma.FloatFilter<"Product"> | number
+  viewCount?: Prisma.IntFilter<"Product"> | number
+  saveCount?: Prisma.IntFilter<"Product"> | number
   sellerId?: Prisma.IntFilter<"Product"> | number
   categoryId?: Prisma.IntFilter<"Product"> | number
   createdAt?: Prisma.DateTimeFilter<"Product"> | Date | string
@@ -911,14 +980,17 @@ export type ProductCreateWithoutCategoryInput = {
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
-  qualityScore?: number
   expiresAt?: Date | string | null
   boostExpiresAt?: Date | string | null
-  renewCount?: number
+  qualityScore?: number
+  viewCount?: number
+  saveCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   seller: Prisma.UserCreateNestedOneWithoutProductsInput
   images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
+  savedBy?: Prisma.SavedProductCreateNestedManyWithoutProductInput
+  views?: Prisma.ProductViewCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -932,14 +1004,17 @@ export type ProductUncheckedCreateWithoutCategoryInput = {
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
-  qualityScore?: number
   expiresAt?: Date | string | null
   boostExpiresAt?: Date | string | null
-  renewCount?: number
+  qualityScore?: number
+  viewCount?: number
+  saveCount?: number
   sellerId: number
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
+  savedBy?: Prisma.SavedProductUncheckedCreateNestedManyWithoutProductInput
+  views?: Prisma.ProductViewUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutCategoryInput = {
@@ -978,14 +1053,17 @@ export type ProductCreateWithoutImagesInput = {
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
-  qualityScore?: number
   expiresAt?: Date | string | null
   boostExpiresAt?: Date | string | null
-  renewCount?: number
+  qualityScore?: number
+  viewCount?: number
+  saveCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   seller: Prisma.UserCreateNestedOneWithoutProductsInput
   category: Prisma.CategoryCreateNestedOneWithoutProductsInput
+  savedBy?: Prisma.SavedProductCreateNestedManyWithoutProductInput
+  views?: Prisma.ProductViewCreateNestedManyWithoutProductInput
 }
 
 export type ProductUncheckedCreateWithoutImagesInput = {
@@ -999,14 +1077,17 @@ export type ProductUncheckedCreateWithoutImagesInput = {
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
-  qualityScore?: number
   expiresAt?: Date | string | null
   boostExpiresAt?: Date | string | null
-  renewCount?: number
+  qualityScore?: number
+  viewCount?: number
+  saveCount?: number
   sellerId: number
   categoryId: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  savedBy?: Prisma.SavedProductUncheckedCreateNestedManyWithoutProductInput
+  views?: Prisma.ProductViewUncheckedCreateNestedManyWithoutProductInput
 }
 
 export type ProductCreateOrConnectWithoutImagesInput = {
@@ -1035,14 +1116,17 @@ export type ProductUpdateWithoutImagesInput = {
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   boostExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  renewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  saveCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   seller?: Prisma.UserUpdateOneRequiredWithoutProductsNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
+  savedBy?: Prisma.SavedProductUpdateManyWithoutProductNestedInput
+  views?: Prisma.ProductViewUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutImagesInput = {
@@ -1056,14 +1140,237 @@ export type ProductUncheckedUpdateWithoutImagesInput = {
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   boostExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  renewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  saveCount?: Prisma.IntFieldUpdateOperationsInput | number
   sellerId?: Prisma.IntFieldUpdateOperationsInput | number
   categoryId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  savedBy?: Prisma.SavedProductUncheckedUpdateManyWithoutProductNestedInput
+  views?: Prisma.ProductViewUncheckedUpdateManyWithoutProductNestedInput
+}
+
+export type ProductCreateWithoutSavedByInput = {
+  title: string
+  description: string
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  province: string
+  district: string
+  ward?: string | null
+  condition: $Enums.ProductCondition
+  status?: $Enums.ProductStatus
+  rejectedReason?: string | null
+  expiresAt?: Date | string | null
+  boostExpiresAt?: Date | string | null
+  qualityScore?: number
+  viewCount?: number
+  saveCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  seller: Prisma.UserCreateNestedOneWithoutProductsInput
+  category: Prisma.CategoryCreateNestedOneWithoutProductsInput
+  images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
+  views?: Prisma.ProductViewCreateNestedManyWithoutProductInput
+}
+
+export type ProductUncheckedCreateWithoutSavedByInput = {
+  id?: number
+  title: string
+  description: string
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  province: string
+  district: string
+  ward?: string | null
+  condition: $Enums.ProductCondition
+  status?: $Enums.ProductStatus
+  rejectedReason?: string | null
+  expiresAt?: Date | string | null
+  boostExpiresAt?: Date | string | null
+  qualityScore?: number
+  viewCount?: number
+  saveCount?: number
+  sellerId: number
+  categoryId: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
+  views?: Prisma.ProductViewUncheckedCreateNestedManyWithoutProductInput
+}
+
+export type ProductCreateOrConnectWithoutSavedByInput = {
+  where: Prisma.ProductWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductCreateWithoutSavedByInput, Prisma.ProductUncheckedCreateWithoutSavedByInput>
+}
+
+export type ProductUpsertWithoutSavedByInput = {
+  update: Prisma.XOR<Prisma.ProductUpdateWithoutSavedByInput, Prisma.ProductUncheckedUpdateWithoutSavedByInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutSavedByInput, Prisma.ProductUncheckedCreateWithoutSavedByInput>
+  where?: Prisma.ProductWhereInput
+}
+
+export type ProductUpdateToOneWithWhereWithoutSavedByInput = {
+  where?: Prisma.ProductWhereInput
+  data: Prisma.XOR<Prisma.ProductUpdateWithoutSavedByInput, Prisma.ProductUncheckedUpdateWithoutSavedByInput>
+}
+
+export type ProductUpdateWithoutSavedByInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  province?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
+  status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+  rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  boostExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  saveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  seller?: Prisma.UserUpdateOneRequiredWithoutProductsNestedInput
+  category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
+  images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
+  views?: Prisma.ProductViewUpdateManyWithoutProductNestedInput
+}
+
+export type ProductUncheckedUpdateWithoutSavedByInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  province?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
+  status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+  rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  boostExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  saveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  sellerId?: Prisma.IntFieldUpdateOperationsInput | number
+  categoryId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
+  views?: Prisma.ProductViewUncheckedUpdateManyWithoutProductNestedInput
+}
+
+export type ProductCreateWithoutViewsInput = {
+  title: string
+  description: string
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  province: string
+  district: string
+  ward?: string | null
+  condition: $Enums.ProductCondition
+  status?: $Enums.ProductStatus
+  rejectedReason?: string | null
+  expiresAt?: Date | string | null
+  boostExpiresAt?: Date | string | null
+  qualityScore?: number
+  viewCount?: number
+  saveCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  seller: Prisma.UserCreateNestedOneWithoutProductsInput
+  category: Prisma.CategoryCreateNestedOneWithoutProductsInput
+  images?: Prisma.ProductImageCreateNestedManyWithoutProductInput
+  savedBy?: Prisma.SavedProductCreateNestedManyWithoutProductInput
+}
+
+export type ProductUncheckedCreateWithoutViewsInput = {
+  id?: number
+  title: string
+  description: string
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  province: string
+  district: string
+  ward?: string | null
+  condition: $Enums.ProductCondition
+  status?: $Enums.ProductStatus
+  rejectedReason?: string | null
+  expiresAt?: Date | string | null
+  boostExpiresAt?: Date | string | null
+  qualityScore?: number
+  viewCount?: number
+  saveCount?: number
+  sellerId: number
+  categoryId: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.ProductImageUncheckedCreateNestedManyWithoutProductInput
+  savedBy?: Prisma.SavedProductUncheckedCreateNestedManyWithoutProductInput
+}
+
+export type ProductCreateOrConnectWithoutViewsInput = {
+  where: Prisma.ProductWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProductCreateWithoutViewsInput, Prisma.ProductUncheckedCreateWithoutViewsInput>
+}
+
+export type ProductUpsertWithoutViewsInput = {
+  update: Prisma.XOR<Prisma.ProductUpdateWithoutViewsInput, Prisma.ProductUncheckedUpdateWithoutViewsInput>
+  create: Prisma.XOR<Prisma.ProductCreateWithoutViewsInput, Prisma.ProductUncheckedCreateWithoutViewsInput>
+  where?: Prisma.ProductWhereInput
+}
+
+export type ProductUpdateToOneWithWhereWithoutViewsInput = {
+  where?: Prisma.ProductWhereInput
+  data: Prisma.XOR<Prisma.ProductUpdateWithoutViewsInput, Prisma.ProductUncheckedUpdateWithoutViewsInput>
+}
+
+export type ProductUpdateWithoutViewsInput = {
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  province?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
+  status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+  rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  boostExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  saveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  seller?: Prisma.UserUpdateOneRequiredWithoutProductsNestedInput
+  category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
+  images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
+  savedBy?: Prisma.SavedProductUpdateManyWithoutProductNestedInput
+}
+
+export type ProductUncheckedUpdateWithoutViewsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  province?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  ward?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
+  status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
+  rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  boostExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  saveCount?: Prisma.IntFieldUpdateOperationsInput | number
+  sellerId?: Prisma.IntFieldUpdateOperationsInput | number
+  categoryId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
+  savedBy?: Prisma.SavedProductUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductCreateManySellerInput = {
@@ -1077,10 +1384,11 @@ export type ProductCreateManySellerInput = {
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
-  qualityScore?: number
   expiresAt?: Date | string | null
   boostExpiresAt?: Date | string | null
-  renewCount?: number
+  qualityScore?: number
+  viewCount?: number
+  saveCount?: number
   categoryId: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1096,14 +1404,17 @@ export type ProductUpdateWithoutSellerInput = {
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   boostExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  renewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  saveCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneRequiredWithoutProductsNestedInput
   images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
+  savedBy?: Prisma.SavedProductUpdateManyWithoutProductNestedInput
+  views?: Prisma.ProductViewUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutSellerInput = {
@@ -1117,14 +1428,17 @@ export type ProductUncheckedUpdateWithoutSellerInput = {
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   boostExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  renewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  saveCount?: Prisma.IntFieldUpdateOperationsInput | number
   categoryId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
+  savedBy?: Prisma.SavedProductUncheckedUpdateManyWithoutProductNestedInput
+  views?: Prisma.ProductViewUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateManyWithoutSellerInput = {
@@ -1138,10 +1452,11 @@ export type ProductUncheckedUpdateManyWithoutSellerInput = {
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   boostExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  renewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  saveCount?: Prisma.IntFieldUpdateOperationsInput | number
   categoryId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1158,10 +1473,11 @@ export type ProductCreateManyCategoryInput = {
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
-  qualityScore?: number
   expiresAt?: Date | string | null
   boostExpiresAt?: Date | string | null
-  renewCount?: number
+  qualityScore?: number
+  viewCount?: number
+  saveCount?: number
   sellerId: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1177,14 +1493,17 @@ export type ProductUpdateWithoutCategoryInput = {
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   boostExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  renewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  saveCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   seller?: Prisma.UserUpdateOneRequiredWithoutProductsNestedInput
   images?: Prisma.ProductImageUpdateManyWithoutProductNestedInput
+  savedBy?: Prisma.SavedProductUpdateManyWithoutProductNestedInput
+  views?: Prisma.ProductViewUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -1198,14 +1517,17 @@ export type ProductUncheckedUpdateWithoutCategoryInput = {
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   boostExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  renewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  saveCount?: Prisma.IntFieldUpdateOperationsInput | number
   sellerId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.ProductImageUncheckedUpdateManyWithoutProductNestedInput
+  savedBy?: Prisma.SavedProductUncheckedUpdateManyWithoutProductNestedInput
+  views?: Prisma.ProductViewUncheckedUpdateManyWithoutProductNestedInput
 }
 
 export type ProductUncheckedUpdateManyWithoutCategoryInput = {
@@ -1219,10 +1541,11 @@ export type ProductUncheckedUpdateManyWithoutCategoryInput = {
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   boostExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  renewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  qualityScore?: Prisma.FloatFieldUpdateOperationsInput | number
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  saveCount?: Prisma.IntFieldUpdateOperationsInput | number
   sellerId?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1235,10 +1558,14 @@ export type ProductUncheckedUpdateManyWithoutCategoryInput = {
 
 export type ProductCountOutputType = {
   images: number
+  savedBy: number
+  views: number
 }
 
 export type ProductCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   images?: boolean | ProductCountOutputTypeCountImagesArgs
+  savedBy?: boolean | ProductCountOutputTypeCountSavedByArgs
+  views?: boolean | ProductCountOutputTypeCountViewsArgs
 }
 
 /**
@@ -1258,6 +1585,20 @@ export type ProductCountOutputTypeCountImagesArgs<ExtArgs extends runtime.Types.
   where?: Prisma.ProductImageWhereInput
 }
 
+/**
+ * ProductCountOutputType without action
+ */
+export type ProductCountOutputTypeCountSavedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SavedProductWhereInput
+}
+
+/**
+ * ProductCountOutputType without action
+ */
+export type ProductCountOutputTypeCountViewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProductViewWhereInput
+}
+
 
 export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1270,10 +1611,11 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   condition?: boolean
   status?: boolean
   rejectedReason?: boolean
-  qualityScore?: boolean
   expiresAt?: boolean
   boostExpiresAt?: boolean
-  renewCount?: boolean
+  qualityScore?: boolean
+  viewCount?: boolean
+  saveCount?: boolean
   sellerId?: boolean
   categoryId?: boolean
   createdAt?: boolean
@@ -1281,6 +1623,8 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   images?: boolean | Prisma.Product$imagesArgs<ExtArgs>
+  savedBy?: boolean | Prisma.Product$savedByArgs<ExtArgs>
+  views?: boolean | Prisma.Product$viewsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["product"]>
 
@@ -1295,10 +1639,11 @@ export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   condition?: boolean
   status?: boolean
   rejectedReason?: boolean
-  qualityScore?: boolean
   expiresAt?: boolean
   boostExpiresAt?: boolean
-  renewCount?: boolean
+  qualityScore?: boolean
+  viewCount?: boolean
+  saveCount?: boolean
   sellerId?: boolean
   categoryId?: boolean
   createdAt?: boolean
@@ -1318,10 +1663,11 @@ export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   condition?: boolean
   status?: boolean
   rejectedReason?: boolean
-  qualityScore?: boolean
   expiresAt?: boolean
   boostExpiresAt?: boolean
-  renewCount?: boolean
+  qualityScore?: boolean
+  viewCount?: boolean
+  saveCount?: boolean
   sellerId?: boolean
   categoryId?: boolean
   createdAt?: boolean
@@ -1341,21 +1687,24 @@ export type ProductSelectScalar = {
   condition?: boolean
   status?: boolean
   rejectedReason?: boolean
-  qualityScore?: boolean
   expiresAt?: boolean
   boostExpiresAt?: boolean
-  renewCount?: boolean
+  qualityScore?: boolean
+  viewCount?: boolean
+  saveCount?: boolean
   sellerId?: boolean
   categoryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "price" | "province" | "district" | "ward" | "condition" | "status" | "rejectedReason" | "qualityScore" | "expiresAt" | "boostExpiresAt" | "renewCount" | "sellerId" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "price" | "province" | "district" | "ward" | "condition" | "status" | "rejectedReason" | "expiresAt" | "boostExpiresAt" | "qualityScore" | "viewCount" | "saveCount" | "sellerId" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   images?: boolean | Prisma.Product$imagesArgs<ExtArgs>
+  savedBy?: boolean | Prisma.Product$savedByArgs<ExtArgs>
+  views?: boolean | Prisma.Product$viewsArgs<ExtArgs>
   _count?: boolean | Prisma.ProductCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProductIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1373,6 +1722,8 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     seller: Prisma.$UserPayload<ExtArgs>
     category: Prisma.$CategoryPayload<ExtArgs>
     images: Prisma.$ProductImagePayload<ExtArgs>[]
+    savedBy: Prisma.$SavedProductPayload<ExtArgs>[]
+    views: Prisma.$ProductViewPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1385,10 +1736,11 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     condition: $Enums.ProductCondition
     status: $Enums.ProductStatus
     rejectedReason: string | null
-    qualityScore: number
     expiresAt: Date | null
     boostExpiresAt: Date | null
-    renewCount: number
+    qualityScore: number
+    viewCount: number
+    saveCount: number
     sellerId: number
     categoryId: number
     createdAt: Date
@@ -1790,6 +2142,8 @@ export interface Prisma__ProductClient<T, Null = never, ExtArgs extends runtime.
   seller<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   category<T extends Prisma.CategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   images<T extends Prisma.Product$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  savedBy<T extends Prisma.Product$savedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$savedByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  views<T extends Prisma.Product$viewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Product$viewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductViewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1829,10 +2183,11 @@ export interface ProductFieldRefs {
   readonly condition: Prisma.FieldRef<"Product", 'ProductCondition'>
   readonly status: Prisma.FieldRef<"Product", 'ProductStatus'>
   readonly rejectedReason: Prisma.FieldRef<"Product", 'String'>
-  readonly qualityScore: Prisma.FieldRef<"Product", 'Float'>
   readonly expiresAt: Prisma.FieldRef<"Product", 'DateTime'>
   readonly boostExpiresAt: Prisma.FieldRef<"Product", 'DateTime'>
-  readonly renewCount: Prisma.FieldRef<"Product", 'Int'>
+  readonly qualityScore: Prisma.FieldRef<"Product", 'Float'>
+  readonly viewCount: Prisma.FieldRef<"Product", 'Int'>
+  readonly saveCount: Prisma.FieldRef<"Product", 'Int'>
   readonly sellerId: Prisma.FieldRef<"Product", 'Int'>
   readonly categoryId: Prisma.FieldRef<"Product", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Product", 'DateTime'>
@@ -2259,6 +2614,54 @@ export type Product$imagesArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.ProductImageScalarFieldEnum | Prisma.ProductImageScalarFieldEnum[]
+}
+
+/**
+ * Product.savedBy
+ */
+export type Product$savedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SavedProduct
+   */
+  select?: Prisma.SavedProductSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SavedProduct
+   */
+  omit?: Prisma.SavedProductOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SavedProductInclude<ExtArgs> | null
+  where?: Prisma.SavedProductWhereInput
+  orderBy?: Prisma.SavedProductOrderByWithRelationInput | Prisma.SavedProductOrderByWithRelationInput[]
+  cursor?: Prisma.SavedProductWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SavedProductScalarFieldEnum | Prisma.SavedProductScalarFieldEnum[]
+}
+
+/**
+ * Product.views
+ */
+export type Product$viewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProductView
+   */
+  select?: Prisma.ProductViewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProductView
+   */
+  omit?: Prisma.ProductViewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProductViewInclude<ExtArgs> | null
+  where?: Prisma.ProductViewWhereInput
+  orderBy?: Prisma.ProductViewOrderByWithRelationInput | Prisma.ProductViewOrderByWithRelationInput[]
+  cursor?: Prisma.ProductViewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProductViewScalarFieldEnum | Prisma.ProductViewScalarFieldEnum[]
 }
 
 /**

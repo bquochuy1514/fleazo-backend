@@ -59,3 +59,13 @@ export type Product = Prisma.ProductModel
  * 
  */
 export type ProductImage = Prisma.ProductImageModel
+/**
+ * Model SavedProduct
+ * 
+ */
+export type SavedProduct = Prisma.SavedProductModel
+/**
+ * Model ProductView
+ * 
+ */
+export type ProductView = Prisma.ProductViewModel
