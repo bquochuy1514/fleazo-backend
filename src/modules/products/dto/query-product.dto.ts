@@ -9,12 +9,14 @@ export class QueryProductDto {
   categoryId?: number;
 
   @IsOptional()
-  @IsString({ message: 'Tỉnh/thành phố phải là chuỗi ký tự' })
-  province?: string;
+  @Type(() => Number)
+  @IsInt({ message: 'Mã tỉnh/thành phố phải là số nguyên' })
+  provinceCode?: number;
 
   @IsOptional()
-  @IsString({ message: 'Quận/huyện phải là chuỗi ký tự' })
-  district?: string;
+  @Type(() => Number)
+  @IsInt({ message: 'Mã phường/xã phải là số nguyên' })
+  wardCode?: number;
 
   @IsOptional()
   @IsEnum(ProductCondition, { message: 'Tình trạng sản phẩm không hợp lệ' })

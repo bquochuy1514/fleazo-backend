@@ -216,12 +216,24 @@ export class ProductsService {
       throw new ForbiddenException('Bạn không có quyền chỉnh sửa sản phẩm này');
     }
 
-    // 2. Validate category if it's being changed
+    // 2. Validate paired location fields — code and name must travel together
+    const { provinceCode, provinceName, wardCode, wardName } = dto;
+    const provincePairBroken =
+      (provinceCode !== undefined) !== (provinceName !== undefined);
+    const wardPairBroken =
+      (wardCode !== undefined) !== (wardName !== undefined);
+    if (provincePairBroken || wardPairBroken) {
+      throw new BadRequestException(
+        'Vui lòng cung cấp đầy đủ mã và tên của tỉnh/thành phố hoặc phường/xã.',
+      );
+    }
+
+    // 3. Validate category if it's being changed
     if (dto.categoryId !== undefined) {
       await this.categoriesService.validateLeafCategory(dto.categoryId);
     }
 
-    // 3. Resolve delete/order instructions against the current image set
+    // 4. Resolve delete/order instructions against the current image set
     const newFilesCount = files?.length ?? 0;
     const { deleteImageIds, remainingImages, imagesOrder } =
       this.resolveImageChanges(
@@ -231,7 +243,7 @@ export class ProductsService {
         newFilesCount,
       );
 
-    // 4. Enforce at least 1 image in the final result, unless still a draft
+    // 5. Enforce at least 1 image in the final result, unless still a draft
     const finalImageCount = remainingImages.length + newFilesCount;
     if (product.status !== ProductStatus.DRAFT && finalImageCount === 0) {
       throw new BadRequestException(
@@ -239,11 +251,11 @@ export class ProductsService {
       );
     }
 
-    // 5. Upload new images to Cloudinary, rolling back on partial failure
+    // 6. Upload new images to Cloudinary, rolling back on partial failure
     const uploadedImages =
       newFilesCount > 0 ? await this.uploadProductImages(files) : [];
 
-    // 6. Final order — explicit imagesOrder if given, otherwise: kept images in
+    // 7. Final order — explicit imagesOrder if given, otherwise: kept images in
     //    their current order, followed by new images in upload order
     const finalOrder: ImageOrderItem[] =
       imagesOrder.length > 0
@@ -259,10 +271,10 @@ export class ProductsService {
             })),
           ];
 
-    // 7. Strip image-instruction fields out of dto before using it as Product data
+    // 8. Strip image-instruction fields out of dto before using it as Product data
     const { deleteImageIds: _di, imagesOrder: _io, ...productFields } = dto;
 
-    // 8. Apply text update + image delete/reorder/create atomically
+    // 9. Apply text update + image delete/reorder/create atomically
     const updated = await this.prisma.$transaction(async (tx) => {
       if (deleteImageIds.length > 0) {
         await tx.productImage.deleteMany({
@@ -295,7 +307,7 @@ export class ProductsService {
       });
     });
 
-    // 9. Clean up deleted images from Cloudinary only after the DB transaction commits
+    // 10. Clean up deleted images from Cloudinary only after the DB transaction commits
     const deletedImages = product.images.filter((img) =>
       deleteImageIds.includes(img.id),
     );
@@ -429,8 +441,8 @@ export class ProductsService {
   async findAll(query: QueryProductDto) {
     const {
       categoryId,
-      province,
-      district,
+      provinceCode,
+      wardCode,
       condition,
       minPrice,
       maxPrice,
@@ -461,8 +473,8 @@ export class ProductsService {
     const where: Prisma.ProductWhereInput = {
       status: ProductStatus.ACTIVE,
       ...(categoryFilter && { categoryId: { in: categoryFilter } }),
-      ...(province && { province }),
-      ...(district && { district }),
+      ...(provinceCode && { provinceCode }),
+      ...(wardCode && { wardCode }),
       ...(condition && { condition }),
       ...((minPrice !== undefined || maxPrice !== undefined) && {
         price: {

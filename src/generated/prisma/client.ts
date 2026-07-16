@@ -69,3 +69,8 @@ export type SavedProduct = Prisma.SavedProductModel
  * 
  */
 export type ProductView = Prisma.ProductViewModel
+/**
+ * Model Review
+ * 
+ */
+export type Review = Prisma.ReviewModel

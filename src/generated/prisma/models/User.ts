@@ -28,6 +28,8 @@ export type AggregateUser = {
 
 export type UserAvgAggregateOutputType = {
   id: number | null
+  provinceCode: number | null
+  wardCode: number | null
   avgRating: number | null
   completionRate: number | null
   responseRate: number | null
@@ -35,6 +37,8 @@ export type UserAvgAggregateOutputType = {
 
 export type UserSumAggregateOutputType = {
   id: number | null
+  provinceCode: number | null
+  wardCode: number | null
   avgRating: number | null
   completionRate: number | null
   responseRate: number | null
@@ -48,6 +52,11 @@ export type UserMinAggregateOutputType = {
   phone: string | null
   avatar: string | null
   role: $Enums.UserRole | null
+  provinceCode: number | null
+  provinceName: string | null
+  wardCode: number | null
+  wardName: string | null
+  addressDetail: string | null
   isActive: boolean | null
   isBanned: boolean | null
   codeOtp: string | null
@@ -69,6 +78,11 @@ export type UserMaxAggregateOutputType = {
   phone: string | null
   avatar: string | null
   role: $Enums.UserRole | null
+  provinceCode: number | null
+  provinceName: string | null
+  wardCode: number | null
+  wardName: string | null
+  addressDetail: string | null
   isActive: boolean | null
   isBanned: boolean | null
   codeOtp: string | null
@@ -90,6 +104,11 @@ export type UserCountAggregateOutputType = {
   phone: number
   avatar: number
   role: number
+  provinceCode: number
+  provinceName: number
+  wardCode: number
+  wardName: number
+  addressDetail: number
   isActive: number
   isBanned: number
   codeOtp: number
@@ -107,6 +126,8 @@ export type UserCountAggregateOutputType = {
 
 export type UserAvgAggregateInputType = {
   id?: true
+  provinceCode?: true
+  wardCode?: true
   avgRating?: true
   completionRate?: true
   responseRate?: true
@@ -114,6 +135,8 @@ export type UserAvgAggregateInputType = {
 
 export type UserSumAggregateInputType = {
   id?: true
+  provinceCode?: true
+  wardCode?: true
   avgRating?: true
   completionRate?: true
   responseRate?: true
@@ -127,6 +150,11 @@ export type UserMinAggregateInputType = {
   phone?: true
   avatar?: true
   role?: true
+  provinceCode?: true
+  provinceName?: true
+  wardCode?: true
+  wardName?: true
+  addressDetail?: true
   isActive?: true
   isBanned?: true
   codeOtp?: true
@@ -148,6 +176,11 @@ export type UserMaxAggregateInputType = {
   phone?: true
   avatar?: true
   role?: true
+  provinceCode?: true
+  provinceName?: true
+  wardCode?: true
+  wardName?: true
+  addressDetail?: true
   isActive?: true
   isBanned?: true
   codeOtp?: true
@@ -169,6 +202,11 @@ export type UserCountAggregateInputType = {
   phone?: true
   avatar?: true
   role?: true
+  provinceCode?: true
+  provinceName?: true
+  wardCode?: true
+  wardName?: true
+  addressDetail?: true
   isActive?: true
   isBanned?: true
   codeOtp?: true
@@ -277,6 +315,11 @@ export type UserGroupByOutputType = {
   phone: string | null
   avatar: string
   role: $Enums.UserRole
+  provinceCode: number | null
+  provinceName: string | null
+  wardCode: number | null
+  wardName: string | null
+  addressDetail: string | null
   isActive: boolean
   isBanned: boolean
   codeOtp: string | null
@@ -321,6 +364,11 @@ export type UserWhereInput = {
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   avatar?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
+  provinceCode?: Prisma.IntNullableFilter<"User"> | number | null
+  provinceName?: Prisma.StringNullableFilter<"User"> | string | null
+  wardCode?: Prisma.IntNullableFilter<"User"> | number | null
+  wardName?: Prisma.StringNullableFilter<"User"> | string | null
+  addressDetail?: Prisma.StringNullableFilter<"User"> | string | null
   isActive?: Prisma.BoolFilter<"User"> | boolean
   isBanned?: Prisma.BoolFilter<"User"> | boolean
   codeOtp?: Prisma.StringNullableFilter<"User"> | string | null
@@ -335,6 +383,8 @@ export type UserWhereInput = {
   products?: Prisma.ProductListRelationFilter
   savedProducts?: Prisma.SavedProductListRelationFilter
   productViews?: Prisma.ProductViewListRelationFilter
+  reviewsWritten?: Prisma.ReviewListRelationFilter
+  reviewsReceived?: Prisma.ReviewListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -345,6 +395,11 @@ export type UserOrderByWithRelationInput = {
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  provinceCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  provinceName?: Prisma.SortOrderInput | Prisma.SortOrder
+  wardCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  wardName?: Prisma.SortOrderInput | Prisma.SortOrder
+  addressDetail?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   isBanned?: Prisma.SortOrder
   codeOtp?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -359,6 +414,8 @@ export type UserOrderByWithRelationInput = {
   products?: Prisma.ProductOrderByRelationAggregateInput
   savedProducts?: Prisma.SavedProductOrderByRelationAggregateInput
   productViews?: Prisma.ProductViewOrderByRelationAggregateInput
+  reviewsWritten?: Prisma.ReviewOrderByRelationAggregateInput
+  reviewsReceived?: Prisma.ReviewOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -372,6 +429,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   phone?: Prisma.StringNullableFilter<"User"> | string | null
   avatar?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
+  provinceCode?: Prisma.IntNullableFilter<"User"> | number | null
+  provinceName?: Prisma.StringNullableFilter<"User"> | string | null
+  wardCode?: Prisma.IntNullableFilter<"User"> | number | null
+  wardName?: Prisma.StringNullableFilter<"User"> | string | null
+  addressDetail?: Prisma.StringNullableFilter<"User"> | string | null
   isActive?: Prisma.BoolFilter<"User"> | boolean
   isBanned?: Prisma.BoolFilter<"User"> | boolean
   codeOtp?: Prisma.StringNullableFilter<"User"> | string | null
@@ -386,6 +448,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   products?: Prisma.ProductListRelationFilter
   savedProducts?: Prisma.SavedProductListRelationFilter
   productViews?: Prisma.ProductViewListRelationFilter
+  reviewsWritten?: Prisma.ReviewListRelationFilter
+  reviewsReceived?: Prisma.ReviewListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -396,6 +460,11 @@ export type UserOrderByWithAggregationInput = {
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  provinceCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  provinceName?: Prisma.SortOrderInput | Prisma.SortOrder
+  wardCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  wardName?: Prisma.SortOrderInput | Prisma.SortOrder
+  addressDetail?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   isBanned?: Prisma.SortOrder
   codeOtp?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -425,6 +494,11 @@ export type UserScalarWhereWithAggregatesInput = {
   phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   avatar?: Prisma.StringWithAggregatesFilter<"User"> | string
   role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
+  provinceCode?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
+  provinceName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  wardCode?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
+  wardName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  addressDetail?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   isBanned?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   codeOtp?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -445,6 +519,11 @@ export type UserCreateInput = {
   phone?: string | null
   avatar?: string
   role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
   isActive?: boolean
   isBanned?: boolean
   codeOtp?: string | null
@@ -459,6 +538,8 @@ export type UserCreateInput = {
   products?: Prisma.ProductCreateNestedManyWithoutSellerInput
   savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
   productViews?: Prisma.ProductViewCreateNestedManyWithoutUserInput
+  reviewsWritten?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutSellerInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -469,6 +550,11 @@ export type UserUncheckedCreateInput = {
   phone?: string | null
   avatar?: string
   role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
   isActive?: boolean
   isBanned?: boolean
   codeOtp?: string | null
@@ -483,6 +569,8 @@ export type UserUncheckedCreateInput = {
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
   savedProducts?: Prisma.SavedProductUncheckedCreateNestedManyWithoutUserInput
   productViews?: Prisma.ProductViewUncheckedCreateNestedManyWithoutUserInput
+  reviewsWritten?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
 }
 
 export type UserUpdateInput = {
@@ -492,6 +580,11 @@ export type UserUpdateInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -506,6 +599,8 @@ export type UserUpdateInput = {
   products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
   savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
   productViews?: Prisma.ProductViewUpdateManyWithoutUserNestedInput
+  reviewsWritten?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -516,6 +611,11 @@ export type UserUncheckedUpdateInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -530,6 +630,8 @@ export type UserUncheckedUpdateInput = {
   products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
   savedProducts?: Prisma.SavedProductUncheckedUpdateManyWithoutUserNestedInput
   productViews?: Prisma.ProductViewUncheckedUpdateManyWithoutUserNestedInput
+  reviewsWritten?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -540,6 +642,11 @@ export type UserCreateManyInput = {
   phone?: string | null
   avatar?: string
   role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
   isActive?: boolean
   isBanned?: boolean
   codeOtp?: string | null
@@ -560,6 +667,11 @@ export type UserUpdateManyMutationInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -581,6 +693,11 @@ export type UserUncheckedUpdateManyInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -602,6 +719,11 @@ export type UserCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  provinceCode?: Prisma.SortOrder
+  provinceName?: Prisma.SortOrder
+  wardCode?: Prisma.SortOrder
+  wardName?: Prisma.SortOrder
+  addressDetail?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   isBanned?: Prisma.SortOrder
   codeOtp?: Prisma.SortOrder
@@ -617,6 +739,8 @@ export type UserCountOrderByAggregateInput = {
 
 export type UserAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  provinceCode?: Prisma.SortOrder
+  wardCode?: Prisma.SortOrder
   avgRating?: Prisma.SortOrder
   completionRate?: Prisma.SortOrder
   responseRate?: Prisma.SortOrder
@@ -630,6 +754,11 @@ export type UserMaxOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  provinceCode?: Prisma.SortOrder
+  provinceName?: Prisma.SortOrder
+  wardCode?: Prisma.SortOrder
+  wardName?: Prisma.SortOrder
+  addressDetail?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   isBanned?: Prisma.SortOrder
   codeOtp?: Prisma.SortOrder
@@ -651,6 +780,11 @@ export type UserMinOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  provinceCode?: Prisma.SortOrder
+  provinceName?: Prisma.SortOrder
+  wardCode?: Prisma.SortOrder
+  wardName?: Prisma.SortOrder
+  addressDetail?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   isBanned?: Prisma.SortOrder
   codeOtp?: Prisma.SortOrder
@@ -666,6 +800,8 @@ export type UserMinOrderByAggregateInput = {
 
 export type UserSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  provinceCode?: Prisma.SortOrder
+  wardCode?: Prisma.SortOrder
   avgRating?: Prisma.SortOrder
   completionRate?: Prisma.SortOrder
   responseRate?: Prisma.SortOrder
@@ -691,6 +827,14 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type EnumUserRoleFieldUpdateOperationsInput = {
   set?: $Enums.UserRole
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type BoolFieldUpdateOperationsInput = {
@@ -765,6 +909,34 @@ export type UserUpdateOneWithoutProductViewsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProductViewsInput, Prisma.UserUpdateWithoutProductViewsInput>, Prisma.UserUncheckedUpdateWithoutProductViewsInput>
 }
 
+export type UserCreateNestedOneWithoutReviewsWrittenInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewsWrittenInput, Prisma.UserUncheckedCreateWithoutReviewsWrittenInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewsWrittenInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutReviewsReceivedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewsReceivedInput, Prisma.UserUncheckedCreateWithoutReviewsReceivedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewsReceivedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutReviewsWrittenNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewsWrittenInput, Prisma.UserUncheckedCreateWithoutReviewsWrittenInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewsWrittenInput
+  upsert?: Prisma.UserUpsertWithoutReviewsWrittenInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewsWrittenInput, Prisma.UserUpdateWithoutReviewsWrittenInput>, Prisma.UserUncheckedUpdateWithoutReviewsWrittenInput>
+}
+
+export type UserUpdateOneRequiredWithoutReviewsReceivedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewsReceivedInput, Prisma.UserUncheckedCreateWithoutReviewsReceivedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewsReceivedInput
+  upsert?: Prisma.UserUpsertWithoutReviewsReceivedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewsReceivedInput, Prisma.UserUpdateWithoutReviewsReceivedInput>, Prisma.UserUncheckedUpdateWithoutReviewsReceivedInput>
+}
+
 export type UserCreateWithoutProductsInput = {
   email: string
   password?: string | null
@@ -772,6 +944,11 @@ export type UserCreateWithoutProductsInput = {
   phone?: string | null
   avatar?: string
   role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
   isActive?: boolean
   isBanned?: boolean
   codeOtp?: string | null
@@ -785,6 +962,8 @@ export type UserCreateWithoutProductsInput = {
   updatedAt?: Date | string
   savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
   productViews?: Prisma.ProductViewCreateNestedManyWithoutUserInput
+  reviewsWritten?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutSellerInput
 }
 
 export type UserUncheckedCreateWithoutProductsInput = {
@@ -795,6 +974,11 @@ export type UserUncheckedCreateWithoutProductsInput = {
   phone?: string | null
   avatar?: string
   role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
   isActive?: boolean
   isBanned?: boolean
   codeOtp?: string | null
@@ -808,6 +992,8 @@ export type UserUncheckedCreateWithoutProductsInput = {
   updatedAt?: Date | string
   savedProducts?: Prisma.SavedProductUncheckedCreateNestedManyWithoutUserInput
   productViews?: Prisma.ProductViewUncheckedCreateNestedManyWithoutUserInput
+  reviewsWritten?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
 }
 
 export type UserCreateOrConnectWithoutProductsInput = {
@@ -833,6 +1019,11 @@ export type UserUpdateWithoutProductsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -846,6 +1037,8 @@ export type UserUpdateWithoutProductsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
   productViews?: Prisma.ProductViewUpdateManyWithoutUserNestedInput
+  reviewsWritten?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProductsInput = {
@@ -856,6 +1049,11 @@ export type UserUncheckedUpdateWithoutProductsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -869,6 +1067,8 @@ export type UserUncheckedUpdateWithoutProductsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   savedProducts?: Prisma.SavedProductUncheckedUpdateManyWithoutUserNestedInput
   productViews?: Prisma.ProductViewUncheckedUpdateManyWithoutUserNestedInput
+  reviewsWritten?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
 }
 
 export type UserCreateWithoutSavedProductsInput = {
@@ -878,6 +1078,11 @@ export type UserCreateWithoutSavedProductsInput = {
   phone?: string | null
   avatar?: string
   role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
   isActive?: boolean
   isBanned?: boolean
   codeOtp?: string | null
@@ -891,6 +1096,8 @@ export type UserCreateWithoutSavedProductsInput = {
   updatedAt?: Date | string
   products?: Prisma.ProductCreateNestedManyWithoutSellerInput
   productViews?: Prisma.ProductViewCreateNestedManyWithoutUserInput
+  reviewsWritten?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutSellerInput
 }
 
 export type UserUncheckedCreateWithoutSavedProductsInput = {
@@ -901,6 +1108,11 @@ export type UserUncheckedCreateWithoutSavedProductsInput = {
   phone?: string | null
   avatar?: string
   role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
   isActive?: boolean
   isBanned?: boolean
   codeOtp?: string | null
@@ -914,6 +1126,8 @@ export type UserUncheckedCreateWithoutSavedProductsInput = {
   updatedAt?: Date | string
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
   productViews?: Prisma.ProductViewUncheckedCreateNestedManyWithoutUserInput
+  reviewsWritten?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
 }
 
 export type UserCreateOrConnectWithoutSavedProductsInput = {
@@ -939,6 +1153,11 @@ export type UserUpdateWithoutSavedProductsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -952,6 +1171,8 @@ export type UserUpdateWithoutSavedProductsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
   productViews?: Prisma.ProductViewUpdateManyWithoutUserNestedInput
+  reviewsWritten?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavedProductsInput = {
@@ -962,6 +1183,11 @@ export type UserUncheckedUpdateWithoutSavedProductsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -975,6 +1201,8 @@ export type UserUncheckedUpdateWithoutSavedProductsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
   productViews?: Prisma.ProductViewUncheckedUpdateManyWithoutUserNestedInput
+  reviewsWritten?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
 }
 
 export type UserCreateWithoutProductViewsInput = {
@@ -984,6 +1212,11 @@ export type UserCreateWithoutProductViewsInput = {
   phone?: string | null
   avatar?: string
   role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
   isActive?: boolean
   isBanned?: boolean
   codeOtp?: string | null
@@ -997,6 +1230,8 @@ export type UserCreateWithoutProductViewsInput = {
   updatedAt?: Date | string
   products?: Prisma.ProductCreateNestedManyWithoutSellerInput
   savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
+  reviewsWritten?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutSellerInput
 }
 
 export type UserUncheckedCreateWithoutProductViewsInput = {
@@ -1007,6 +1242,11 @@ export type UserUncheckedCreateWithoutProductViewsInput = {
   phone?: string | null
   avatar?: string
   role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
   isActive?: boolean
   isBanned?: boolean
   codeOtp?: string | null
@@ -1020,6 +1260,8 @@ export type UserUncheckedCreateWithoutProductViewsInput = {
   updatedAt?: Date | string
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
   savedProducts?: Prisma.SavedProductUncheckedCreateNestedManyWithoutUserInput
+  reviewsWritten?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
 }
 
 export type UserCreateOrConnectWithoutProductViewsInput = {
@@ -1045,6 +1287,11 @@ export type UserUpdateWithoutProductViewsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1058,6 +1305,8 @@ export type UserUpdateWithoutProductViewsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
   savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
+  reviewsWritten?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProductViewsInput = {
@@ -1068,6 +1317,11 @@ export type UserUncheckedUpdateWithoutProductViewsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1081,6 +1335,276 @@ export type UserUncheckedUpdateWithoutProductViewsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
   savedProducts?: Prisma.SavedProductUncheckedUpdateManyWithoutUserNestedInput
+  reviewsWritten?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
+}
+
+export type UserCreateWithoutReviewsWrittenInput = {
+  email: string
+  password?: string | null
+  fullName: string
+  phone?: string | null
+  avatar?: string
+  role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
+  isActive?: boolean
+  isBanned?: boolean
+  codeOtp?: string | null
+  codeOtpExpiration?: Date | string | null
+  isOtpVerified?: boolean
+  hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  products?: Prisma.ProductCreateNestedManyWithoutSellerInput
+  savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
+  productViews?: Prisma.ProductViewCreateNestedManyWithoutUserInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutSellerInput
+}
+
+export type UserUncheckedCreateWithoutReviewsWrittenInput = {
+  id?: number
+  email: string
+  password?: string | null
+  fullName: string
+  phone?: string | null
+  avatar?: string
+  role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
+  isActive?: boolean
+  isBanned?: boolean
+  codeOtp?: string | null
+  codeOtpExpiration?: Date | string | null
+  isOtpVerified?: boolean
+  hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
+  savedProducts?: Prisma.SavedProductUncheckedCreateNestedManyWithoutUserInput
+  productViews?: Prisma.ProductViewUncheckedCreateNestedManyWithoutUserInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
+}
+
+export type UserCreateOrConnectWithoutReviewsWrittenInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewsWrittenInput, Prisma.UserUncheckedCreateWithoutReviewsWrittenInput>
+}
+
+export type UserCreateWithoutReviewsReceivedInput = {
+  email: string
+  password?: string | null
+  fullName: string
+  phone?: string | null
+  avatar?: string
+  role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
+  isActive?: boolean
+  isBanned?: boolean
+  codeOtp?: string | null
+  codeOtpExpiration?: Date | string | null
+  isOtpVerified?: boolean
+  hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  products?: Prisma.ProductCreateNestedManyWithoutSellerInput
+  savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
+  productViews?: Prisma.ProductViewCreateNestedManyWithoutUserInput
+  reviewsWritten?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+}
+
+export type UserUncheckedCreateWithoutReviewsReceivedInput = {
+  id?: number
+  email: string
+  password?: string | null
+  fullName: string
+  phone?: string | null
+  avatar?: string
+  role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
+  isActive?: boolean
+  isBanned?: boolean
+  codeOtp?: string | null
+  codeOtpExpiration?: Date | string | null
+  isOtpVerified?: boolean
+  hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
+  savedProducts?: Prisma.SavedProductUncheckedCreateNestedManyWithoutUserInput
+  productViews?: Prisma.ProductViewUncheckedCreateNestedManyWithoutUserInput
+  reviewsWritten?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+}
+
+export type UserCreateOrConnectWithoutReviewsReceivedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewsReceivedInput, Prisma.UserUncheckedCreateWithoutReviewsReceivedInput>
+}
+
+export type UserUpsertWithoutReviewsWrittenInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReviewsWrittenInput, Prisma.UserUncheckedUpdateWithoutReviewsWrittenInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewsWrittenInput, Prisma.UserUncheckedCreateWithoutReviewsWrittenInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReviewsWrittenInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReviewsWrittenInput, Prisma.UserUncheckedUpdateWithoutReviewsWrittenInput>
+}
+
+export type UserUpdateWithoutReviewsWrittenInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
+  savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
+  productViews?: Prisma.ProductViewUpdateManyWithoutUserNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReviewsWrittenInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
+  savedProducts?: Prisma.SavedProductUncheckedUpdateManyWithoutUserNestedInput
+  productViews?: Prisma.ProductViewUncheckedUpdateManyWithoutUserNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
+}
+
+export type UserUpsertWithoutReviewsReceivedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReviewsReceivedInput, Prisma.UserUncheckedUpdateWithoutReviewsReceivedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewsReceivedInput, Prisma.UserUncheckedCreateWithoutReviewsReceivedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReviewsReceivedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReviewsReceivedInput, Prisma.UserUncheckedUpdateWithoutReviewsReceivedInput>
+}
+
+export type UserUpdateWithoutReviewsReceivedInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
+  savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
+  productViews?: Prisma.ProductViewUpdateManyWithoutUserNestedInput
+  reviewsWritten?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
+  savedProducts?: Prisma.SavedProductUncheckedUpdateManyWithoutUserNestedInput
+  productViews?: Prisma.ProductViewUncheckedUpdateManyWithoutUserNestedInput
+  reviewsWritten?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 
@@ -1092,12 +1616,16 @@ export type UserCountOutputType = {
   products: number
   savedProducts: number
   productViews: number
+  reviewsWritten: number
+  reviewsReceived: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   products?: boolean | UserCountOutputTypeCountProductsArgs
   savedProducts?: boolean | UserCountOutputTypeCountSavedProductsArgs
   productViews?: boolean | UserCountOutputTypeCountProductViewsArgs
+  reviewsWritten?: boolean | UserCountOutputTypeCountReviewsWrittenArgs
+  reviewsReceived?: boolean | UserCountOutputTypeCountReviewsReceivedArgs
 }
 
 /**
@@ -1131,6 +1659,20 @@ export type UserCountOutputTypeCountProductViewsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.ProductViewWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReviewsWrittenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReviewWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReviewsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReviewWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1140,6 +1682,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   phone?: boolean
   avatar?: boolean
   role?: boolean
+  provinceCode?: boolean
+  provinceName?: boolean
+  wardCode?: boolean
+  wardName?: boolean
+  addressDetail?: boolean
   isActive?: boolean
   isBanned?: boolean
   codeOtp?: boolean
@@ -1154,6 +1701,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   products?: boolean | Prisma.User$productsArgs<ExtArgs>
   savedProducts?: boolean | Prisma.User$savedProductsArgs<ExtArgs>
   productViews?: boolean | Prisma.User$productViewsArgs<ExtArgs>
+  reviewsWritten?: boolean | Prisma.User$reviewsWrittenArgs<ExtArgs>
+  reviewsReceived?: boolean | Prisma.User$reviewsReceivedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1165,6 +1714,11 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   phone?: boolean
   avatar?: boolean
   role?: boolean
+  provinceCode?: boolean
+  provinceName?: boolean
+  wardCode?: boolean
+  wardName?: boolean
+  addressDetail?: boolean
   isActive?: boolean
   isBanned?: boolean
   codeOtp?: boolean
@@ -1186,6 +1740,11 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   phone?: boolean
   avatar?: boolean
   role?: boolean
+  provinceCode?: boolean
+  provinceName?: boolean
+  wardCode?: boolean
+  wardName?: boolean
+  addressDetail?: boolean
   isActive?: boolean
   isBanned?: boolean
   codeOtp?: boolean
@@ -1207,6 +1766,11 @@ export type UserSelectScalar = {
   phone?: boolean
   avatar?: boolean
   role?: boolean
+  provinceCode?: boolean
+  provinceName?: boolean
+  wardCode?: boolean
+  wardName?: boolean
+  addressDetail?: boolean
   isActive?: boolean
   isBanned?: boolean
   codeOtp?: boolean
@@ -1220,11 +1784,13 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "fullName" | "phone" | "avatar" | "role" | "isActive" | "isBanned" | "codeOtp" | "codeOtpExpiration" | "isOtpVerified" | "hashedRefreshToken" | "avgRating" | "completionRate" | "responseRate" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "fullName" | "phone" | "avatar" | "role" | "provinceCode" | "provinceName" | "wardCode" | "wardName" | "addressDetail" | "isActive" | "isBanned" | "codeOtp" | "codeOtpExpiration" | "isOtpVerified" | "hashedRefreshToken" | "avgRating" | "completionRate" | "responseRate" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   products?: boolean | Prisma.User$productsArgs<ExtArgs>
   savedProducts?: boolean | Prisma.User$savedProductsArgs<ExtArgs>
   productViews?: boolean | Prisma.User$productViewsArgs<ExtArgs>
+  reviewsWritten?: boolean | Prisma.User$reviewsWrittenArgs<ExtArgs>
+  reviewsReceived?: boolean | Prisma.User$reviewsReceivedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1236,6 +1802,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     products: Prisma.$ProductPayload<ExtArgs>[]
     savedProducts: Prisma.$SavedProductPayload<ExtArgs>[]
     productViews: Prisma.$ProductViewPayload<ExtArgs>[]
+    reviewsWritten: Prisma.$ReviewPayload<ExtArgs>[]
+    reviewsReceived: Prisma.$ReviewPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1245,6 +1813,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     phone: string | null
     avatar: string
     role: $Enums.UserRole
+    provinceCode: number | null
+    provinceName: string | null
+    wardCode: number | null
+    wardName: string | null
+    addressDetail: string | null
     isActive: boolean
     isBanned: boolean
     codeOtp: string | null
@@ -1653,6 +2226,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   products<T extends Prisma.User$productsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$productsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   savedProducts<T extends Prisma.User$savedProductsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savedProductsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   productViews<T extends Prisma.User$productViewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$productViewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductViewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reviewsWritten<T extends Prisma.User$reviewsWrittenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewsWrittenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reviewsReceived<T extends Prisma.User$reviewsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1689,6 +2264,11 @@ export interface UserFieldRefs {
   readonly phone: Prisma.FieldRef<"User", 'String'>
   readonly avatar: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'UserRole'>
+  readonly provinceCode: Prisma.FieldRef<"User", 'Int'>
+  readonly provinceName: Prisma.FieldRef<"User", 'String'>
+  readonly wardCode: Prisma.FieldRef<"User", 'Int'>
+  readonly wardName: Prisma.FieldRef<"User", 'String'>
+  readonly addressDetail: Prisma.FieldRef<"User", 'String'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
   readonly isBanned: Prisma.FieldRef<"User", 'Boolean'>
   readonly codeOtp: Prisma.FieldRef<"User", 'String'>
@@ -2162,6 +2742,54 @@ export type User$productViewsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.ProductViewScalarFieldEnum | Prisma.ProductViewScalarFieldEnum[]
+}
+
+/**
+ * User.reviewsWritten
+ */
+export type User$reviewsWrittenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Review
+   */
+  select?: Prisma.ReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Review
+   */
+  omit?: Prisma.ReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReviewInclude<ExtArgs> | null
+  where?: Prisma.ReviewWhereInput
+  orderBy?: Prisma.ReviewOrderByWithRelationInput | Prisma.ReviewOrderByWithRelationInput[]
+  cursor?: Prisma.ReviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReviewScalarFieldEnum | Prisma.ReviewScalarFieldEnum[]
+}
+
+/**
+ * User.reviewsReceived
+ */
+export type User$reviewsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Review
+   */
+  select?: Prisma.ReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Review
+   */
+  omit?: Prisma.ReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReviewInclude<ExtArgs> | null
+  where?: Prisma.ReviewWhereInput
+  orderBy?: Prisma.ReviewOrderByWithRelationInput | Prisma.ReviewOrderByWithRelationInput[]
+  cursor?: Prisma.ReviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReviewScalarFieldEnum | Prisma.ReviewScalarFieldEnum[]
 }
 
 /**

@@ -83,7 +83,7 @@ Design modeled after Chợ Tốt (a real large-scale C2C marketplace with the sa
 - Realtime: WebSocket (chat between buyer and seller)
 - Email: Nodemailer with Gmail SMTP
 - File storage: Cloudinary (avatars, product images)
-- Address API: [provinces.open-api.vn](https://provinces.open-api.vn) — free, no API key required (Tỉnh/Quận/Phường)
+- Address API: [provinces.open-api.vn](https://provinces.open-api.vn) `/api/v2/` — free, no API key required. 2-level structure (Tỉnh/Thành phố → Phường/Xã) since Vietnam's July 2025 administrative merger abolished the district level — do not use `/api/v1/` (pre-merger, 3-level, obsolete)
 
 ## Recommendation Engine
 
@@ -253,9 +253,18 @@ Rules:
 - Use `@db.VarChar(n)` for fixed-length strings (e.g. phone, OTP)
 - Always end with a `// — Timestamps —` section containing `createdAt` and `updatedAt`
 
+## Location Fields — User & Product
+
+Vietnam's administrative merger (July 2025) collapsed the old 3-level structure (Tỉnh → Huyện → Xã) into 2 levels (Tỉnh/Thành phố → Phường/Xã), abolishing the district tier entirely. `provinces.open-api.vn`'s `/api/v2/` reflects this — it returns only province and ward, no district. Schema follows the new 2-level structure.
+
+Both `User` and `Product` carry their own independent set of 4 location fields (`provinceCode`, `provinceName`, `wardCode`, `wardName`) — **not a shared `Address` model**. A user's home location and a listing's location are unrelated facts about two different entities (a seller can live in one district and list an item stored elsewhere); a shared/polymorphic `Address` table would need an artificial owner-discriminator or two nullable FKs for no real benefit, since neither side needs to query "all addresses" as a cross-cutting resource. Duplicating these 4 scalar columns across models is the same pattern already used for `createdAt`/`updatedAt` on every model — not denormalization to worry about.
+
+- Both `code` and `name` are stored (not just the human-readable name) — Vietnamese place names have diacritics/formatting variants that make string-based filtering unreliable; `code` from the API is used for exact filtering/matching, `name` is cached purely for display so the app never has to re-hit the external API to render a listing or profile.
+- No local mirror table for the full province/ward reference list — that data barely changes and the frontend calls `provinces.open-api.vn` directly for the picker dropdown. Backend only ever stores the _result_ of a selection, not the reference data itself.
+- `Product`'s fields are required (every listing must have a location). `User`'s fields are nullable (optional profile info, feeds a future "listings near you" feature — not yet built, but worth capturing on profile now since it's cheap and the frontend will have a location picker anyway for Products).
+
 ## Product Schema Decisions
 
-- `Product.province` / `Product.district` / `Product.ward` — structured address fields (not free text) to support location-based filtering and recommendation. Frontend uses [provinces.open-api.vn](https://provinces.open-api.vn) component (3-level: Tỉnh → Quận → Phường). `ward` is optional.
 - `Product.price` — `Decimal(12, 0)`, no decimal places (VNĐ has no cents), avoids float rounding errors.
 - `Product.rejectedReason` — nullable String; filled by admin when setting status to `REJECTED`.
 - `ProductImage.publicId` — Cloudinary public_id stored explicitly to avoid URL parsing on delete.
@@ -294,6 +303,7 @@ Stay at `0` for every seller until the respective modules land — don't use for
 - Forgot password: forgot-password → verify-forgot-otp → reset-password
 - Google OAuth for social login
 - No LocalStrategy/LocalAuthGuard — validation is handled directly in AuthService.validateUser()
+- `phone` stays optional, unverified (unlike Chợ Tốt, which requires phone verification to post listings). Reasons: Fleazo is a closed university-student community, not an open nationwide marketplace, so fake-account risk is lower; and phone OTP requires a paid SMS gateway, unlike the free Gmail SMTP already used for email OTP — not worth the added cost/friction without evidence of a real spam problem. Revisit if that changes.
 
 ## Mail Service
 

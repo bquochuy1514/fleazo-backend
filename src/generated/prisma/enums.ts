@@ -35,7 +35,8 @@ export const ProductStatus = {
   REJECTED: 'REJECTED',
   SOLD: 'SOLD',
   EXPIRED: 'EXPIRED',
-  BANNED: 'BANNED'
+  BANNED: 'BANNED',
+  CANCELLED: 'CANCELLED'
 } as const
 
 export type ProductStatus = (typeof ProductStatus)[keyof typeof ProductStatus]

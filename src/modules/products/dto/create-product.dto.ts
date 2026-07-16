@@ -3,7 +3,7 @@ import {
   IsEnum,
   IsInt,
   IsNotEmpty,
-  IsOptional,
+  IsPositive,
   IsString,
   Min,
 } from 'class-validator';
@@ -24,17 +24,29 @@ export class CreateProductDto {
   @IsNotEmpty({ message: 'Giá không được để trống' })
   price: number;
 
-  @IsString({ message: 'Tỉnh/thành phố phải là chuỗi ký tự' })
-  @IsNotEmpty({ message: 'Tỉnh/thành phố không được để trống' })
-  province: string;
+  @Type(() => Number)
+  @IsInt({ message: 'Mã tỉnh/thành phố phải là số nguyên' })
+  @IsPositive({ message: 'Mã tỉnh/thành phố không hợp lệ' })
+  @IsNotEmpty({ message: 'Mã tỉnh/thành phố không được để trống' })
+  provinceCode: number;
 
-  @IsString({ message: 'Quận/huyện phải là chuỗi ký tự' })
-  @IsNotEmpty({ message: 'Quận/huyện không được để trống' })
-  district: string;
+  @IsString({ message: 'Tên tỉnh/thành phố phải là chuỗi ký tự' })
+  @IsNotEmpty({ message: 'Tên tỉnh/thành phố không được để trống' })
+  provinceName: string;
 
-  @IsString({ message: 'Phường/xã phải là chuỗi ký tự' })
-  @IsOptional()
-  ward?: string;
+  @Type(() => Number)
+  @IsInt({ message: 'Mã phường/xã phải là số nguyên' })
+  @IsPositive({ message: 'Mã phường/xã không hợp lệ' })
+  @IsNotEmpty({ message: 'Mã phường/xã không được để trống' })
+  wardCode: number;
+
+  @IsString({ message: 'Tên phường/xã phải là chuỗi ký tự' })
+  @IsNotEmpty({ message: 'Tên phường/xã không được để trống' })
+  wardName: string;
+
+  @IsString({ message: 'Địa chỉ chi tiết phải là chuỗi ký tự' })
+  @IsNotEmpty({ message: 'Địa chỉ chi tiết không được để trống' })
+  addressDetail: string;
 
   @IsEnum(ProductCondition, { message: 'Tình trạng sản phẩm không hợp lệ' })
   @IsNotEmpty({ message: 'Tình trạng sản phẩm không được để trống' })

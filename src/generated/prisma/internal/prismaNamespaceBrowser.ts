@@ -56,7 +56,8 @@ export const ModelName = {
   Product: 'Product',
   ProductImage: 'ProductImage',
   SavedProduct: 'SavedProduct',
-  ProductView: 'ProductView'
+  ProductView: 'ProductView',
+  Review: 'Review'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -83,6 +84,11 @@ export const UserScalarFieldEnum = {
   phone: 'phone',
   avatar: 'avatar',
   role: 'role',
+  provinceCode: 'provinceCode',
+  provinceName: 'provinceName',
+  wardCode: 'wardCode',
+  wardName: 'wardName',
+  addressDetail: 'addressDetail',
   isActive: 'isActive',
   isBanned: 'isBanned',
   codeOtp: 'codeOtp',
@@ -117,9 +123,11 @@ export const ProductScalarFieldEnum = {
   title: 'title',
   description: 'description',
   price: 'price',
-  province: 'province',
-  district: 'district',
-  ward: 'ward',
+  provinceCode: 'provinceCode',
+  provinceName: 'provinceName',
+  wardCode: 'wardCode',
+  wardName: 'wardName',
+  addressDetail: 'addressDetail',
   condition: 'condition',
   status: 'status',
   rejectedReason: 'rejectedReason',
@@ -168,6 +176,23 @@ export const ProductViewScalarFieldEnum = {
 } as const
 
 export type ProductViewScalarFieldEnum = (typeof ProductViewScalarFieldEnum)[keyof typeof ProductViewScalarFieldEnum]
+
+
+export const ReviewScalarFieldEnum = {
+  id: 'id',
+  reviewerId: 'reviewerId',
+  sellerId: 'sellerId',
+  productId: 'productId',
+  rating: 'rating',
+  comment: 'comment',
+  sellerReply: 'sellerReply',
+  isPublished: 'isPublished',
+  isHidden: 'isHidden',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
 
 
 export const SortOrder = {

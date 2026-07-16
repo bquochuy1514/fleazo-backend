@@ -71,13 +71,25 @@ export class UsersService {
       throw new NotFoundException('Người dùng không tồn tại.');
     }
 
-    // 2. Update profile
+    // 2. Validate paired location fields — code and name must travel together
+    const { provinceCode, provinceName, wardCode, wardName } = updateProfileDto;
+    const provincePairBroken =
+      (provinceCode !== undefined) !== (provinceName !== undefined);
+    const wardPairBroken =
+      (wardCode !== undefined) !== (wardName !== undefined);
+    if (provincePairBroken || wardPairBroken) {
+      throw new BadRequestException(
+        'Vui lòng cung cấp đầy đủ mã và tên của tỉnh/thành phố hoặc phường/xã.',
+      );
+    }
+
+    // 3. Update profile
     const updated = await this.prisma.user.update({
       where: { id: userId },
       data: updateProfileDto,
     });
 
-    // 3. Strip sensitive fields
+    // 4. Strip sensitive fields
     const {
       password,
       hashedRefreshToken,
@@ -158,11 +170,14 @@ export class UsersService {
 
     if (!user) throw new NotFoundException('Người dùng không tồn tại.');
 
-    // 2. Return only public fields
+    // 2. Return only public fields — provinceName/wardName shown for rough
+    // location context, addressDetail and codes withheld (street-level = home address)
     return {
       id: user.id,
       fullName: user.fullName,
       avatar: user.avatar,
+      provinceName: user.provinceName,
+      wardName: user.wardName,
       createdAt: user.createdAt,
     };
   }
