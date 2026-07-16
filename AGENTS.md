@@ -44,17 +44,34 @@ Fleazo is being built with three goals simultaneously:
 
 **PayOS handles (money → Fleazo):** Membership subscription, Boost, Extend. These are the only real payments in the system.
 
-**PayOS does NOT handle product sales (buyer ↔ seller).** Money for a product transaction moves directly between buyer and seller outside the app (cash on meetup, direct bank transfer) — Fleazo never touches it. Reasons, in order of importance:
+**PayOS does NOT handle product sales (buyer ↔ seller).** Money moves directly between buyer and seller outside the app (cash on meetup, direct transfer) — Fleazo never touches it:
 
-1. **Legal** — holding buyer money and later releasing it to a seller is an intermediary-payment activity that requires an NHNN license in Vietnam. Fleazo doesn't have one and shouldn't build a flow that implies it does.
-2. **PayOS is a single-merchant collector**, not a marketplace payout system — it has no built-in mechanism to split/hold funds per individual seller.
-3. **Behavioral fit** — student C2C trades are mostly in-person meetups on campus; buyers want to inspect items before paying, so forcing payment through the app before meetup adds friction and pushes users off-platform entirely.
+- **Legal**: holding and releasing buyer funds is an intermediary-payment activity requiring an NHNN license, which Fleazo doesn't have.
+- **Technical**: PayOS is a single-merchant collector, not a marketplace payout system — no built-in per-seller split/hold.
+- **Behavioral**: student trades are mostly in-person campus meetups; forcing in-app payment before meetup adds friction and pushes users off-platform.
 
-**Consequence for the schema: there is no `Order` model.** A 2-way buyer/seller confirmation ("mark as sold" + "confirm received") was considered and dropped — in a C2C flow with no money custody, the app can never actually verify a transaction happened, so a 2-way confirmation only adds complexity without adding trust (both sides could confirm a trade that never happened, or a real trade could go unconfirmed). Instead:
+**Consequence: no `Order` model.** A 2-way confirmation was considered and dropped — with no money custody, the app can never verify a trade happened, so confirmation adds complexity without adding trust.
 
-- Seller marks a listing `SOLD` directly on `Product` (single action, already motivated — see `completionRate` below and freeing up their listing slot).
-- `Review` is gated by an existing `Chat` thread between buyer and seller on that listing, not by an `Order` record.
+- Seller marks a listing `SOLD` directly on `Product` (single action — see `completionRate` in Product Schema Decisions).
 - `Product.status` (`SOLD` vs `EXPIRED`) is the only signal the system trusts for "did this seller actually sell things."
+- **`CANCELLED`** — a separate status for a seller voluntarily pulling a still-live listing (`DRAFT`/`PENDING`/`ACTIVE`) for reasons other than a sale (changed mind, sold off-platform without marking `SOLD`, etc). One-way, no "un-cancel" — sellers re-list instead. Excluded from `completionRate`'s numerator and denominator entirely (neither counted as a success nor a failure — an unverifiable off-platform sale shouldn't be penalized as if the listing failed to sell).
+- **`Product` rows are never hard-deleted** — only status changes (including `BANNED`, `CANCELLED`). This keeps `Review.productId` always valid; no delete endpoint exists or should be built without revisiting this.
+
+## Reviews — seller reputation, not product reviews
+
+Reviews rate **the seller** (`User.avgRating`), not the product — every listing is a unique secondhand item sold once, so there's no "review this exact listing for future buyers" case like Shopee/Tiki. What matters is "is this seller trustworthy," a property of the person.
+
+Design modeled after Chợ Tốt (a real large-scale C2C marketplace with the same no-money-custody constraint), which solves the same verification problem via policy/moderation instead of a hard technical gate — with two deliberate departures explained below.
+
+- **One-way only (buyer → seller)**: a reverse "seller reviews buyer" was considered and dropped. Nothing in Fleazo consumes a buyer-role rating (Quality Score only reads seller `avgRating`), so it would add a "block dishonest reviews" benefit that's smaller than the complexity it drags in (role-tagging every review, recalculating who's a buyer vs seller per transaction). Not worth it at this stage.
+- **Loose gate**: a buyer can review a seller if they have an existing `Chat` `Conversation` with them on that `productId` — no proof the trade completed. Trades that skip in-app chat entirely (Zalo/Facebook) can't be reviewed; accepted gap.
+- **One review per buyer–seller pair, ever**: enforced by `@@unique([reviewerId, sellerId])`. If the same buyer buys from the same seller again, the review is **upserted** (rating/comment/productId overwritten to reflect the latest experience), not duplicated — otherwise a buyer who purchases repeatedly from one seller would inflate that seller's review count without representing distinct trust signals.
+- **Immutable once submitted** (aside from the upsert-on-repeat-purchase case above): no edit API for `rating`/`comment` after creation, matching Chợ Tốt's rule that neither party can alter a review after the fact.
+- **Seller can reply once**: `sellerReply` is a single nullable field, not a list — inherently caps it at one reply per review, and the reply itself is also immutable once set.
+- **Delayed publish**: hidden for 3 days after creation, then auto-publishes via cron. (No "wait for both sides" rule anymore now that reviews are one-way.)
+- **Report + hide** after the fact, not upfront moderation — same as Chợ Tốt. No `reportCount`/report table yet; `isHidden` is admin-set manually until a general-purpose reporting feature exists.
+
+`Review` schema: `reviewerId`, `sellerId`, `productId` (grounds the gate check), `rating` (1–5), `comment`, `sellerReply`, `isPublished` (default `false`), `isHidden` (default `false`, admin-set on report), unique on `(reviewerId, sellerId)`.
 
 ## Tech Stack
 
@@ -142,7 +159,7 @@ src/
 │   ├── categories/       # Product categories
 │   ├── payments/         # PayOS transactions for Membership / Boost / Extend (NOT product sales — see Money Flow)
 │   ├── chat/             # Realtime WebSocket chat
-│   ├── reviews/          # Rating and review, gated by an existing Chat thread on the listing
+│   ├── reviews/          # Seller reputation (User.avgRating), gated by an existing Chat Conversation on the listing — see Reviews section
 │   ├── recommendation/   # Session-based + content-based recommendation engine
 │   └── chatbot/          # LLM-powered shopping assistant (function calling)
 ├── common/
@@ -262,12 +279,13 @@ Rules:
 
 ### User: deferred seller-trust fields (placeholder, not yet wired up)
 
-- `User.avgRating`, `User.completionRate`, `User.responseRate` — added to the schema as placeholders (`Float @default(0)`) so the Quality Score formula's field references stay valid, but **no logic writes to them yet**. Each depends on a module/field that doesn't exist yet:
-  - `avgRating` — `AVG(rating)` from `Review` (Reviews module)
-  - `completionRate` — `soldCount / (soldCount + expiredCount)`, counted directly off `Product.status` for that seller (only listings that reached `SOLD` or `EXPIRED`; `DRAFT`/`PENDING`/`ACTIVE` don't count — their lifecycle isn't finished). No `Order` model involved — see Money Flow. Needs `Product.soldAt` added to schema (nullable DateTime, set when status → `SOLD`) to distinguish "actively sold" from "just expired".
-  - `responseRate` — seller reply-within-window ratio from `Chat` (Chat module)
-- This is self-reported by the seller (they choose when to mark `SOLD`) and can be gamed downward (lazy seller lets listings expire instead of marking sold) but not meaningfully upward — safer failure mode than a 2-way confirmation.
-- Wire up the real update logic when Reviews/Chat are implemented and `Product.soldAt` exists. Until then these stay at `0` for every seller — do not use them for ranking/UI yet.
+`User.avgRating`, `User.completionRate`, `User.responseRate` — `Float @default(0)` placeholders so the Quality Score formula's field references stay valid; no logic writes to them yet:
+
+- `avgRating` — `AVG(rating)` from published `Review`s (Reviews module; gate rule in the Reviews section)
+- `completionRate` — `soldCount / (soldCount + expiredCount)`, plain `COUNT(*) ... GROUP BY status` on `Product` per seller, only `SOLD`/`EXPIRED` listings (see Money Flow)
+- `responseRate` — seller reply-within-window ratio from `Chat` (Chat module)
+
+Stay at `0` for every seller until the respective modules land — don't use for ranking/UI yet.
 
 ## Auth Flow
 
@@ -403,9 +421,7 @@ Known gaps, left unimplemented because the blocking module doesn't exist yet. Sc
 
 - `ProductView` logging + `viewCount` cron aggregation — blocked on: recommendation engine work
 - `Product.qualityScore` calculation — blocked on: recommendation engine work
-- `User.avgRating` — blocked on: Reviews module
-- `User.completionRate` — blocked on: adding `Product.soldAt` to schema (no module dependency — see Money Flow, computed directly from `Product.status`)
-- `User.responseRate` — blocked on: Chat module
+- `User.avgRating` / `User.completionRate` / `User.responseRate` — see Product Schema Decisions → User: deferred seller-trust fields
 - Per-tier image limit (`MAX_IMAGES_PER_UPLOAD` is a temporary hard cap of 10) — blocked on: Membership module
 - Per-tier `expiresAt` duration on approve (`DEFAULT_LISTING_DURATION_DAYS` is a flat 30-day placeholder) — blocked on: Membership module
 - Re-review flow when editing a field on an `ACTIVE` listing — not a missing module, just an undecided rule (which fields should revert status to `PENDING`)

@@ -29,6 +29,7 @@ enum ProductStatus {
   SOLD
   EXPIRED
   BANNED
+  CANCELLED
 }
 
 model User {
@@ -63,9 +64,11 @@ model User {
   responseRate   Float @default(0) @map("response_rate")
 
   // — Relations —
-  products      Product[]
-  savedProducts SavedProduct[]
-  productViews  ProductView[]
+  products        Product[]
+  savedProducts   SavedProduct[]
+  productViews    ProductView[]
+  reviewsWritten  Review[]       @relation("ReviewsWritten")
+  reviewsReceived Review[]       @relation("ReviewsReceived")
 
   // — Timestamps —
   createdAt DateTime @default(now()) @map("created_at")
@@ -128,6 +131,7 @@ model Product {
   images     ProductImage[]
   savedBy    SavedProduct[]
   views      ProductView[]
+  reviews    Review[]
 
   // — Timestamps —
   createdAt DateTime @default(now()) @map("created_at")
@@ -183,4 +187,33 @@ model ProductView {
   viewedAt DateTime @default(now()) @map("viewed_at")
 
   @@map("product_views")
+}
+
+model Review {
+  // — Identity —
+  id Int @id @default(autoincrement())
+
+  // — Relations —
+  reviewerId Int     @map("reviewer_id")
+  reviewer   User    @relation("ReviewsWritten", fields: [reviewerId], references: [id])
+  sellerId   Int     @map("seller_id")
+  seller     User    @relation("ReviewsReceived", fields: [sellerId], references: [id])
+  productId  Int     @map("product_id")
+  product    Product @relation(fields: [productId], references: [id])
+
+  // — Content —
+  rating      Int
+  comment     String? @db.Text
+  sellerReply String? @map("seller_reply") @db.Text
+
+  // — Moderation —
+  isPublished Boolean @default(false) @map("is_published")
+  isHidden    Boolean @default(false) @map("is_hidden")
+
+  // — Timestamps —
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([reviewerId, sellerId])
+  @@map("reviews")
 }
