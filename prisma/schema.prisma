@@ -71,11 +71,14 @@ model User {
   responseRate   Float @default(0) @map("response_rate")
 
   // — Relations —
-  products        Product[]
-  savedProducts   SavedProduct[]
-  productViews    ProductView[]
-  reviewsWritten  Review[]       @relation("ReviewsWritten")
-  reviewsReceived Review[]       @relation("ReviewsReceived")
+  products               Product[]
+  savedProducts          SavedProduct[]
+  productViews           ProductView[]
+  reviewsWritten         Review[]       @relation("ReviewsWritten")
+  reviewsReceived        Review[]       @relation("ReviewsReceived")
+  conversationsInitiated Conversation[] @relation("ConversationsInitiated")
+  conversationsReceived  Conversation[] @relation("ConversationsReceived")
+  messagesSent           Message[]      @relation("MessagesSent")
 
   // — Timestamps —
   createdAt DateTime @default(now()) @map("created_at")
@@ -143,6 +146,7 @@ model Product {
   savedBy    SavedProduct[]
   views      ProductView[]
   reviews    Review[]
+  messages   Message[]
 
   // — Timestamps —
   createdAt DateTime @default(now()) @map("created_at")
@@ -227,4 +231,58 @@ model Review {
 
   @@unique([reviewerId, sellerId])
   @@map("reviews")
+}
+
+model Conversation {
+  // — Identity —
+  id Int @id @default(autoincrement())
+
+  // — Relations — initiator/recipient are fixed at creation, NOT buyer/seller
+  // (a single thread is reused across every product the pair discusses, so
+  // who's buying vs selling depends on the product, not on this conversation)
+  initiatorId Int  @map("initiator_id")
+  initiator   User @relation("ConversationsInitiated", fields: [initiatorId], references: [id])
+  recipientId Int  @map("recipient_id")
+  recipient   User @relation("ConversationsReceived", fields: [recipientId], references: [id])
+
+  // — Relations —
+  messages Message[]
+
+  // — Timestamps — updatedAt bumped on every new message, used to sort inbox
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([initiatorId, recipientId])
+  @@map("conversations")
+}
+
+model Message {
+  // — Identity —
+  id Int @id @default(autoincrement())
+
+  // — Relations —
+  conversationId Int          @map("conversation_id")
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       Int          @map("sender_id")
+  sender         User         @relation("MessagesSent", fields: [senderId], references: [id])
+
+  // Which product this message is about (nullable — a conversation can start or
+  // continue without referencing a specific listing). Feeds Reviews' gate check:
+  // cross-referenced against Product.sellerId to determine actual buyer/seller
+  // role, since Conversation itself no longer tracks that.
+  productId Int?     @map("product_id")
+  product   Product? @relation(fields: [productId], references: [id])
+
+  // — Content — content stays in the DB even when recalled (soft-hide only,
+  // for audit/dispute purposes); the frontend renders "message recalled"
+  // in place of content when isRecalled is true. No edit support — see Chat
+  // section for why (recall only, no silent rewriting of negotiation history).
+  content    String  @db.Text
+  isRead     Boolean @default(false) @map("is_read")
+  isRecalled Boolean @default(false) @map("is_recalled")
+
+  // — Timestamps —
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("messages")
 }

@@ -64,7 +64,7 @@ Reviews rate **the seller** (`User.avgRating`), not the product — every listin
 Design modeled after Chợ Tốt (a real large-scale C2C marketplace with the same no-money-custody constraint), which solves the same verification problem via policy/moderation instead of a hard technical gate — with two deliberate departures explained below.
 
 - **One-way only (buyer → seller)**: a reverse "seller reviews buyer" was considered and dropped. Nothing in Fleazo consumes a buyer-role rating (Quality Score only reads seller `avgRating`), so it would add a "block dishonest reviews" benefit that's smaller than the complexity it drags in (role-tagging every review, recalculating who's a buyer vs seller per transaction). Not worth it at this stage.
-- **Loose gate**: a buyer can review a seller if they have an existing `Chat` `Conversation` with them on that `productId` — no proof the trade completed. Trades that skip in-app chat entirely (Zalo/Facebook) can't be reviewed; accepted gap.
+- **Loose gate**: a buyer can review a seller if there's a `Message` between them (in their shared `Conversation`, regardless of which of them started it) referencing that `productId` — no proof the trade completed. Trades that skip in-app chat entirely (Zalo/Facebook) can't be reviewed; accepted gap. See Chat section for why the check is on `Message.productId`, not on `Conversation` itself.
 - **One review per buyer–seller pair, ever**: enforced by `@@unique([reviewerId, sellerId])`. If the same buyer buys from the same seller again, the review is **upserted** (rating/comment/productId overwritten to reflect the latest experience), not duplicated — otherwise a buyer who purchases repeatedly from one seller would inflate that seller's review count without representing distinct trust signals.
 - **Immutable once submitted** (aside from the upsert-on-repeat-purchase case above): no edit API for `rating`/`comment` after creation, matching Chợ Tốt's rule that neither party can alter a review after the fact.
 - **Seller can reply once**: `sellerReply` is a single nullable field, not a list — inherently caps it at one reply per review, and the reply itself is also immutable once set.
@@ -72,6 +72,35 @@ Design modeled after Chợ Tốt (a real large-scale C2C marketplace with the sa
 - **Report + hide** after the fact, not upfront moderation — same as Chợ Tốt. No `reportCount`/report table yet; `isHidden` is admin-set manually until a general-purpose reporting feature exists.
 
 `Review` schema: `reviewerId`, `sellerId`, `productId` (grounds the gate check), `rating` (1–5), `comment`, `sellerReply`, `isPublished` (default `false`), `isHidden` (default `false`, admin-set on report), unique on `(reviewerId, sellerId)`.
+
+## Chat — scope and design
+
+**MVP scope — what's in:**
+
+- Direct 1-to-1 messaging, realtime via WebSocket
+- Last-message preview + timestamp on the conversation list
+- Unread count (`Message.isRead`)
+- Read receipts ("seen")
+- Message recall (`Message.isRecalled`) — sender can retract a sent message; content stays in the DB (soft-hide only) so it isn't lost, frontend just renders "message recalled" in place of `content` when true
+- Pagination for loading older messages
+- Online/offline status, scoped to the other person in an open conversation (not a global presence list)
+
+**No message editing** — deliberately not offered, even though recall is. In a negotiation context (haggling over price, agreeing on a meetup), editing lets either side quietly rewrite what was actually said ("I said 2 million" vs a since-edited message), which undermines chat as a record either party can point back to in a dispute. Recall is safer: it visibly marks that something was retracted rather than silently rewriting history. Messages are otherwise immutable once sent.
+
+**Reviews gate must not filter out recalled messages.** The gate check (see Reviews section) queries `Message.productId` to confirm two people discussed a given product — that fact is still true even if the message's content was later recalled. Do not add `isRecalled: false` to the gate query; that condition belongs only to whatever renders message content for display.
+
+**Explicitly cut, and why:**
+
+- **Friend system (requests, accept/decline, username search, friends list)** — this is a social-network feature, not a marketplace one. No C2C platform (Chợ Tốt, Shopee, Facebook Marketplace) has a friending layer, because trades are one-off transactions, not a persistent social graph. There's also no `username` field on `User` to search by — adding one just for this would be scope creep with no other consumer.
+- **Group chat (>2 participants)** — would require replacing `Conversation.initiatorId`/`recipientId` with a join table (`ConversationParticipant`), a real architecture change. No use case identified for group negotiation over a single secondhand item; revisit only if a real need shows up (e.g. splitting a group purchase).
+- **Image/file attachments in chat** — reasonable for a marketplace (buyer asking for another photo angle), but adds Cloudinary upload into the realtime flow on the very first chat implementation. Deferred to a later pass once basic realtime messaging is solid.
+- **Message reactions** — nice-to-have, no bearing on the core buy/sell flow. Deferred, no urgency.
+
+**Conversation is per-pair, not per-product.** Modeled after Chợ Tốt: two people have exactly one thread total, reused across every product they ever discuss — not a new thread per listing. This matches how people actually expect chat to work (Messenger/Zalo also have one thread per pair) and avoids fragmenting a buyer-seller relationship across N separate threads.
+
+- `Conversation.initiatorId`/`recipientId` name the two participants, **not** buyer/seller — those roles aren't fixed for a pair over time (the same two people can each sell to the other on different occasions), so the field names deliberately avoid implying a fixed role.
+- `Message.productId` (nullable) carries "which listing this message is about" instead — this is what makes the Reviews gate check still work: to confirm reviewer/seller-being-reviewed actually exchanged messages about a specific product, cross-reference `Message.productId` against `Product.sellerId` (the only source of truth for who's the seller of that product), rather than trusting anything on `Conversation`.
+- No unique DB constraint enforces "one conversation per pair" — Prisma can't express "unordered pair uniqueness" directly (a `(initiatorId, recipientId)` unique index doesn't catch the reversed pair). The service layer must check both directions (`OR: [{initiatorId: A, recipientId: B}, {initiatorId: B, recipientId: A}]`) before creating a new conversation.
 
 ## Tech Stack
 
@@ -158,7 +187,7 @@ src/
 │   ├── products/         # CRUD listings, image upload, quality scoring
 │   ├── categories/       # Product categories
 │   ├── payments/         # PayOS transactions for Membership / Boost / Extend (NOT product sales — see Money Flow)
-│   ├── chat/             # Realtime WebSocket chat
+│   ├── chat/             # 1-to-1 realtime WebSocket chat (Conversation/Message) — see Chat section
 │   ├── reviews/          # Seller reputation (User.avgRating), gated by an existing Chat Conversation on the listing — see Reviews section
 │   ├── recommendation/   # Session-based + content-based recommendation engine
 │   └── chatbot/          # LLM-powered shopping assistant (function calling)

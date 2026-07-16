@@ -52,3 +52,13 @@ export type ProductView = Prisma.ProductViewModel
  * 
  */
 export type Review = Prisma.ReviewModel
+/**
+ * Model Conversation
+ * 
+ */
+export type Conversation = Prisma.ConversationModel
+/**
+ * Model Message
+ * 
+ */
+export type Message = Prisma.MessageModel
