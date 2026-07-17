@@ -7,6 +7,7 @@ import { UsersModule } from './modules/users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { ProductsModule } from './modules/products/products.module';
+import { ChatModule } from './modules/chat/chat.module';
 import jwtConfig from './config/jwt.config';
 import googleConfig from './config/google.config';
 import mailConfig from './config/mail.config';
@@ -24,6 +25,7 @@ import cloudinaryConfig from './config/cloudinary.config';
     }),
     CategoriesModule,
     ProductsModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

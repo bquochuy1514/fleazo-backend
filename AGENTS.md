@@ -83,7 +83,12 @@ Design modeled after Chợ Tốt (a real large-scale C2C marketplace with the sa
 - Read receipts ("seen")
 - Message recall (`Message.isRecalled`) — sender can retract a sent message; content stays in the DB (soft-hide only) so it isn't lost, frontend just renders "message recalled" in place of `content` when true
 - Pagination for loading older messages
-- Online/offline status, scoped to the other person in an open conversation (not a global presence list)
+- Online/offline status, notified only to conversation partners (not a global presence list — see below for both halves of this design)
+
+**Online status has two separate decisions — don't conflate them:**
+
+1. **Who gets notified** (audience): only users who already share a `Conversation` with the person going online/offline — computed via `getPartnerIds`, mirrors the "no friend system" decision above. Not broadcast to every connected user.
+2. **When the socket connects** (lifecycle): the frontend opens the Socket.IO connection once, app-wide, as soon as the user is logged in — not only when they open the Chat page/route. Chosen over "only connect while on the Chat page" because Fleazo is primarily a browsing marketplace; sellers are online (and shown as such) while browsing listings too, not only while actively chatting — the online indicator is meant to signal "likely to respond right now" (like Messenger's "Active now"), which is only useful if it reflects general app presence, not just chat-tab presence. Implication for the frontend: the socket connection lives in a top-level provider/layout, not inside the Chat page component.
 
 **No message editing** — deliberately not offered, even though recall is. In a negotiation context (haggling over price, agreeing on a meetup), editing lets either side quietly rewrite what was actually said ("I said 2 million" vs a since-edited message), which undermines chat as a record either party can point back to in a dispute. Recall is safer: it visibly marks that something was retracted rather than silently rewriting history. Messages are otherwise immutable once sent.
 
