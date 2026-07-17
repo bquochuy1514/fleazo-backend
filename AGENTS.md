@@ -107,6 +107,45 @@ Design modeled after Chợ Tốt (a real large-scale C2C marketplace with the sa
 - `Message.productId` (nullable) carries "which listing this message is about" instead — this is what makes the Reviews gate check still work: to confirm reviewer/seller-being-reviewed actually exchanged messages about a specific product, cross-reference `Message.productId` against `Product.sellerId` (the only source of truth for who's the seller of that product), rather than trusting anything on `Conversation`.
 - No unique DB constraint enforces "one conversation per pair" — Prisma can't express "unordered pair uniqueness" directly (a `(initiatorId, recipientId)` unique index doesn't catch the reversed pair). The service layer must check both directions (`OR: [{initiatorId: A, recipientId: B}, {initiatorId: B, recipientId: A}]`) before creating a new conversation.
 
+### WebSocket event contract
+
+`ChatGateway` uses **Socket.IO** (not raw WebSocket — the client must use `socket.io-client`, protocols aren't compatible). Auth token goes in `io(url, { auth: { token } })` at connect time; `handleConnection` rejects (disconnects) anything without a valid token before any event handler can fire.
+
+**Client → Server (emit):**
+
+| Event              | Payload                                   |
+| ------------------ | ----------------------------------------- |
+| `joinConversation` | `{ conversationId }`                      |
+| `sendMessage`      | `{ conversationId, content, productId? }` |
+| `recallMessage`    | `{ messageId }`                           |
+
+- `joinConversation`: joins the `conversation:<id>` room, marks the sender's messages as read, returns `{ otherUserOnline }` as an ack.
+- `sendMessage`: persists the message, broadcasts `newMessage` to the room and `newMessageNotification` to the recipient.
+- `recallMessage`: sets `isRecalled = true`, broadcasts `messageRecalled` to the room.
+
+**Server → Client (on):**
+
+| Event                        | Payload                                          |
+| ---------------------------- | ------------------------------------------------ |
+| `newMessage`                 | full `Message` row                               |
+| `newMessageNotification`     | `{ conversationId, latestMessage, unreadCount }` |
+| `messagesRead`               | `{ conversationId, readerId }`                   |
+| `messageRecalled`            | `{ messageId }`                                  |
+| `userOnline` / `userOffline` | `{ userId }`                                     |
+
+- `newMessage`: fires for anyone in the `conversation:<id>` room you've joined.
+- `newMessageNotification`: fires for **any** of your conversations, joined or not — this is what should drive the inbox badge/preview while browsing outside the Chat page.
+- `messagesRead`: the other person just opened the conversation and read your messages.
+- `messageRecalled`: a message in a room you've joined was recalled.
+- `userOnline` / `userOffline`: someone you share a conversation with connected/disconnected (audience explained below).
+
+Room naming: `conversation:<id>` (joined explicitly via `joinConversation`) and `user:<id>` (joined automatically on connect, for anything that must reach a person regardless of which conversation they have open).
+
+**Two things not yet production-ready — revisit before deploying:**
+
+- `cors: { origin: '*' }` on `@WebSocketGateway` accepts connections from any domain — fine for local dev, must be restricted to the real `fleazo-frontend` origin before production.
+- `onlineUsers` is an in-memory `Set` on the Gateway instance — resets on server restart and only works correctly with a single backend instance. A multi-instance deployment would need a shared store (e.g. Redis) instead; not needed at current scale.
+
 ## Tech Stack
 
 - Runtime: Node.js with NestJS framework
@@ -114,7 +153,7 @@ Design modeled after Chợ Tốt (a real large-scale C2C marketplace with the sa
 - Database: PostgreSQL via Prisma ORM (v7)
 - Auth: JWT (access + refresh token rotation) + Google OAuth
 - Payment: PayOS
-- Realtime: WebSocket (chat between buyer and seller)
+- Realtime: **Socket.IO** (`socket.io` + `@nestjs/websockets`/`@nestjs/platform-socket.io`) — not raw WebSocket; frontend must use `socket.io-client`, protocols aren't interchangeable. 1-to-1 chat, not scoped to only buyer/seller roles — see Chat section
 - Email: Nodemailer with Gmail SMTP
 - File storage: Cloudinary (avatars, product images)
 - Address API: [provinces.open-api.vn](https://provinces.open-api.vn) `/api/v2/` — free, no API key required. 2-level structure (Tỉnh/Thành phố → Phường/Xã) since Vietnam's July 2025 administrative merger abolished the district level — do not use `/api/v1/` (pre-merger, 3-level, obsolete)
@@ -326,7 +365,7 @@ Both `User` and `Product` carry their own independent set of 4 location fields (
 
 - `avgRating` — `AVG(rating)` from published `Review`s (Reviews module; gate rule in the Reviews section)
 - `completionRate` — `soldCount / (soldCount + expiredCount)`, plain `COUNT(*) ... GROUP BY status` on `Product` per seller, only `SOLD`/`EXPIRED` listings (see Money Flow)
-- `responseRate` — seller reply-within-window ratio from `Chat` (Chat module)
+- `responseRate` — seller reply-within-window ratio computed from `Message` timestamps. Chat module now exists (see Chat section), but no aggregation logic reads it into this field yet — still a genuine gap, just no longer blocked on missing infrastructure
 
 Stay at `0` for every seller until the respective modules land — don't use for ranking/UI yet.
 
@@ -395,10 +434,13 @@ Always check for existing utilities before writing new code:
 | `src/common/guards/refresh-auth.guard.ts`           | `RefreshAuthGuard`                | refresh token endpoint                          |
 | `src/common/guards/google-auth.guard.ts`            | `GoogleAuthGuard`                 | Google OAuth callback                           |
 | `src/common/guards/roles.guard.ts`                  | `RolesGuard`                      | enforce `@Roles()` (pair with JwtAuthGuard)     |
+| `src/common/guards/ws-jwt.guard.ts`                 | `WsJwtGuard`                      | require `client.data.user` to exist (WebSocket) |
 | `src/common/filters/validation-exception.filter.ts` | `ValidationExceptionFilter`       | global class-validator errors                   |
 | `src/common/types/jwt-payload.type.ts`              | `JwtPayload`                      | decoded JWT payload type                        |
 
 > ⚠️ Whenever a new file is added to `src/common/`, update this table immediately.
+
+`WsJwtGuard` doesn't verify the JWT itself — that happens once in `ChatGateway.handleConnection`. It's a lightweight re-check, paired with `@SubscribeMessage` handlers, that `client.data.user` is still set.
 
 ### DTO convention
 
@@ -454,10 +496,12 @@ async handleRegister(registerDto: RegisterDto) {
 
 - Core setup: ✅ Done
 - Auth module: ✅ Done
-- Users module: ✅ Done — get profile, update profile, update avatar, change password, get public profile
+- Users module: ✅ Done — get profile, update profile (incl. optional location fields), update avatar, change password, get public profile (shows province/ward, not `addressDetail`)
 - Categories module: ✅ Done — CRUD, icon upload, 2-level hierarchy enforcement (`validateLeafCategory` used by Products for assignment)
-- Products module: ✅ Core CRUD done — create (PENDING, requires ≥1 image), create draft (DRAFT, image optional), update (combined text + image add/delete/reorder, atomic), list with filters + pagination, detail (ACTIVE only), admin approve/reject, save/unsave
-- Next: pick up one of the deferred items below, or start a new module (Reviews, Membership/Payments, Chat)
+- Products module: ✅ Core CRUD done — create (PENDING, requires ≥1 image), create draft (DRAFT, image optional), update (combined text + image add/delete/reorder, atomic), list with filters + pagination, detail (ACTIVE only), admin approve/reject, save/unsave. Location fields migrated to the 2-level `provinceCode`/`provinceName`/`wardCode`/`wardName`/`addressDetail` structure (see Location Fields section) — `province`/`district`/`ward` no longer exist.
+- Reviews: ⚠️ **Design only** — `Review` model exists in schema, full gating/moderation design documented above, but `ReviewsController`/`ReviewsService` are not implemented yet.
+- Chat module: ✅ Done — REST (`ChatController`/`ChatService`: create/get conversation, list conversations, paginated message history) + WebSocket (`ChatGateway`: join, send, recall, read receipts, online/offline, cross-conversation notifications) — see Chat section for the full event contract.
+- Next: pick up Reviews (schema is ready, just needs Controller/Service), one of the deferred items below, or start `fleazo-frontend`
 
 ### Deferred work — blocked on other modules not built yet
 
