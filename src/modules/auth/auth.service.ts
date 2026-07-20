@@ -23,6 +23,7 @@ import { VerifyForgotOtpDto } from './dto/verify-forgot-otp.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import jwtConfig from '../../config/jwt.config';
 import type { ConfigType } from '@nestjs/config';
+import { ErrorCode } from '../../common/constants/error-code.constant';
 
 @Injectable()
 export class AuthService {
@@ -61,9 +62,11 @@ export class AuthService {
     );
 
     if (existingUser) {
-      throw new BadRequestException(
-        'Email này đã tồn tại trong hệ thống! Vui lòng đăng nhập hoặc đăng ký bằng email khác.',
-      );
+      throw new BadRequestException({
+        message:
+          'Email này đã tồn tại trong hệ thống! Vui lòng đăng nhập hoặc đăng ký bằng email khác.',
+        errorCode: ErrorCode.EMAIL_ALREADY_EXISTS,
+      });
     }
 
     // 2. Hash Password
@@ -101,28 +104,34 @@ export class AuthService {
     // 1. Find user
     const user = await this.usersService.findUserByEmail(email);
     if (!user) {
-      throw new BadRequestException(
-        'Mã xác thực không hợp lệ hoặc đã hết hạn.',
-      );
+      throw new BadRequestException({
+        message: 'Mã xác thực không hợp lệ hoặc đã hết hạn.',
+        errorCode: ErrorCode.OTP_INVALID_OR_EXPIRED,
+      });
     }
 
     // 2. Check already active
     if (user.isActive) {
-      throw new BadRequestException('Tài khoản đã được kích hoạt trước đó.');
+      throw new BadRequestException({
+        message: 'Tài khoản đã được kích hoạt trước đó.',
+        errorCode: ErrorCode.ACCOUNT_ALREADY_ACTIVE,
+      });
     }
 
     // 3. Check OTP match
     if (user.codeOtp !== codeOtp) {
-      throw new BadRequestException(
-        'Mã xác thực không hợp lệ hoặc đã hết hạn.',
-      );
+      throw new BadRequestException({
+        message: 'Mã xác thực không hợp lệ hoặc đã hết hạn.',
+        errorCode: ErrorCode.OTP_INVALID_OR_EXPIRED,
+      });
     }
 
     // 4. Check OTP expiration
     if (!user.codeOtpExpiration || dayjs().isAfter(user.codeOtpExpiration)) {
-      throw new BadRequestException(
-        'Mã xác thực không hợp lệ hoặc đã hết hạn.',
-      );
+      throw new BadRequestException({
+        message: 'Mã xác thực không hợp lệ hoặc đã hết hạn.',
+        errorCode: ErrorCode.OTP_INVALID_OR_EXPIRED,
+      });
     }
 
     // 5. Activate account
@@ -141,12 +150,18 @@ export class AuthService {
     // 1. Find user
     const user = await this.usersService.findUserByEmail(email);
     if (!user) {
-      throw new BadRequestException('Email không tồn tại trong hệ thống.');
+      throw new BadRequestException({
+        message: 'Email không tồn tại trong hệ thống.',
+        errorCode: ErrorCode.EMAIL_NOT_FOUND,
+      });
     }
 
     // 2. Check already active
     if (user.isActive) {
-      throw new BadRequestException('Tài khoản đã được kích hoạt trước đó.');
+      throw new BadRequestException({
+        message: 'Tài khoản đã được kích hoạt trước đó.',
+        errorCode: ErrorCode.ACCOUNT_ALREADY_ACTIVE,
+      });
     }
 
     // 3. Generate new OTP
@@ -170,28 +185,42 @@ export class AuthService {
     // 1. Find user by email
     const user = await this.usersService.findUserByEmail(email);
     if (!user) {
-      throw new UnauthorizedException('Email hoặc mật khẩu không chính xác.');
+      throw new UnauthorizedException({
+        message: 'Email hoặc mật khẩu không chính xác.',
+        errorCode: ErrorCode.INVALID_CREDENTIALS,
+      });
     }
 
     // 2. Compare password
     if (!user.password) {
-      throw new UnauthorizedException('Email hoặc mật khẩu không chính xác.');
+      throw new UnauthorizedException({
+        message: 'Email hoặc mật khẩu không chính xác.',
+        errorCode: ErrorCode.INVALID_CREDENTIALS,
+      });
     }
     const isPasswordValid = await comparePassword(password, user.password);
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Email hoặc mật khẩu không chính xác.');
+      throw new UnauthorizedException({
+        message: 'Email hoặc mật khẩu không chính xác.',
+        errorCode: ErrorCode.INVALID_CREDENTIALS,
+      });
     }
 
     // 3. Check account active
     if (!user.isActive) {
-      throw new BadRequestException(
-        'Tài khoản chưa được kích hoạt! Vui lòng kiểm tra email để xác thực tài khoản.',
-      );
+      throw new BadRequestException({
+        message:
+          'Tài khoản chưa được kích hoạt! Vui lòng kiểm tra email để xác thực tài khoản.',
+        errorCode: ErrorCode.ACCOUNT_NOT_VERIFIED,
+      });
     }
 
     // 4. Check account banned
     if (user.isBanned) {
-      throw new ForbiddenException('Tài khoản của bạn đã bị khóa.');
+      throw new ForbiddenException({
+        message: 'Tài khoản của bạn đã bị khóa.',
+        errorCode: ErrorCode.ACCOUNT_BANNED,
+      });
     }
 
     // 5. Return user without sensitive fields
@@ -267,14 +296,19 @@ export class AuthService {
     // 1. Find user
     const user = await this.usersService.findUserByEmail(email);
     if (!user) {
-      throw new BadRequestException('Email không tồn tại trong hệ thống.');
+      throw new BadRequestException({
+        message: 'Email không tồn tại trong hệ thống.',
+        errorCode: ErrorCode.EMAIL_NOT_FOUND,
+      });
     }
 
     // 2. Check active
     if (!user.isActive) {
-      throw new BadRequestException(
-        'Tài khoản chưa được kích hoạt. Vui lòng xác thực email trước.',
-      );
+      throw new BadRequestException({
+        message:
+          'Tài khoản chưa được kích hoạt. Vui lòng xác thực email trước.',
+        errorCode: ErrorCode.ACCOUNT_NOT_VERIFIED,
+      });
     }
 
     // 3. Generate OTP
@@ -302,17 +336,26 @@ export class AuthService {
     // 1. Find user
     const user = await this.usersService.findUserByEmail(email);
     if (!user) {
-      throw new BadRequestException('Mã OTP không hợp lệ hoặc đã hết hạn.');
+      throw new BadRequestException({
+        message: 'Mã OTP không hợp lệ hoặc đã hết hạn.',
+        errorCode: ErrorCode.OTP_INVALID_OR_EXPIRED,
+      });
     }
 
     // 2. Check OTP match
     if (user.codeOtp !== codeOtp) {
-      throw new BadRequestException('Mã OTP không hợp lệ hoặc đã hết hạn.');
+      throw new BadRequestException({
+        message: 'Mã OTP không hợp lệ hoặc đã hết hạn.',
+        errorCode: ErrorCode.OTP_INVALID_OR_EXPIRED,
+      });
     }
 
     // 3. Check OTP expiration
     if (!user.codeOtpExpiration || dayjs().isAfter(user.codeOtpExpiration)) {
-      throw new BadRequestException('Mã OTP không hợp lệ hoặc đã hết hạn.');
+      throw new BadRequestException({
+        message: 'Mã OTP không hợp lệ hoặc đã hết hạn.',
+        errorCode: ErrorCode.OTP_INVALID_OR_EXPIRED,
+      });
     }
 
     // 4. Mark OTP as verified
@@ -331,14 +374,18 @@ export class AuthService {
     // 1. Find user
     const user = await this.usersService.findUserByEmail(email);
     if (!user) {
-      throw new BadRequestException('Email không tồn tại trong hệ thống.');
+      throw new BadRequestException({
+        message: 'Email không tồn tại trong hệ thống.',
+        errorCode: ErrorCode.EMAIL_NOT_FOUND,
+      });
     }
 
     // 2. Check OTP verified
     if (!user.isOtpVerified) {
-      throw new BadRequestException(
-        'Vui lòng xác thực mã OTP trước khi đổi mật khẩu.',
-      );
+      throw new BadRequestException({
+        message: 'Vui lòng xác thực mã OTP trước khi đổi mật khẩu.',
+        errorCode: ErrorCode.OTP_NOT_VERIFIED,
+      });
     }
 
     // 3. Hash new password
@@ -365,7 +412,10 @@ export class AuthService {
     );
     if (existingUser) {
       if (existingUser.isBanned) {
-        throw new ForbiddenException('Tài khoản của bạn đã bị khóa.');
+        throw new ForbiddenException({
+          message: 'Tài khoản của bạn đã bị khóa.',
+          errorCode: ErrorCode.ACCOUNT_BANNED,
+        });
       }
       return existingUser;
     }

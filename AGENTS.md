@@ -6,18 +6,28 @@
 ## Project Overview
 
 Fleazo is a student secondhand marketplace platform built for Vietnamese university students.
-It includes a recommendation engine (session-based + content-based + quality scoring)
-and an AI-powered shopping chatbot as the core thesis novelty.
+Core AI-related features: an AI-powered shopping chatbot (function-calling into product
+search, scope under review — see AI Chatbot section) and an LLM-based listing quality/
+condition assessment (reads a listing's images + Vietnamese description, scores how well
+it conveys the item's real condition, and surfaces missing info back to the seller).
+No recommendation engine (session-based, content-based, or collaborative filtering) —
+dropped; see Listing Quality & AI Chatbot section for why.
+
+Thesis status: undecided again as of 19 July. Huy previously decoupled this
+repo from his graduation thesis, then reconsidered — Fleazo may become the thesis subject
+after all if the feature set (especially AI Chatbot / Quality Score) is strong enough.
+Do not assume either direction; don't reintroduce "novelty"-driven scope cuts without
+Huy explicitly confirming thesis is back on, and don't strip thesis-relevant depth either
+until he decides. Fleazo stays production-quality regardless of thesis outcome.
 
 ## Product Vision
 
-Fleazo is being built with three goals simultaneously:
+Fleazo is being built with two goals simultaneously:
 
 1. **Real product** — ship to actual Vietnamese university students, production-ready
 2. **Revenue-generating** — monetize through listing services and membership tiers
-3. **Graduation thesis** — novelty argument centers on the recommendation engine + AI chatbot
 
-**Never cut features just because it's a thesis.** Always design and implement for production quality and completeness. The thesis deadline is a constraint on time, not on ambition.
+**Never cut features for the sake of scope reduction.** Always design and implement for production quality and completeness.
 
 ### Monetization model
 
@@ -32,7 +42,7 @@ Fleazo is being built with three goals simultaneously:
 **Boost (one-time, per listing):** pay to push a listing to the top of the feed
 
 - Multiple duration options (e.g. 24h / 48h / 72h) at different price points (TBD)
-- Integrates with the recommendation engine — boosted listings get a temporary priority score bump, but quality score still applies (no pure pay-to-win)
+- Boosted listings get a temporary priority score bump on top of `qualityScore`, but quality score still applies (no pure pay-to-win)
 - Payment via PayOS
 
 **Extend listing (one-time, per listing):** pay to renew an expired listing without re-posting
@@ -64,14 +74,14 @@ Reviews rate **the seller** (`User.avgRating`), not the product — every listin
 Design modeled after Chợ Tốt (a real large-scale C2C marketplace with the same no-money-custody constraint), which solves the same verification problem via policy/moderation instead of a hard technical gate — with two deliberate departures explained below.
 
 - **One-way only (buyer → seller)**: a reverse "seller reviews buyer" was considered and dropped. Nothing in Fleazo consumes a buyer-role rating (Quality Score only reads seller `avgRating`), so it would add a "block dishonest reviews" benefit that's smaller than the complexity it drags in (role-tagging every review, recalculating who's a buyer vs seller per transaction). Not worth it at this stage.
-- **Loose gate**: a buyer can review a seller if there's a `Message` between them (in their shared `Conversation`, regardless of which of them started it) referencing that `productId` — no proof the trade completed. Trades that skip in-app chat entirely (Zalo/Facebook) can't be reviewed; accepted gap. See Chat section for why the check is on `Message.productId`, not on `Conversation` itself.
+- **Loose gate**: a buyer can review a seller if there's a `Message` between them (in their shared `Conversation`, regardless of which of them started it) referencing that `productId` — no proof the trade completed. This mirrors Chợ Tốt's own Terms, which count "any case where the buyer voluntarily interacted with the seller's listing (call button, message button, sent a message...)" as sufficient grounds for review — not just a completed sale (their list even includes met-but-didn't-buy, no-show, paid-but-not-received). Trades that skip in-app chat entirely (Zalo/Facebook) can't be reviewed; accepted gap. See Chat section for why the check is on `Message.productId`, not on `Conversation` itself.
 - **One review per buyer–seller pair, ever**: enforced by `@@unique([reviewerId, sellerId])`. If the same buyer buys from the same seller again, the review is **upserted** (rating/comment/productId overwritten to reflect the latest experience), not duplicated — otherwise a buyer who purchases repeatedly from one seller would inflate that seller's review count without representing distinct trust signals.
 - **Immutable once submitted** (aside from the upsert-on-repeat-purchase case above): no edit API for `rating`/`comment` after creation, matching Chợ Tốt's rule that neither party can alter a review after the fact.
 - **Seller can reply once**: `sellerReply` is a single nullable field, not a list — inherently caps it at one reply per review, and the reply itself is also immutable once set.
-- **Delayed publish**: hidden for 3 days after creation, then auto-publishes via cron. (No "wait for both sides" rule anymore now that reviews are one-way.)
-- **Report + hide** after the fact, not upfront moderation — same as Chợ Tốt. No `reportCount`/report table yet; `isHidden` is admin-set manually until a general-purpose reporting feature exists.
+- **No pre-publish delay — reviews go live immediately.** Confirmed against Chợ Tốt's actual published Terms (Quy định sử dụng Tính năng Đánh giá, effective 15/10/2019): there is no hold period before a review is shown; Chợ Tốt's own wording is reviews get taken down reactively ("gỡ bỏ mà không cần thông báo trước") on violation/report, never held back pre-publish. A delay was originally added here to prevent retaliatory counter-reviews, but that only made sense for two-way reviews — now that reviews are one-way (buyer → seller, see above), there's no counter-review for a delay to protect against, so it was dropped. No cron job, no `isPublished` field.
+- **Report + hide** after the fact, same as Chợ Tốt — reviews are taken down reactively (not pre-screened) if reported/found to violate rules (harassment, personal info, off-topic content, fake/competitor brigading, etc. — see Chợ Tốt's Terms for the reference category list). No `reportCount`/report table yet; `isHidden` is admin-set manually until a general-purpose reporting feature exists.
 
-`Review` schema: `reviewerId`, `sellerId`, `productId` (grounds the gate check), `rating` (1–5), `comment`, `sellerReply`, `isPublished` (default `false`), `isHidden` (default `false`, admin-set on report), unique on `(reviewerId, sellerId)`.
+`Review` schema: `reviewerId`, `sellerId`, `productId` (grounds the gate check), `rating` (1–5), `comment`, `sellerReply`, `isHidden` (default `false`, admin-set on report), unique on `(reviewerId, sellerId)`.
 
 ## Chat — scope and design
 
@@ -158,33 +168,30 @@ Room naming: `conversation:<id>` (joined explicitly via `joinConversation`) and 
 - File storage: Cloudinary (avatars, product images)
 - Address API: [provinces.open-api.vn](https://provinces.open-api.vn) `/api/v2/` — free, no API key required. 2-level structure (Tỉnh/Thành phố → Phường/Xã) since Vietnam's July 2025 administrative merger abolished the district level — do not use `/api/v1/` (pre-merger, 3-level, obsolete)
 
-## Recommendation Engine
+## Listing Quality & AI Chatbot
 
-The recommendation engine is the core thesis novelty. It combines three techniques:
+No recommendation engine (session-based, content-based filtering, or collaborative
+filtering) — considered and dropped. It was originally planned as the thesis novelty
+argument, but the thesis is now decoupled from this repo (see Project Overview), and a
+personalized/session-tracked recommendation system isn't needed for Fleazo as a product —
+plain filtering (category/price/location/condition, already in `QueryProductDto`) covers
+real user needs without the added complexity of behavior tracking, cold-start tiering, etc.
 
-### 1. Session-based Recommendation
+### Quality Score
 
-Tracks user behavior within the current session (clicks, views) to suggest relevant listings immediately — no login or history required. Solves the cold-start problem for anonymous and new users.
+Every listing gets a `Product.qualityScore` used for basic feed ordering (not
+personalized — same score for every viewer). Simplified down from an earlier 9-signal
+weighted formula to just two components:
 
-### 2. Content-based Filtering + Quality Score
+| Signal                     | Formula / source               |
+| -------------------------- | ------------------------------ |
+| Condition-confidence score | LLM call (image + description) |
+| Freshness                  | `max(1 - daysOld / 30, 0)`     |
 
-Finds listings similar to what the user has viewed or purchased, ranked by a Quality Score.
+- **Condition-confidence score**: LLM call (multimodal — images + Vietnamese description) scoring how well the listing content conveys the item's real condition. Also surfaces `missingInfo` (e.g. "chưa nêu tình trạng pin") back to the seller as actionable feedback — this is the useful part beyond just a number. Not yet implemented — see Deferred work.
+- **Freshness**: decays over the listing's active window.
 
-**Quality Score formula (0–100):**
-
-| Signal                 | Max points | Formula                         |
-| ---------------------- | ---------- | ------------------------------- |
-| Image count            | 15         | `min(count / 5, 1) × 15`        |
-| Description length     | 10         | `min(length / 200, 1) × 10`     |
-| Condition filled       | 5          | Boolean                         |
-| Seller avg rating      | 15         | `(avgRating / 5) × 15`          |
-| Seller completion rate | 12         | `completionRate × 12`           |
-| Seller response rate   | 8          | `responseRate × 8`              |
-| Save count             | 10         | `min(saveCount / 20, 1) × 10`   |
-| View count             | 10         | `min(viewCount / 100, 1) × 10`  |
-| Freshness              | 15         | `max(1 - daysOld / 30, 0) × 15` |
-
-> ⚠️ Weights above are tentative. Do not hardcode — make them configurable.
+> ⚠️ Exact blend/weighting between the two is undecided — don't hardcode until the LLM piece is actually built and can be tuned against real data.
 
 **Boost multiplier (monetization integration):**
 
@@ -196,16 +203,15 @@ Boosted listings get a temporary score bump, but quality score still applies —
 
 **Quality Score is recalculated on:**
 
-- Seller updates listing (images, description)
+- Seller updates listing (images, description) — triggers a fresh LLM condition-confidence call
 - `Product.status` changes to `SOLD` or `EXPIRED` (feeds seller `completionRate` — see Money Flow)
-- Save/view count changes (batched, not per-event)
 - Nightly cron job (for freshness decay)
 
 Score is stored in `Product.qualityScore` and read at query time via `ORDER BY effectiveScore DESC`.
 
-### 3. LLM Chatbot with Function Calling
+### AI Chatbot with Function Calling
 
-User describes what they want in natural language → chatbot calls real functions into the recommendation engine → returns actual listings. Implemented in `fleazo-ai` (Python FastAPI, future service).
+User describes what they want in natural language → chatbot calls real functions into product search (plain filtering, not a recommendation engine) → returns actual listings. Implemented in `fleazo-ai` (Python FastAPI, future service).
 
 Example:
 
@@ -228,13 +234,12 @@ src/
 │   ├── mail/             # Email service (Nodemailer + Gmail SMTP)
 │   ├── upload/           # Cloudinary upload service
 │   ├── users/            # User profile, avatar upload
-│   ├── products/         # CRUD listings, image upload, quality scoring
+│   ├── products/         # CRUD listings, image upload, LLM-based quality scoring (see Listing Quality & AI Chatbot section)
 │   ├── categories/       # Product categories
 │   ├── payments/         # PayOS transactions for Membership / Boost / Extend (NOT product sales — see Money Flow)
 │   ├── chat/             # 1-to-1 realtime WebSocket chat (Conversation/Message) — see Chat section
 │   ├── reviews/          # Seller reputation (User.avgRating), gated by an existing Chat Conversation on the listing — see Reviews section
-│   ├── recommendation/   # Session-based + content-based recommendation engine
-│   └── chatbot/          # LLM-powered shopping assistant (function calling)
+│   └── chatbot/          # LLM-powered shopping assistant, function-calling into plain product search (no recommendation engine)
 ├── common/
 │   ├── decorators/       # Custom decorators (@CurrentUser, @Match)
 │   ├── guards/           # Auth guards (JwtAuthGuard, RolesGuard)
@@ -351,17 +356,16 @@ Both `User` and `Product` carry their own independent set of 4 location fields (
 - `Product.boostExpiresAt` — nullable DateTime; `null` means not currently boosted. No separate boost table needed for MVP.
 - `Product.renewCount` was considered and dropped — no rule currently consumes it. If a renew limit or a quality-score penalty for repeatedly-renewed listings is added later, reintroduce it alongside that rule (don't add derived counters without a consumer).
 
-### Quality Score & recommendation-engine fields
+### Quality Score fields
 
-- `Product.qualityScore` — `Float @default(0)`, updated by recommendation engine, never by user input.
-- `Product.viewCount` / `Product.saveCount` — cached aggregate counters, inputs to the Quality Score formula. Not the source of truth for behavior data — see `ProductView` / `SavedProduct` below.
+- `Product.qualityScore` — `Float @default(0)`, updated by the listing quality logic (see Listing Quality & AI Chatbot section), never by user input.
+- `Product.saveCount` — cached aggregate counter (not currently a Quality Score input — the formula was simplified down to condition-confidence + freshness only, see that section). Not the source of truth for behavior data — see `SavedProduct` below.
 - `SavedProduct` — join table (`@@id([userId, productId])`) for the "save/favorite" button. Real-time toggle (insert on save, delete on unsave); no `updatedAt` since a row only ever exists or doesn't. `Product.saveCount` is a cache = `COUNT(*)` over this table.
-- `ProductView` — raw view-event log (`sessionId`, nullable `userId` for anonymous views, `viewedAt`). Feeds two things: (1) `Product.viewCount` via a batch job, not per-request increments, to prevent easy gaming (self-view spam, refresh-spam) — dedupe by `sessionId` + `productId` within a short window, and exclude views where `userId == product.sellerId`; (2) raw behavioral data for session-based recommendation (cold-start).
-- Seller-side signals (`avgRating`, `completionRate`, `responseRate` in the Quality Score formula) live on `User`, deferred — see below.
+- Seller-side trust signals (`avgRating`, `completionRate`, `responseRate`) live on `User`, deferred — see below. Not currently Quality Score inputs (dropped along with the old 9-signal formula); still useful for display on seller profile / future features.
 
 ### User: deferred seller-trust fields (placeholder, not yet wired up)
 
-`User.avgRating`, `User.completionRate`, `User.responseRate` — `Float @default(0)` placeholders so the Quality Score formula's field references stay valid; no logic writes to them yet:
+`User.avgRating`, `User.completionRate`, `User.responseRate` — `Float @default(0)` placeholders for seller trust display (profile, future features); no logic writes to them yet:
 
 - `avgRating` — `AVG(rating)` from published `Review`s (Reviews module; gate rule in the Reviews section)
 - `completionRate` — `soldCount / (soldCount + expiredCount)`, plain `COUNT(*) ... GROUP BY status` on `Product` per seller, only `SOLD`/`EXPIRED` listings (see Money Flow)
@@ -377,6 +381,8 @@ Stay at `0` for every seller until the respective modules land — don't use for
 - Google OAuth for social login
 - No LocalStrategy/LocalAuthGuard — validation is handled directly in AuthService.validateUser()
 - `phone` stays optional, unverified (unlike Chợ Tốt, which requires phone verification to post listings). Reasons: Fleazo is a closed university-student community, not an open nationwide marketplace, so fake-account risk is lower; and phone OTP requires a paid SMS gateway, unlike the free Gmail SMTP already used for email OTP — not worth the added cost/friction without evidence of a real spam problem. Revisit if that changes.
+- **Error codes**: every auth exception the frontend needs to branch on (not just display) carries a stable `errorCode` (see `src/common/constants/error-code.constant.ts`) alongside `message` — frontend must branch only on `errorCode`, never on `message` text, which can be reworded freely. `validateUser`'s "email not found" and "wrong password" cases deliberately share one code (`INVALID_CREDENTIALS`) — don't split them, that would let an attacker enumerate registered emails via response codes even with an identical message.
+- ⚠️ `ValidationExceptionFilter` only catches `BadRequestException` (`@Catch(BadRequestException)`). `UnauthorizedException`/`ForbiddenException` throws bypass it and fall through to Nest's default handling — passing an object body (`{ message, errorCode }`) there returns it as-is, without the `statusCode`/`error` fields Nest auto-adds for a plain string body. Frontend doesn't read those fields so it's harmless today, but 400 vs 401/403 responses are not guaranteed to share an identical shape — don't assume so when adding new throws.
 
 ## Mail Service
 
@@ -437,6 +443,7 @@ Always check for existing utilities before writing new code:
 | `src/common/guards/ws-jwt.guard.ts`                 | `WsJwtGuard`                      | require `client.data.user` to exist (WebSocket) |
 | `src/common/filters/validation-exception.filter.ts` | `ValidationExceptionFilter`       | global class-validator errors                   |
 | `src/common/types/jwt-payload.type.ts`              | `JwtPayload`                      | decoded JWT payload type                        |
+| `src/common/constants/error-code.constant.ts`       | `ErrorCode`                       | throwing an exception frontend must branch on   |
 
 > ⚠️ Whenever a new file is added to `src/common/`, update this table immediately.
 
@@ -501,14 +508,13 @@ async handleRegister(registerDto: RegisterDto) {
 - Products module: ✅ Core CRUD done — create (PENDING, requires ≥1 image), create draft (DRAFT, image optional), update (combined text + image add/delete/reorder, atomic), list with filters + pagination, detail (ACTIVE only), admin approve/reject, save/unsave. Location fields migrated to the 2-level `provinceCode`/`provinceName`/`wardCode`/`wardName`/`addressDetail` structure (see Location Fields section) — `province`/`district`/`ward` no longer exist.
 - Reviews: ⚠️ **Design only** — `Review` model exists in schema, full gating/moderation design documented above, but `ReviewsController`/`ReviewsService` are not implemented yet.
 - Chat module: ✅ Done — REST (`ChatController`/`ChatService`: create/get conversation, list conversations, paginated message history) + WebSocket (`ChatGateway`: join, send, recall, read receipts, online/offline, cross-conversation notifications) — see Chat section for the full event contract.
-- Next: pick up Reviews (schema is ready, just needs Controller/Service), one of the deferred items below, or start `fleazo-frontend`
+- Next: pick up Reviews (schema is ready, just needs Controller/Service), one of the deferred items below, or start `fleazo-frontend`.
 
 ### Deferred work — blocked on other modules not built yet
 
 Known gaps, left unimplemented because the blocking module doesn't exist yet. Schema fields may already exist with no service writing to them — expected until the module lands.
 
-- `ProductView` logging + `viewCount` cron aggregation — blocked on: recommendation engine work
-- `Product.qualityScore` calculation — blocked on: recommendation engine work
+- `Product.qualityScore` calculation (LLM condition-confidence call + freshness) — blocked on: `fleazo-ai` service work
 - `User.avgRating` / `User.completionRate` / `User.responseRate` — see Product Schema Decisions → User: deferred seller-trust fields
 - Per-tier image limit (`MAX_IMAGES_PER_UPLOAD` is a temporary hard cap of 10) — blocked on: Membership module
 - Per-tier `expiresAt` duration on approve (`DEFAULT_LISTING_DURATION_DAYS` is a flat 30-day placeholder) — blocked on: Membership module
@@ -544,7 +550,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 - `style` — formatting, lint (no logic change)
 
 **Scope** — related module name (optional but encouraged):
-`auth`, `users`, `upload`, `mail`, `products`, `payments`, `chat`, `reviews`, `recommendation`, `chatbot`, `prisma`, `config`
+`auth`, `users`, `upload`, `mail`, `products`, `payments`, `chat`, `reviews`, `chatbot`, `prisma`, `config`
 
 **Examples:**
 

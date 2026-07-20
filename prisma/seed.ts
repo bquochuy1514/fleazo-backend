@@ -72,15 +72,7 @@ async function main() {
         { name: 'Xe đạp', slug: 'xe-dap' },
         { name: 'Phụ kiện xe máy', slug: 'phu-kien-xe-may' },
       ],
-    },
-    {
-      name: 'Khác',
-      slug: 'khac',
-      children: [
-        { name: 'Trao đổi', slug: 'trao-doi' },
-        { name: 'Cho tặng', slug: 'cho-tang' },
-      ],
-    },
+    }
   ];
 
   for (const category of categories) {

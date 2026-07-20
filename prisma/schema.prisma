@@ -44,7 +44,7 @@ model User {
   avatar   String   @default("https://res.cloudinary.com/dazcuspid/image/upload/default_avatar_nj9oa5.avif")
   role     UserRole @default(CUSTOMER)
 
-  // — Location (optional, 2-level structure — for "near you" recommendation) —
+  // — Location (optional, 2-level structure — for location-based features) —
   provinceCode  Int?    @map("province_code")
   provinceName  String? @map("province_name")
   wardCode      Int?    @map("ward_code")
@@ -65,7 +65,7 @@ model User {
   // — Auth tokens —
   hashedRefreshToken String? @map("hashed_refresh_token")
 
-  // — Seller trust signals (recommendation engine, not yet wired up) —
+  // — Seller trust signals (from Reviews/Chat/Products, not yet wired up) —
   avgRating      Float @default(0) @map("avg_rating")
   completionRate Float @default(0) @map("completion_rate")
   responseRate   Float @default(0) @map("response_rate")
@@ -73,7 +73,6 @@ model User {
   // — Relations —
   products               Product[]
   savedProducts          SavedProduct[]
-  productViews           ProductView[]
   reviewsWritten         Review[]       @relation("ReviewsWritten")
   reviewsReceived        Review[]       @relation("ReviewsReceived")
   conversationsInitiated Conversation[] @relation("ConversationsInitiated")
@@ -132,9 +131,8 @@ model Product {
   expiresAt      DateTime? @map("expires_at")
   boostExpiresAt DateTime? @map("boost_expires_at")
 
-  // — Quality Score (recommendation engine) —
+  // — Quality Score (LLM-based listing condition/quality assessment — see AGENTS.md) —
   qualityScore Float @default(0) @map("quality_score")
-  viewCount    Int   @default(0) @map("view_count")
   saveCount    Int   @default(0) @map("save_count")
 
   // — Relations —
@@ -144,7 +142,6 @@ model Product {
   category   Category       @relation(fields: [categoryId], references: [id])
   images     ProductImage[]
   savedBy    SavedProduct[]
-  views      ProductView[]
   reviews    Review[]
   messages   Message[]
 
@@ -187,23 +184,6 @@ model SavedProduct {
   @@map("saved_products")
 }
 
-model ProductView {
-  // — Identity —
-  id        Int    @id @default(autoincrement())
-  sessionId String @map("session_id")
-
-  // — Relations —
-  productId Int     @map("product_id")
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  userId    Int?    @map("user_id")
-  user      User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-  // — Timestamps —
-  viewedAt DateTime @default(now()) @map("viewed_at")
-
-  @@map("product_views")
-}
-
 model Review {
   // — Identity —
   id Int @id @default(autoincrement())
@@ -221,9 +201,13 @@ model Review {
   comment     String? @db.Text
   sellerReply String? @map("seller_reply") @db.Text
 
-  // — Moderation —
-  isPublished Boolean @default(false) @map("is_published")
-  isHidden    Boolean @default(false) @map("is_hidden")
+  // — Moderation — published immediately on creation (no pre-moderation hold —
+  // matches Chợ Tốt's real terms: reviews go live immediately, bad ones are
+  // taken down reactively via report, never pre-screened before publish).
+  // No isPublished field: with reviews now one-way only (buyer -> seller),
+  // there's no retaliatory counter-review to guard against, so a publish
+  // delay has no one left to protect.
+  isHidden Boolean @default(false) @map("is_hidden")
 
   // — Timestamps —
   createdAt DateTime @default(now()) @map("created_at")

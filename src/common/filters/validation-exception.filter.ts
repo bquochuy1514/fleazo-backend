@@ -19,6 +19,7 @@ export class ValidationExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const exceptionResponse = exception.getResponse() as {
       message: string | ValidationError[];
+      errorCode?: string;
     };
 
     // Nếu là validation error (message là array)
@@ -43,6 +44,9 @@ export class ValidationExceptionFilter implements ExceptionFilter {
     return response.status(400).json({
       statusCode: 400,
       message: exceptionResponse.message,
+      ...(exceptionResponse.errorCode && {
+        errorCode: exceptionResponse.errorCode,
+      }),
     });
   }
 }
