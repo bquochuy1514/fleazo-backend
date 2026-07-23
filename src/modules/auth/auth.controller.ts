@@ -80,6 +80,7 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   async googleCallback(@Req() req, @Res() res) {
     const response = await this.authService.loginWithGoogle(req.user);
-    return res.json(response); // tạm thời trả JSON để xem token khi dev
+    const redirectUrl = `${process.env.FRONTEND_URL}/google-callback?access_token=${response.access_token}&refresh_token=${response.refresh_token}&message=${encodeURIComponent(response.message)}`;
+    return res.redirect(redirectUrl);
   }
 }

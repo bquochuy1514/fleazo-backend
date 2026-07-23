@@ -23,9 +23,9 @@ export class RegisterDto {
   @IsNotEmpty({ message: 'Mật khẩu không được để trống' })
   password: string;
 
-  @IsString({ message: 'Xác nhận mật khẩu phải là chuỗi ký tự' })
+  @IsString({ message: 'Xác nhận phải là chuỗi ký tự' })
   @Match('password', { message: 'Mật khẩu xác nhận không khớp' })
-  @IsNotEmpty({ message: 'Xác nhận mật khẩu không được để trống' })
+  @IsNotEmpty({ message: 'Xác nhận không được để trống' })
   confirmPassword: string;
 
   @IsString({ message: 'Họ tên phải là chuỗi ký tự' })

@@ -24,6 +24,7 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import jwtConfig from '../../config/jwt.config';
 import type { ConfigType } from '@nestjs/config';
 import { ErrorCode } from '../../common/constants/error-code.constant';
+import type { JwtPayload } from '../../common/types/jwt-payload.type';
 
 @Injectable()
 export class AuthService {
@@ -63,8 +64,7 @@ export class AuthService {
 
     if (existingUser) {
       throw new BadRequestException({
-        message:
-          'Email này đã tồn tại trong hệ thống! Vui lòng đăng nhập hoặc đăng ký bằng email khác.',
+        message: 'Email này đã tồn tại trong hệ thống!',
         errorCode: ErrorCode.EMAIL_ALREADY_EXISTS,
       });
     }
@@ -209,8 +209,7 @@ export class AuthService {
     // 3. Check account active
     if (!user.isActive) {
       throw new BadRequestException({
-        message:
-          'Tài khoản chưa được kích hoạt! Vui lòng kiểm tra email để xác thực tài khoản.',
+        message: 'Tài khoản chưa được xác thực!',
         errorCode: ErrorCode.ACCOUNT_NOT_VERIFIED,
       });
     }
@@ -235,7 +234,7 @@ export class AuthService {
     return safeUser;
   }
 
-  async generateTokens(user: any) {
+  async generateTokens(user: JwtPayload) {
     const payload = { id: user.id, email: user.email, role: user.role };
 
     const [accessToken, refreshToken] = await Promise.all([
@@ -249,7 +248,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async validateRefreshToken(payload: any, refreshToken: string) {
+  async validateRefreshToken(payload: JwtPayload, refreshToken: string) {
     // 1. Find user by email
     const user = await this.usersService.findUserByEmail(payload.email);
     if (!user || !user.hashedRefreshToken) {
@@ -268,7 +267,7 @@ export class AuthService {
     return payload;
   }
 
-  async handleRefreshToken(user: any) {
+  async handleRefreshToken(user: JwtPayload) {
     // 1. Generate new tokens
     const { accessToken, refreshToken } = await this.generateTokens(user);
 
@@ -305,8 +304,7 @@ export class AuthService {
     // 2. Check active
     if (!user.isActive) {
       throw new BadRequestException({
-        message:
-          'Tài khoản chưa được kích hoạt. Vui lòng xác thực email trước.',
+        message: 'Tài khoản chưa được xác thực!',
         errorCode: ErrorCode.ACCOUNT_NOT_VERIFIED,
       });
     }
@@ -429,7 +427,7 @@ export class AuthService {
     });
   }
 
-  async loginWithGoogle(user: any) {
+  async loginWithGoogle(user: JwtPayload) {
     // 1. Generate tokens
     const { accessToken, refreshToken } = await this.generateTokens(user);
 
