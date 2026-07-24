@@ -10,10 +10,10 @@
  */
 export type * from './models/User.js'
 export type * from './models/Category.js'
+export type * from './models/University.js'
 export type * from './models/Product.js'
 export type * from './models/ProductImage.js'
 export type * from './models/SavedProduct.js'
-export type * from './models/ProductView.js'
 export type * from './models/Review.js'
 export type * from './models/Conversation.js'
 export type * from './models/Message.js'

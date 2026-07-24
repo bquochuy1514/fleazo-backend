@@ -21,6 +21,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { VerifyForgotOtpDto } from './dto/verify-forgot-otp.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { SetInitialPasswordDto } from './dto/set-initial-password.dto';
 import jwtConfig from '../../config/jwt.config';
 import type { ConfigType } from '@nestjs/config';
 import { ErrorCode } from '../../common/constants/error-code.constant';
@@ -396,6 +397,33 @@ export class AuthService {
     });
 
     return { message: 'Đặt lại mật khẩu thành công! Vui lòng đăng nhập.' };
+  }
+
+  async handleSetInitialPassword(userId: number, dto: SetInitialPasswordDto) {
+    // 1. Find user — should always exist for a valid access token; no
+    //    errorCode needed here, this isn't a real user-facing branch (same
+    //    pattern as validateRefreshToken's plain fallback below)
+    const user = await this.usersService.findUserById(userId);
+    if (!user) {
+      throw new BadRequestException('Người dùng không tồn tại.');
+    }
+
+    // 2. Only for accounts with no password yet (Google-login) — an account
+    //    that already has one must go through the regular change-password
+    //    flow instead, which requires the old password
+    if (user.password) {
+      throw new BadRequestException({
+        message:
+          'Tài khoản đã có mật khẩu. Vui lòng dùng chức năng đổi mật khẩu.',
+        errorCode: ErrorCode.PASSWORD_ALREADY_SET,
+      });
+    }
+
+    // 3. Hash and save the new password
+    const hashedPassword = await hashPassword(dto.password);
+    await this.usersService.updateUser(userId, { password: hashedPassword });
+
+    return { message: 'Đặt mật khẩu thành công.' };
   }
 
   async validateGoogleUser(googleUser: {

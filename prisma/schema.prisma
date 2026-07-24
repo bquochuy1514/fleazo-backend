@@ -70,6 +70,10 @@ model User {
   completionRate Float @default(0) @map("completion_rate")
   responseRate   Float @default(0) @map("response_rate")
 
+  // — University (student identity — required to sell, see gate on Products —
+  universityId Int?        @map("university_id")
+  university   University? @relation(fields: [universityId], references: [id])
+
   // — Relations —
   products               Product[]
   savedProducts          SavedProduct[]
@@ -106,6 +110,22 @@ model Category {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("categories")
+}
+
+model University {
+  // — Identity —
+  id   Int    @id @default(autoincrement())
+  name String
+  slug String @unique
+
+  // — Relations —
+  users User[]
+
+  // — Timestamps —
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("universities")
 }
 
 model Product {

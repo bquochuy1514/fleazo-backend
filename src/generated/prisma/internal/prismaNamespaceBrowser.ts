@@ -53,10 +53,10 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Category: 'Category',
+  University: 'University',
   Product: 'Product',
   ProductImage: 'ProductImage',
   SavedProduct: 'SavedProduct',
-  ProductView: 'ProductView',
   Review: 'Review',
   Conversation: 'Conversation',
   Message: 'Message'
@@ -100,6 +100,7 @@ export const UserScalarFieldEnum = {
   avgRating: 'avgRating',
   completionRate: 'completionRate',
   responseRate: 'responseRate',
+  universityId: 'universityId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -120,6 +121,17 @@ export const CategoryScalarFieldEnum = {
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
 
 
+export const UniversityScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UniversityScalarFieldEnum = (typeof UniversityScalarFieldEnum)[keyof typeof UniversityScalarFieldEnum]
+
+
 export const ProductScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -136,7 +148,6 @@ export const ProductScalarFieldEnum = {
   expiresAt: 'expiresAt',
   boostExpiresAt: 'boostExpiresAt',
   qualityScore: 'qualityScore',
-  viewCount: 'viewCount',
   saveCount: 'saveCount',
   sellerId: 'sellerId',
   categoryId: 'categoryId',
@@ -169,17 +180,6 @@ export const SavedProductScalarFieldEnum = {
 export type SavedProductScalarFieldEnum = (typeof SavedProductScalarFieldEnum)[keyof typeof SavedProductScalarFieldEnum]
 
 
-export const ProductViewScalarFieldEnum = {
-  id: 'id',
-  sessionId: 'sessionId',
-  productId: 'productId',
-  userId: 'userId',
-  viewedAt: 'viewedAt'
-} as const
-
-export type ProductViewScalarFieldEnum = (typeof ProductViewScalarFieldEnum)[keyof typeof ProductViewScalarFieldEnum]
-
-
 export const ReviewScalarFieldEnum = {
   id: 'id',
   reviewerId: 'reviewerId',
@@ -188,7 +188,6 @@ export const ReviewScalarFieldEnum = {
   rating: 'rating',
   comment: 'comment',
   sellerReply: 'sellerReply',
-  isPublished: 'isPublished',
   isHidden: 'isHidden',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

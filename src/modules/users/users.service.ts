@@ -27,6 +27,12 @@ export class UsersService {
     });
   }
 
+  async findUserById(id: number) {
+    return this.prisma.user.findUnique({
+      where: { id },
+    });
+  }
+
   async createUser(data: Prisma.UserCreateInput) {
     return this.prisma.user.create({ data });
   }
@@ -58,7 +64,7 @@ export class UsersService {
       ...safeUser
     } = foundUser;
 
-    return safeUser;
+    return { ...safeUser, hasPassword: !!password };
   }
 
   async handleUpdateProfile(
@@ -179,6 +185,7 @@ export class UsersService {
       provinceName: user.provinceName,
       wardName: user.wardName,
       createdAt: user.createdAt,
+      addressDetail: user.addressDetail,
     };
   }
 

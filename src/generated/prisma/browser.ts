@@ -28,6 +28,11 @@ export type User = Prisma.UserModel
  */
 export type Category = Prisma.CategoryModel
 /**
+ * Model University
+ * 
+ */
+export type University = Prisma.UniversityModel
+/**
  * Model Product
  * 
  */
@@ -42,11 +47,6 @@ export type ProductImage = Prisma.ProductImageModel
  * 
  */
 export type SavedProduct = Prisma.SavedProductModel
-/**
- * Model ProductView
- * 
- */
-export type ProductView = Prisma.ProductViewModel
 /**
  * Model Review
  * 

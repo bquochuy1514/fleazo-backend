@@ -20,6 +20,14 @@ export const ErrorCode = {
 
   // reset-password
   OTP_NOT_VERIFIED: 'OTP_NOT_VERIFIED',
+
+  // products — seller profile gate before a listing can go PENDING
+  INCOMPLETE_SELLER_PROFILE: 'INCOMPLETE_SELLER_PROFILE',
+
+  // set-initial-password — account already has a password set; the caller
+  // should use the regular change-password flow (which requires the old
+  // password) instead of this one (for Google-login accounts with none yet).
+  PASSWORD_ALREADY_SET: 'PASSWORD_ALREADY_SET',
 } as const;
 
 export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode];

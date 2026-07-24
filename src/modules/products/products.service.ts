@@ -14,10 +14,44 @@ import { parseJsonArray } from '../../common/utils/parse-json-array.util';
 import { CreateProductDto } from './dto/create-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { UpdateProductStatusDto } from './dto/update-product-status.dto';
 import { Prisma, ProductStatus } from '../../generated/prisma/client';
+import { assertSellerProfileComplete } from '../../common/utils/assert-seller-profile-complete.util';
 
 // Placeholder listing duration until the Membership tier module sets this per-tier
 const DEFAULT_LISTING_DURATION_DAYS = 30;
+
+// Fields needed to check seller profile completeness — kept in one place so
+// the two call sites (createProduct, updateProductStatus) select exactly the
+// same shape from Prisma.
+const SELLER_PROFILE_SELECT = {
+  phone: true,
+  provinceCode: true,
+  wardCode: true,
+  universityId: true,
+  password: true,
+} as const;
+
+// Which status(es) a seller may transition their own listing INTO, keyed by
+// the listing's CURRENT status. Deliberately separate from admin's
+// approve/reject (PENDING -> ACTIVE/REJECTED) — sellers never get those.
+// REJECTED/BANNED/EXPIRED/SOLD/CANCELLED have no seller-initiated way out:
+// a rejected or banned listing can't be resubmitted, the seller must create
+// a new listing instead (see AGENTS.md Money Flow — CANCELLED has no
+// "un-cancel" for the same reason).
+const SELLER_ALLOWED_STATUS_TRANSITIONS: Record<
+  ProductStatus,
+  ProductStatus[]
+> = {
+  [ProductStatus.DRAFT]: [ProductStatus.PENDING, ProductStatus.CANCELLED],
+  [ProductStatus.PENDING]: [ProductStatus.CANCELLED],
+  [ProductStatus.ACTIVE]: [ProductStatus.SOLD, ProductStatus.CANCELLED],
+  [ProductStatus.REJECTED]: [],
+  [ProductStatus.SOLD]: [],
+  [ProductStatus.EXPIRED]: [],
+  [ProductStatus.CANCELLED]: [],
+  [ProductStatus.BANNED]: [],
+};
 
 type ImageOrderItem =
   | { type: 'existing'; id: number }
@@ -138,18 +172,26 @@ export class ProductsService {
     dto: CreateProductDto,
     files: Express.Multer.File[],
   ) {
-    // 1. Validate category exists and is a leaf category
+    // 1. This always creates a PENDING (public-facing) listing, so the seller
+    //    must have a complete profile — phone, address, university, password
+    const seller = await this.prisma.user.findUnique({
+      where: { id: sellerId },
+      select: SELLER_PROFILE_SELECT,
+    });
+    assertSellerProfileComplete(seller);
+
+    // 2. Validate category exists and is a leaf category
     await this.categoriesService.validateLeafCategory(dto.categoryId);
 
-    // 2. Submitting for review requires at least 1 image
+    // 3. Submitting for review requires at least 1 image
     if (!files || files.length === 0) {
       throw new BadRequestException('Vui lòng tải lên ít nhất 1 ảnh sản phẩm');
     }
 
-    // 3. Upload all images to Cloudinary, rolling back on partial failure
+    // 4. Upload all images to Cloudinary, rolling back on partial failure
     const uploadedImages = await this.uploadProductImages(files);
 
-    // 4. Create product and its images atomically (single Prisma nested write)
+    // 5. Create product and its images atomically (single Prisma nested write)
     return this.prisma.product.create({
       data: {
         ...dto,
@@ -316,6 +358,52 @@ export class ProductsService {
     );
 
     return updated;
+  }
+
+  async updateProductStatus(
+    sellerId: number,
+    productId: number,
+    dto: UpdateProductStatusDto,
+  ) {
+    // 1. Fetch product, verify existence and ownership
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+    });
+    if (!product) {
+      throw new NotFoundException('Sản phẩm không tồn tại');
+    }
+    if (product.sellerId !== sellerId) {
+      throw new ForbiddenException(
+        'Bạn không có quyền thay đổi trạng thái sản phẩm này',
+      );
+    }
+
+    // 2. Only whitelisted transitions are allowed for the seller (not admin
+    //    approve/reject, not resurrecting a REJECTED/BANNED/EXPIRED listing —
+    //    those require creating a new listing instead)
+    const allowedNextStatuses =
+      SELLER_ALLOWED_STATUS_TRANSITIONS[product.status];
+    if (!allowedNextStatuses.includes(dto.status)) {
+      throw new BadRequestException(
+        `Không thể chuyển sản phẩm từ trạng thái ${product.status} sang ${dto.status}`,
+      );
+    }
+
+    // 3. Submitting for review (-> PENDING) requires a complete seller profile
+    if (dto.status === ProductStatus.PENDING) {
+      const seller = await this.prisma.user.findUnique({
+        where: { id: sellerId },
+        select: SELLER_PROFILE_SELECT,
+      });
+      assertSellerProfileComplete(seller);
+    }
+
+    // 4. Apply the transition
+    return this.prisma.product.update({
+      where: { id: productId },
+      data: { status: dto.status },
+      include: { category: true, images: true },
+    });
   }
 
   async findOne(id: number) {

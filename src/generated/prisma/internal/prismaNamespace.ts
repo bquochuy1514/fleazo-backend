@@ -386,10 +386,10 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   Category: 'Category',
+  University: 'University',
   Product: 'Product',
   ProductImage: 'ProductImage',
   SavedProduct: 'SavedProduct',
-  ProductView: 'ProductView',
   Review: 'Review',
   Conversation: 'Conversation',
   Message: 'Message'
@@ -408,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "category" | "product" | "productImage" | "savedProduct" | "productView" | "review" | "conversation" | "message"
+    modelProps: "user" | "category" | "university" | "product" | "productImage" | "savedProduct" | "review" | "conversation" | "message"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -557,6 +557,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CategoryCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CategoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    University: {
+      payload: Prisma.$UniversityPayload<ExtArgs>
+      fields: Prisma.UniversityFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UniversityFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UniversityPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UniversityFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UniversityPayload>
+        }
+        findFirst: {
+          args: Prisma.UniversityFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UniversityPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UniversityFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UniversityPayload>
+        }
+        findMany: {
+          args: Prisma.UniversityFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UniversityPayload>[]
+        }
+        create: {
+          args: Prisma.UniversityCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UniversityPayload>
+        }
+        createMany: {
+          args: Prisma.UniversityCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UniversityCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UniversityPayload>[]
+        }
+        delete: {
+          args: Prisma.UniversityDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UniversityPayload>
+        }
+        update: {
+          args: Prisma.UniversityUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UniversityPayload>
+        }
+        deleteMany: {
+          args: Prisma.UniversityDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UniversityUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UniversityUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UniversityPayload>[]
+        }
+        upsert: {
+          args: Prisma.UniversityUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UniversityPayload>
+        }
+        aggregate: {
+          args: Prisma.UniversityAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUniversity>
+        }
+        groupBy: {
+          args: Prisma.UniversityGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UniversityGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UniversityCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UniversityCountAggregateOutputType> | number
         }
       }
     }
@@ -779,80 +853,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.SavedProductCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.SavedProductCountAggregateOutputType> | number
-        }
-      }
-    }
-    ProductView: {
-      payload: Prisma.$ProductViewPayload<ExtArgs>
-      fields: Prisma.ProductViewFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.ProductViewFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductViewPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.ProductViewFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductViewPayload>
-        }
-        findFirst: {
-          args: Prisma.ProductViewFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductViewPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.ProductViewFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductViewPayload>
-        }
-        findMany: {
-          args: Prisma.ProductViewFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductViewPayload>[]
-        }
-        create: {
-          args: Prisma.ProductViewCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductViewPayload>
-        }
-        createMany: {
-          args: Prisma.ProductViewCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.ProductViewCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductViewPayload>[]
-        }
-        delete: {
-          args: Prisma.ProductViewDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductViewPayload>
-        }
-        update: {
-          args: Prisma.ProductViewUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductViewPayload>
-        }
-        deleteMany: {
-          args: Prisma.ProductViewDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.ProductViewUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.ProductViewUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductViewPayload>[]
-        }
-        upsert: {
-          args: Prisma.ProductViewUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductViewPayload>
-        }
-        aggregate: {
-          args: Prisma.ProductViewAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateProductView>
-        }
-        groupBy: {
-          args: Prisma.ProductViewGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ProductViewGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.ProductViewCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.ProductViewCountAggregateOutputType> | number
         }
       }
     }
@@ -1139,6 +1139,7 @@ export const UserScalarFieldEnum = {
   avgRating: 'avgRating',
   completionRate: 'completionRate',
   responseRate: 'responseRate',
+  universityId: 'universityId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1159,6 +1160,17 @@ export const CategoryScalarFieldEnum = {
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
 
 
+export const UniversityScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UniversityScalarFieldEnum = (typeof UniversityScalarFieldEnum)[keyof typeof UniversityScalarFieldEnum]
+
+
 export const ProductScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -1175,7 +1187,6 @@ export const ProductScalarFieldEnum = {
   expiresAt: 'expiresAt',
   boostExpiresAt: 'boostExpiresAt',
   qualityScore: 'qualityScore',
-  viewCount: 'viewCount',
   saveCount: 'saveCount',
   sellerId: 'sellerId',
   categoryId: 'categoryId',
@@ -1208,17 +1219,6 @@ export const SavedProductScalarFieldEnum = {
 export type SavedProductScalarFieldEnum = (typeof SavedProductScalarFieldEnum)[keyof typeof SavedProductScalarFieldEnum]
 
 
-export const ProductViewScalarFieldEnum = {
-  id: 'id',
-  sessionId: 'sessionId',
-  productId: 'productId',
-  userId: 'userId',
-  viewedAt: 'viewedAt'
-} as const
-
-export type ProductViewScalarFieldEnum = (typeof ProductViewScalarFieldEnum)[keyof typeof ProductViewScalarFieldEnum]
-
-
 export const ReviewScalarFieldEnum = {
   id: 'id',
   reviewerId: 'reviewerId',
@@ -1227,7 +1227,6 @@ export const ReviewScalarFieldEnum = {
   rating: 'rating',
   comment: 'comment',
   sellerReply: 'sellerReply',
-  isPublished: 'isPublished',
   isHidden: 'isHidden',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1521,10 +1520,10 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   category?: Prisma.CategoryOmit
+  university?: Prisma.UniversityOmit
   product?: Prisma.ProductOmit
   productImage?: Prisma.ProductImageOmit
   savedProduct?: Prisma.SavedProductOmit
-  productView?: Prisma.ProductViewOmit
   review?: Prisma.ReviewOmit
   conversation?: Prisma.ConversationOmit
   message?: Prisma.MessageOmit

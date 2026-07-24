@@ -19,7 +19,10 @@ import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { VerifyForgotOtpDto } from './dto/verify-forgot-otp.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { SetInitialPasswordDto } from './dto/set-initial-password.dto';
 import { GoogleAuthGuard } from '../../common/guards/google-auth.guard';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import type { JwtPayload } from '../../common/types/jwt-payload.type';
 
 @Controller('auth')
 export class AuthController {
@@ -70,6 +73,15 @@ export class AuthController {
   @Post('reset-password')
   resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return this.authService.handleResetPassword(resetPasswordDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('set-initial-password')
+  setInitialPassword(
+    @CurrentUser() user: JwtPayload,
+    @Body() dto: SetInitialPasswordDto,
+  ) {
+    return this.authService.handleSetInitialPassword(user.id, dto);
   }
 
   @Get('google/login')

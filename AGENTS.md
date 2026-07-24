@@ -373,6 +373,53 @@ Both `User` and `Product` carry their own independent set of 4 location fields (
 
 Stay at `0` for every seller until the respective modules land — don't use for ranking/UI yet.
 
+## Seller Profile Gate
+
+Before a listing can go public (`PENDING`), the seller's profile must be complete:
+`phone`, `provinceCode`+`wardCode` (`addressDetail` NOT required — province/ward alone
+is enough for both the trust display and any future location-based feed), `universityId`,
+and `password`.
+
+- **Why `password` is required to sell but not to buy**: a seller who only has Google
+  login and loses access to that Google account also loses their only way back into
+  Fleazo — active listings, chat history, and reviews included. A buyer with no active
+  listings has much less at stake, so this isn't required account-wide, only to sell.
+- **Why gated only at `PENDING`, not `DRAFT`**: a draft isn't public yet (no feed
+  visibility, no trust display needed), so blocking it here would punish someone for
+  just jotting an idea down before they've invested any real effort. The gate fires
+  at the moment a listing actually goes live — `createProduct` (always `PENDING`) and
+  `updateProductStatus` (only when the target status is `PENDING`).
+- **Seller-driven status transitions are a separate endpoint from editing**:
+  `PATCH /products/:id/status` (`UpdateProductStatusDto`) is distinct from
+  `PATCH /products/:id` (`UpdateProductDto`, text/image edits only, no `status` field).
+  Keeping them separate avoids a seller being able to set any status at all through a
+  plain edit call — the status endpoint enforces an explicit whitelist per current
+  status (`assert-seller-profile-complete.util.ts`'s sibling constant in
+  `products.service.ts`, `SELLER_ALLOWED_STATUS_TRANSITIONS`):
+  - `DRAFT` → `PENDING`, `CANCELLED`
+  - `PENDING` → `CANCELLED`
+  - `ACTIVE` → `SOLD`, `CANCELLED`
+  - Everything else (including `REJECTED`) → no seller-initiated transition. A rejected
+    listing can't be resubmitted — the seller creates a new listing instead. This is
+    separate from admin's own `approve`/`reject` endpoints (`PENDING` → `ACTIVE`/
+    `REJECTED`), which sellers never get access to.
+- **Error shape**: `INCOMPLETE_SELLER_PROFILE` (`ErrorCode`), message + `errorCode`
+  only — no `missingFields` payload. The frontend runs the identical check client-side
+  first (against `AuthProvider`'s already-fetched `user`), so it can show the "complete
+  your profile" modal and know exactly which fields are missing without the backend
+  needing to compute and send that list. This backend check exists only as the
+  authoritative backstop for stale client state or direct API calls — never trust the
+  frontend precheck alone.
+- **`hasPassword` on `/users/profile`**: derived boolean (`!!password`), never the real
+  hash — this is what lets the frontend precheck know whether `password` is missing
+  without ever seeing password data.
+- **Setting a password for the first time** (`POST /auth/set-initial-password`) is a
+  separate flow from the regular change-password one — no old password required (there
+  isn't one), just a valid access token (`JwtAuthGuard`); no OTP needed on top of that,
+  since the user is already authenticated at the point they call it. Rejects with
+  `PASSWORD_ALREADY_SET` if the account already has a password — that case should go
+  through the regular change-password flow instead.
+
 ## Auth Flow
 
 - Register → email verification (OTP code) → login
@@ -429,21 +476,22 @@ JwtModule.registerAsync({
 
 Always check for existing utilities before writing new code:
 
-| Path                                                | Export                            | Use when                                        |
-| --------------------------------------------------- | --------------------------------- | ----------------------------------------------- |
-| `src/common/utils/hash.util.ts`                     | `hashPassword`, `comparePassword` | argon2 hash/verify                              |
-| `src/common/utils/parse-json-array.util.ts`         | `parseJsonArray(raw, field)`      | parse JSON-array field from multipart form-data |
-| `src/common/decorators/match.decorator.ts`          | `@Match(field)`                   | cross-field validation                          |
-| `src/common/decorators/current-user.decorator.ts`   | `@CurrentUser()`                  | get JWT payload in controller                   |
-| `src/common/decorators/roles.decorator.ts`          | `@Roles(...roles)`, `ROLES_KEY`   | restrict endpoint by role                       |
-| `src/common/guards/jwt-auth.guard.ts`               | `JwtAuthGuard`                    | require valid access token                      |
-| `src/common/guards/refresh-auth.guard.ts`           | `RefreshAuthGuard`                | refresh token endpoint                          |
-| `src/common/guards/google-auth.guard.ts`            | `GoogleAuthGuard`                 | Google OAuth callback                           |
-| `src/common/guards/roles.guard.ts`                  | `RolesGuard`                      | enforce `@Roles()` (pair with JwtAuthGuard)     |
-| `src/common/guards/ws-jwt.guard.ts`                 | `WsJwtGuard`                      | require `client.data.user` to exist (WebSocket) |
-| `src/common/filters/validation-exception.filter.ts` | `ValidationExceptionFilter`       | global class-validator errors                   |
-| `src/common/types/jwt-payload.type.ts`              | `JwtPayload`                      | decoded JWT payload type                        |
-| `src/common/constants/error-code.constant.ts`       | `ErrorCode`                       | throwing an exception frontend must branch on   |
+| Path                                                  | Export                            | Use when                                        |
+| ----------------------------------------------------- | --------------------------------- | ----------------------------------------------- |
+| `src/common/utils/hash.util.ts`                       | `hashPassword`, `comparePassword` | argon2 hash/verify                              |
+| `src/common/utils/parse-json-array.util.ts`           | `parseJsonArray(raw, field)`      | parse JSON-array field from multipart form-data |
+| `src/common/decorators/match.decorator.ts`            | `@Match(field)`                   | cross-field validation                          |
+| `src/common/decorators/current-user.decorator.ts`     | `@CurrentUser()`                  | get JWT payload in controller                   |
+| `src/common/decorators/roles.decorator.ts`            | `@Roles(...roles)`, `ROLES_KEY`   | restrict endpoint by role                       |
+| `src/common/guards/jwt-auth.guard.ts`                 | `JwtAuthGuard`                    | require valid access token                      |
+| `src/common/guards/refresh-auth.guard.ts`             | `RefreshAuthGuard`                | refresh token endpoint                          |
+| `src/common/guards/google-auth.guard.ts`              | `GoogleAuthGuard`                 | Google OAuth callback                           |
+| `src/common/guards/roles.guard.ts`                    | `RolesGuard`                      | enforce `@Roles()` (pair with JwtAuthGuard)     |
+| `src/common/guards/ws-jwt.guard.ts`                   | `WsJwtGuard`                      | require `client.data.user` to exist (WebSocket) |
+| `src/common/filters/validation-exception.filter.ts`   | `ValidationExceptionFilter`       | global class-validator errors                   |
+| `src/common/types/jwt-payload.type.ts`                | `JwtPayload`                      | decoded JWT payload type                        |
+| `src/common/constants/error-code.constant.ts`         | `ErrorCode`                       | throwing an exception frontend must branch on   |
+| `common/utils/assert-seller-profile-complete.util.ts` | `assertSellerProfileComplete`     | gate before a listing can go `PENDING`          |
 
 > ⚠️ Whenever a new file is added to `src/common/`, update this table immediately.
 
@@ -502,10 +550,10 @@ async handleRegister(registerDto: RegisterDto) {
 ## Current Status
 
 - Core setup: ✅ Done
-- Auth module: ✅ Done
-- Users module: ✅ Done — get profile, update profile (incl. optional location fields), update avatar, change password, get public profile (shows province/ward, not `addressDetail`)
+- Auth module: ✅ Done — incl. `set-initial-password` (Google-login accounts with no password yet set one for the first time, no old password required — see Seller Profile Gate section)
+- Users module: ✅ Done — get profile (now includes derived `hasPassword: boolean`, never the real hash — feeds the frontend's seller-profile-gate precheck), update profile (incl. optional location fields), update avatar, change password, get public profile (shows province/ward, not `addressDetail`)
 - Categories module: ✅ Done — CRUD, icon upload, 2-level hierarchy enforcement (`validateLeafCategory` used by Products for assignment)
-- Products module: ✅ Core CRUD done — create (PENDING, requires ≥1 image), create draft (DRAFT, image optional), update (combined text + image add/delete/reorder, atomic), list with filters + pagination, detail (ACTIVE only), admin approve/reject, save/unsave. Location fields migrated to the 2-level `provinceCode`/`provinceName`/`wardCode`/`wardName`/`addressDetail` structure (see Location Fields section) — `province`/`district`/`ward` no longer exist.
+- Products module: ✅ Core CRUD done — create (PENDING, requires ≥1 image, gated by seller profile completeness — see Seller Profile Gate section), create draft (DRAFT, image optional, NOT gated), update (combined text + image add/delete/reorder, atomic, status unchanged by this endpoint), seller-driven status transitions (`PATCH /:id/status`, whitelisted per current status, gated by seller profile completeness only when the target is `PENDING` — see Seller Profile Gate section), list with filters + pagination, detail (ACTIVE only), admin approve/reject, save/unsave. Location fields migrated to the 2-level `provinceCode`/`provinceName`/`wardCode`/`wardName`/`addressDetail` structure (see Location Fields section) — `province`/`district`/`ward` no longer exist.
 - Reviews: ⚠️ **Design only** — `Review` model exists in schema, full gating/moderation design documented above, but `ReviewsController`/`ReviewsService` are not implemented yet.
 - Chat module: ✅ Done — REST (`ChatController`/`ChatService`: create/get conversation, list conversations, paginated message history) + WebSocket (`ChatGateway`: join, send, recall, read receipts, online/offline, cross-conversation notifications) — see Chat section for the full event contract.
 - Next: pick up Reviews (schema is ready, just needs Controller/Service), one of the deferred items below, or start `fleazo-frontend`.
