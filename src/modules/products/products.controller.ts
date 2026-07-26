@@ -26,8 +26,13 @@ import { QueryProductDto } from './dto/query-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { RejectProductDto } from './dto/reject-product.dto';
 
-// Temporary hard cap until the Membership tier module enforces per-tier image limits
-const MAX_IMAGES_PER_UPLOAD = 10;
+// Generous hard ceiling multer itself enforces before parsing — just to stop
+// a client from attaching an absurd number of files. The real business limit
+// (MAX_IMAGES_PER_UPLOAD, see products.service.ts) is checked in the service
+// with a friendly Vietnamese message instead: multer's own count limit throws
+// an unfriendly raw "Unexpected field - images" BadRequestException when
+// exceeded, so it's deliberately not used as the exact enforcement point.
+const MULTER_FILE_COUNT_CEILING = 20;
 
 @Controller('products')
 export class ProductsController {
@@ -35,7 +40,7 @@ export class ProductsController {
 
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
-    FilesInterceptor('images', MAX_IMAGES_PER_UPLOAD, {
+    FilesInterceptor('images', MULTER_FILE_COUNT_CEILING, {
       storage: memoryStorage(),
     }),
   )
@@ -50,7 +55,18 @@ export class ProductsController {
 
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
-    FilesInterceptor('images', MAX_IMAGES_PER_UPLOAD, {
+    FilesInterceptor('images', MULTER_FILE_COUNT_CEILING, {
+      storage: memoryStorage(),
+    }),
+  )
+  @Post('listing-assistant/suggest')
+  suggestListing(@UploadedFiles() files: Express.Multer.File[]) {
+    return this.productsService.suggestListing(files);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(
+    FilesInterceptor('images', MULTER_FILE_COUNT_CEILING, {
       storage: memoryStorage(),
     }),
   )
@@ -65,7 +81,7 @@ export class ProductsController {
 
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
-    FilesInterceptor('images', MAX_IMAGES_PER_UPLOAD, {
+    FilesInterceptor('images', MULTER_FILE_COUNT_CEILING, {
       storage: memoryStorage(),
     }),
   )

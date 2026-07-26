@@ -185,7 +185,6 @@ export class UsersService {
       provinceName: user.provinceName,
       wardName: user.wardName,
       createdAt: user.createdAt,
-      addressDetail: user.addressDetail,
     };
   }
 

@@ -377,8 +377,15 @@ Stay at `0` for every seller until the respective modules land — don't use for
 
 Before a listing can go public (`PENDING`), the seller's profile must be complete:
 `phone`, `provinceCode`+`wardCode` (`addressDetail` NOT required — province/ward alone
-is enough for both the trust display and any future location-based feed), `universityId`,
-and `password`.
+is enough for both the trust display and any future location-based feed), and `password`.
+
+- **`universityId` is deliberately NOT part of this gate** — not every seller is a
+  university student, so it can't be a hard requirement to sell. It stays a free,
+  optional field on `User` (student-identity display only, e.g. seller profile trust
+  signal) — collectible whenever a proper profile-edit flow exists, just never
+  enforced by `assertSellerProfileComplete`. This was a real bug once (the gate did
+  require it) — don't reintroduce it without a specific "student-only" feature that
+  actually needs it.
 
 - **Why `password` is required to sell but not to buy**: a seller who only has Google
   login and loses access to that Google account also loses their only way back into

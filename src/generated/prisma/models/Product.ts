@@ -306,7 +306,7 @@ export type ProductGroupByOutputType = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail: string | null
   condition: $Enums.ProductCondition
   status: $Enums.ProductStatus
   rejectedReason: string | null
@@ -352,7 +352,7 @@ export type ProductWhereInput = {
   provinceName?: Prisma.StringFilter<"Product"> | string
   wardCode?: Prisma.IntFilter<"Product"> | number
   wardName?: Prisma.StringFilter<"Product"> | string
-  addressDetail?: Prisma.StringFilter<"Product"> | string
+  addressDetail?: Prisma.StringNullableFilter<"Product"> | string | null
   condition?: Prisma.EnumProductConditionFilter<"Product"> | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
   rejectedReason?: Prisma.StringNullableFilter<"Product"> | string | null
@@ -381,7 +381,7 @@ export type ProductOrderByWithRelationInput = {
   provinceName?: Prisma.SortOrder
   wardCode?: Prisma.SortOrder
   wardName?: Prisma.SortOrder
-  addressDetail?: Prisma.SortOrder
+  addressDetail?: Prisma.SortOrderInput | Prisma.SortOrder
   condition?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rejectedReason?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -413,7 +413,7 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   provinceName?: Prisma.StringFilter<"Product"> | string
   wardCode?: Prisma.IntFilter<"Product"> | number
   wardName?: Prisma.StringFilter<"Product"> | string
-  addressDetail?: Prisma.StringFilter<"Product"> | string
+  addressDetail?: Prisma.StringNullableFilter<"Product"> | string | null
   condition?: Prisma.EnumProductConditionFilter<"Product"> | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
   rejectedReason?: Prisma.StringNullableFilter<"Product"> | string | null
@@ -442,7 +442,7 @@ export type ProductOrderByWithAggregationInput = {
   provinceName?: Prisma.SortOrder
   wardCode?: Prisma.SortOrder
   wardName?: Prisma.SortOrder
-  addressDetail?: Prisma.SortOrder
+  addressDetail?: Prisma.SortOrderInput | Prisma.SortOrder
   condition?: Prisma.SortOrder
   status?: Prisma.SortOrder
   rejectedReason?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -473,7 +473,7 @@ export type ProductScalarWhereWithAggregatesInput = {
   provinceName?: Prisma.StringWithAggregatesFilter<"Product"> | string
   wardCode?: Prisma.IntWithAggregatesFilter<"Product"> | number
   wardName?: Prisma.StringWithAggregatesFilter<"Product"> | string
-  addressDetail?: Prisma.StringWithAggregatesFilter<"Product"> | string
+  addressDetail?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
   condition?: Prisma.EnumProductConditionWithAggregatesFilter<"Product"> | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusWithAggregatesFilter<"Product"> | $Enums.ProductStatus
   rejectedReason?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
@@ -495,7 +495,7 @@ export type ProductCreateInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -522,7 +522,7 @@ export type ProductUncheckedCreateInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -548,7 +548,7 @@ export type ProductUpdateInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -575,7 +575,7 @@ export type ProductUncheckedUpdateInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -602,7 +602,7 @@ export type ProductCreateManyInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -624,7 +624,7 @@ export type ProductUpdateManyMutationInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -645,7 +645,7 @@ export type ProductUncheckedUpdateManyInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -936,7 +936,7 @@ export type ProductCreateWithoutSellerInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -962,7 +962,7 @@ export type ProductUncheckedCreateWithoutSellerInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -1017,7 +1017,7 @@ export type ProductScalarWhereInput = {
   provinceName?: Prisma.StringFilter<"Product"> | string
   wardCode?: Prisma.IntFilter<"Product"> | number
   wardName?: Prisma.StringFilter<"Product"> | string
-  addressDetail?: Prisma.StringFilter<"Product"> | string
+  addressDetail?: Prisma.StringNullableFilter<"Product"> | string | null
   condition?: Prisma.EnumProductConditionFilter<"Product"> | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
   rejectedReason?: Prisma.StringNullableFilter<"Product"> | string | null
@@ -1039,7 +1039,7 @@ export type ProductCreateWithoutCategoryInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -1065,7 +1065,7 @@ export type ProductUncheckedCreateWithoutCategoryInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -1116,7 +1116,7 @@ export type ProductCreateWithoutImagesInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -1142,7 +1142,7 @@ export type ProductUncheckedCreateWithoutImagesInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -1183,7 +1183,7 @@ export type ProductUpdateWithoutImagesInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1209,7 +1209,7 @@ export type ProductUncheckedUpdateWithoutImagesInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1234,7 +1234,7 @@ export type ProductCreateWithoutSavedByInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -1260,7 +1260,7 @@ export type ProductUncheckedCreateWithoutSavedByInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -1301,7 +1301,7 @@ export type ProductUpdateWithoutSavedByInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1327,7 +1327,7 @@ export type ProductUncheckedUpdateWithoutSavedByInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1352,7 +1352,7 @@ export type ProductCreateWithoutReviewsInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -1378,7 +1378,7 @@ export type ProductUncheckedCreateWithoutReviewsInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -1419,7 +1419,7 @@ export type ProductUpdateWithoutReviewsInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1445,7 +1445,7 @@ export type ProductUncheckedUpdateWithoutReviewsInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1470,7 +1470,7 @@ export type ProductCreateWithoutMessagesInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -1496,7 +1496,7 @@ export type ProductUncheckedCreateWithoutMessagesInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -1537,7 +1537,7 @@ export type ProductUpdateWithoutMessagesInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1563,7 +1563,7 @@ export type ProductUncheckedUpdateWithoutMessagesInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1589,7 +1589,7 @@ export type ProductCreateManySellerInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -1610,7 +1610,7 @@ export type ProductUpdateWithoutSellerInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1636,7 +1636,7 @@ export type ProductUncheckedUpdateWithoutSellerInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1662,7 +1662,7 @@ export type ProductUncheckedUpdateManyWithoutSellerInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1684,7 +1684,7 @@ export type ProductCreateManyCategoryInput = {
   provinceName: string
   wardCode: number
   wardName: string
-  addressDetail: string
+  addressDetail?: string | null
   condition: $Enums.ProductCondition
   status?: $Enums.ProductStatus
   rejectedReason?: string | null
@@ -1705,7 +1705,7 @@ export type ProductUpdateWithoutCategoryInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1731,7 +1731,7 @@ export type ProductUncheckedUpdateWithoutCategoryInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1757,7 +1757,7 @@ export type ProductUncheckedUpdateManyWithoutCategoryInput = {
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
   wardCode?: Prisma.IntFieldUpdateOperationsInput | number
   wardName?: Prisma.StringFieldUpdateOperationsInput | string
-  addressDetail?: Prisma.StringFieldUpdateOperationsInput | string
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   condition?: Prisma.EnumProductConditionFieldUpdateOperationsInput | $Enums.ProductCondition
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
   rejectedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1969,7 +1969,7 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     provinceName: string
     wardCode: number
     wardName: string
-    addressDetail: string
+    addressDetail: string | null
     condition: $Enums.ProductCondition
     status: $Enums.ProductStatus
     rejectedReason: string | null

@@ -31,4 +31,9 @@ export class UpdateProfileDto {
   @IsString({ message: 'Địa chỉ chi tiết phải là chuỗi ký tự' })
   @IsOptional()
   addressDetail?: string;
+
+  @IsInt({ message: 'Trường đại học không hợp lệ' })
+  @IsPositive({ message: 'Trường đại học không hợp lệ' })
+  @IsOptional()
+  universityId?: number;
 }

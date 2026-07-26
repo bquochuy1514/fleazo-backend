@@ -3,6 +3,7 @@ import {
   IsEnum,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsPositive,
   IsString,
   Min,
@@ -45,8 +46,8 @@ export class CreateProductDto {
   wardName: string;
 
   @IsString({ message: 'Địa chỉ chi tiết phải là chuỗi ký tự' })
-  @IsNotEmpty({ message: 'Địa chỉ chi tiết không được để trống' })
-  addressDetail: string;
+  @IsOptional()
+  addressDetail?: string;
 
   @IsEnum(ProductCondition, { message: 'Tình trạng sản phẩm không hợp lệ' })
   @IsNotEmpty({ message: 'Tình trạng sản phẩm không được để trống' })

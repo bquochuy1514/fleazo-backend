@@ -3,9 +3,17 @@ import {
   BadRequestException,
   ConflictException,
   ForbiddenException,
+  Inject,
   Injectable,
+  Logger,
   NotFoundException,
+  ServiceUnavailableException,
 } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+import type { ConfigType } from '@nestjs/config';
+import { firstValueFrom } from 'rxjs';
+import { isAxiosError } from 'axios';
+import FormData from 'form-data';
 import dayjs from 'dayjs';
 import { PrismaService } from '../../prisma.service';
 import { UploadService } from '../upload/upload.service';
@@ -17,9 +25,18 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { UpdateProductStatusDto } from './dto/update-product-status.dto';
 import { Prisma, ProductStatus } from '../../generated/prisma/client';
 import { assertSellerProfileComplete } from '../../common/utils/assert-seller-profile-complete.util';
+import fleazoAiConfig from '../../config/fleazo-ai.config';
 
 // Placeholder listing duration until the Membership tier module sets this per-tier
 const DEFAULT_LISTING_DURATION_DAYS = 30;
+
+// Temporary hard cap until the Membership tier module enforces per-tier image
+// limits. Checked here with a friendly Vietnamese message rather than left to
+// multer's own file-count limit (FilesInterceptor's maxCount) — exceeding
+// that throws an unfriendly raw "Unexpected field - images" BadRequestException
+// (a known multer quirk: .array(field, maxCount) reuses the "unexpected file"
+// error for the over-the-count case, not a dedicated too-many-files message).
+export const MAX_IMAGES_PER_UPLOAD = 5;
 
 // Fields needed to check seller profile completeness — kept in one place so
 // the two call sites (createProduct, updateProductStatus) select exactly the
@@ -28,7 +45,6 @@ const SELLER_PROFILE_SELECT = {
   phone: true,
   provinceCode: true,
   wardCode: true,
-  universityId: true,
   password: true,
 } as const;
 
@@ -57,12 +73,23 @@ type ImageOrderItem =
   | { type: 'existing'; id: number }
   | { type: 'new'; fileIndex: number };
 
+export interface ListingSuggestion {
+  title: string;
+  description: string;
+  categoryId: number;
+}
+
 @Injectable()
 export class ProductsService {
+  private readonly logger = new Logger(ProductsService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly uploadService: UploadService,
     private readonly categoriesService: CategoriesService,
+    private readonly httpService: HttpService,
+    @Inject(fleazoAiConfig.KEY)
+    private readonly fleazoAiConfiguration: ConfigType<typeof fleazoAiConfig>,
   ) {}
 
   private async uploadProductImages(files: Express.Multer.File[]) {
@@ -183,9 +210,15 @@ export class ProductsService {
     // 2. Validate category exists and is a leaf category
     await this.categoriesService.validateLeafCategory(dto.categoryId);
 
-    // 3. Submitting for review requires at least 1 image
+    // 3. Submitting for review requires at least 1 image, and at most
+    //    MAX_IMAGES_PER_UPLOAD
     if (!files || files.length === 0) {
       throw new BadRequestException('Vui lòng tải lên ít nhất 1 ảnh sản phẩm');
+    }
+    if (files.length > MAX_IMAGES_PER_UPLOAD) {
+      throw new BadRequestException(
+        `Chỉ được tải lên tối đa ${MAX_IMAGES_PER_UPLOAD} ảnh mỗi tin đăng`,
+      );
     }
 
     // 4. Upload all images to Cloudinary, rolling back on partial failure
@@ -217,7 +250,13 @@ export class ProductsService {
     // 1. Validate category exists and is a leaf category
     await this.categoriesService.validateLeafCategory(dto.categoryId);
 
-    // 2. Images are optional for drafts — upload whatever was provided (can be none)
+    // 2. Images are optional for drafts — upload whatever was provided (can be
+    //    none), but still capped at MAX_IMAGES_PER_UPLOAD
+    if (files && files.length > MAX_IMAGES_PER_UPLOAD) {
+      throw new BadRequestException(
+        `Chỉ được tải lên tối đa ${MAX_IMAGES_PER_UPLOAD} ảnh mỗi tin đăng`,
+      );
+    }
     const uploadedImages =
       files && files.length > 0 ? await this.uploadProductImages(files) : [];
 
@@ -285,11 +324,17 @@ export class ProductsService {
         newFilesCount,
       );
 
-    // 5. Enforce at least 1 image in the final result, unless still a draft
+    // 5. Enforce at least 1 image in the final result (unless still a draft),
+    //    and at most MAX_IMAGES_PER_UPLOAD regardless of status
     const finalImageCount = remainingImages.length + newFilesCount;
     if (product.status !== ProductStatus.DRAFT && finalImageCount === 0) {
       throw new BadRequestException(
         'Sản phẩm phải có ít nhất 1 ảnh, không thể xoá hết ảnh',
+      );
+    }
+    if (finalImageCount > MAX_IMAGES_PER_UPLOAD) {
+      throw new BadRequestException(
+        `Chỉ được có tối đa ${MAX_IMAGES_PER_UPLOAD} ảnh mỗi tin đăng`,
       );
     }
 
@@ -595,5 +640,53 @@ export class ProductsService {
       limit,
       totalPages: Math.ceil(total / limit),
     };
+  }
+
+  async suggestListing(files: Express.Multer.File[]) {
+    // 1. Guard: at least one image required, at most MAX_IMAGES_PER_UPLOAD
+    if (!files || files.length === 0) {
+      throw new BadRequestException('Vui lòng chọn ít nhất 1 ảnh để AI gợi ý.');
+    }
+    if (files.length > MAX_IMAGES_PER_UPLOAD) {
+      throw new BadRequestException(
+        `Chỉ được chọn tối đa ${MAX_IMAGES_PER_UPLOAD} ảnh để AI gợi ý`,
+      );
+    }
+
+    // 2. Build multipart request body for fleazo-ai
+    const form = new FormData();
+    for (const file of files) {
+      form.append('images', file.buffer, {
+        filename: file.originalname,
+        contentType: file.mimetype,
+      });
+    }
+
+    // 3. Call fleazo-ai, authenticated via shared-secret header
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post<ListingSuggestion>(
+          `${this.fleazoAiConfiguration.baseUrl}/listing-assistant/suggest`,
+          form,
+          {
+            headers: {
+              ...form.getHeaders(),
+              'X-Internal-Api-Key': this.fleazoAiConfiguration.internalApiKey,
+            },
+          },
+        ),
+      );
+      return response.data;
+    } catch (error) {
+      // 4. fleazo-ai unreachable or returned an error — log the real cause
+      //    server-side for debugging, surface a clean message to the client
+      const detail = isAxiosError(error)
+        ? `${error.code ?? error.response?.status} ${JSON.stringify(error.response?.data ?? error.message)}`
+        : String(error);
+      this.logger.error(`suggestListing failed: ${detail}`);
+      throw new ServiceUnavailableException(
+        'AI đang bận, vui lòng thử lại sau.',
+      );
+    }
   }
 }
