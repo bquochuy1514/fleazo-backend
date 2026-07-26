@@ -56,6 +56,8 @@ export const ModelName = {
   University: 'University',
   Product: 'Product',
   ProductImage: 'ProductImage',
+  ProductRevision: 'ProductRevision',
+  ProductRevisionImage: 'ProductRevisionImage',
   SavedProduct: 'SavedProduct',
   Review: 'Review',
   Conversation: 'Conversation',
@@ -169,6 +171,37 @@ export const ProductImageScalarFieldEnum = {
 } as const
 
 export type ProductImageScalarFieldEnum = (typeof ProductImageScalarFieldEnum)[keyof typeof ProductImageScalarFieldEnum]
+
+
+export const ProductRevisionScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  price: 'price',
+  condition: 'condition',
+  categoryId: 'categoryId',
+  provinceCode: 'provinceCode',
+  provinceName: 'provinceName',
+  wardCode: 'wardCode',
+  wardName: 'wardName',
+  addressDetail: 'addressDetail',
+  productId: 'productId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProductRevisionScalarFieldEnum = (typeof ProductRevisionScalarFieldEnum)[keyof typeof ProductRevisionScalarFieldEnum]
+
+
+export const ProductRevisionImageScalarFieldEnum = {
+  id: 'id',
+  url: 'url',
+  publicId: 'publicId',
+  order: 'order',
+  revisionId: 'revisionId'
+} as const
+
+export type ProductRevisionImageScalarFieldEnum = (typeof ProductRevisionImageScalarFieldEnum)[keyof typeof ProductRevisionImageScalarFieldEnum]
 
 
 export const SavedProductScalarFieldEnum = {

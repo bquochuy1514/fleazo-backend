@@ -389,6 +389,8 @@ export const ModelName = {
   University: 'University',
   Product: 'Product',
   ProductImage: 'ProductImage',
+  ProductRevision: 'ProductRevision',
+  ProductRevisionImage: 'ProductRevisionImage',
   SavedProduct: 'SavedProduct',
   Review: 'Review',
   Conversation: 'Conversation',
@@ -408,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "category" | "university" | "product" | "productImage" | "savedProduct" | "review" | "conversation" | "message"
+    modelProps: "user" | "category" | "university" | "product" | "productImage" | "productRevision" | "productRevisionImage" | "savedProduct" | "review" | "conversation" | "message"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -779,6 +781,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProductImageCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProductImageCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProductRevision: {
+      payload: Prisma.$ProductRevisionPayload<ExtArgs>
+      fields: Prisma.ProductRevisionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProductRevisionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProductRevisionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionPayload>
+        }
+        findFirst: {
+          args: Prisma.ProductRevisionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProductRevisionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionPayload>
+        }
+        findMany: {
+          args: Prisma.ProductRevisionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionPayload>[]
+        }
+        create: {
+          args: Prisma.ProductRevisionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionPayload>
+        }
+        createMany: {
+          args: Prisma.ProductRevisionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProductRevisionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionPayload>[]
+        }
+        delete: {
+          args: Prisma.ProductRevisionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionPayload>
+        }
+        update: {
+          args: Prisma.ProductRevisionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProductRevisionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProductRevisionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProductRevisionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProductRevisionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionPayload>
+        }
+        aggregate: {
+          args: Prisma.ProductRevisionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProductRevision>
+        }
+        groupBy: {
+          args: Prisma.ProductRevisionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProductRevisionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProductRevisionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProductRevisionCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProductRevisionImage: {
+      payload: Prisma.$ProductRevisionImagePayload<ExtArgs>
+      fields: Prisma.ProductRevisionImageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProductRevisionImageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionImagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProductRevisionImageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionImagePayload>
+        }
+        findFirst: {
+          args: Prisma.ProductRevisionImageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionImagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProductRevisionImageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionImagePayload>
+        }
+        findMany: {
+          args: Prisma.ProductRevisionImageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionImagePayload>[]
+        }
+        create: {
+          args: Prisma.ProductRevisionImageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionImagePayload>
+        }
+        createMany: {
+          args: Prisma.ProductRevisionImageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProductRevisionImageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionImagePayload>[]
+        }
+        delete: {
+          args: Prisma.ProductRevisionImageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionImagePayload>
+        }
+        update: {
+          args: Prisma.ProductRevisionImageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionImagePayload>
+        }
+        deleteMany: {
+          args: Prisma.ProductRevisionImageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProductRevisionImageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProductRevisionImageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionImagePayload>[]
+        }
+        upsert: {
+          args: Prisma.ProductRevisionImageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductRevisionImagePayload>
+        }
+        aggregate: {
+          args: Prisma.ProductRevisionImageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProductRevisionImage>
+        }
+        groupBy: {
+          args: Prisma.ProductRevisionImageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProductRevisionImageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProductRevisionImageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProductRevisionImageCountAggregateOutputType> | number
         }
       }
     }
@@ -1210,6 +1360,37 @@ export const ProductImageScalarFieldEnum = {
 export type ProductImageScalarFieldEnum = (typeof ProductImageScalarFieldEnum)[keyof typeof ProductImageScalarFieldEnum]
 
 
+export const ProductRevisionScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  price: 'price',
+  condition: 'condition',
+  categoryId: 'categoryId',
+  provinceCode: 'provinceCode',
+  provinceName: 'provinceName',
+  wardCode: 'wardCode',
+  wardName: 'wardName',
+  addressDetail: 'addressDetail',
+  productId: 'productId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProductRevisionScalarFieldEnum = (typeof ProductRevisionScalarFieldEnum)[keyof typeof ProductRevisionScalarFieldEnum]
+
+
+export const ProductRevisionImageScalarFieldEnum = {
+  id: 'id',
+  url: 'url',
+  publicId: 'publicId',
+  order: 'order',
+  revisionId: 'revisionId'
+} as const
+
+export type ProductRevisionImageScalarFieldEnum = (typeof ProductRevisionImageScalarFieldEnum)[keyof typeof ProductRevisionImageScalarFieldEnum]
+
+
 export const SavedProductScalarFieldEnum = {
   userId: 'userId',
   productId: 'productId',
@@ -1523,6 +1704,8 @@ export type GlobalOmitConfig = {
   university?: Prisma.UniversityOmit
   product?: Prisma.ProductOmit
   productImage?: Prisma.ProductImageOmit
+  productRevision?: Prisma.ProductRevisionOmit
+  productRevisionImage?: Prisma.ProductRevisionImageOmit
   savedProduct?: Prisma.SavedProductOmit
   review?: Prisma.ReviewOmit
   conversation?: Prisma.ConversationOmit

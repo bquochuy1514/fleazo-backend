@@ -373,6 +373,15 @@ Both `User` and `Product` carry their own independent set of 4 location fields (
 
 Stay at `0` for every seller until the respective modules land — don't use for ranking/UI yet.
 
+## Re-review Flow for ACTIVE Edits
+
+Editing an already-`ACTIVE` listing can't apply immediately like DRAFT/PENDING/etc. do — the listing must keep showing its current, already-approved content until an admin reviews the change, not flash unreviewed content live.
+
+- **`ProductRevision`** (1:1 with `Product`) holds the proposed edit as a **full snapshot** (not a diff) of what `Product` would become if approved — makes "apply on approve" a straight field copy. `ProductRevisionImage` mirrors this for images (copies of kept + newly uploaded images); the live `ProductImage` rows stay untouched while pending. No status field — the row's existence IS "pending"; approve copies + deletes it, reject just deletes it.
+- **`ProductsService.updateProduct`** branches on `product.status`: `ACTIVE` stages a revision (`stageRevision`) instead of writing to `Product`; every other status still applies immediately. A second edit while one is pending replaces it (old staged Cloudinary assets not shared with the live product get cleaned up).
+- **Admin endpoints**, separate from `approveProduct`/`rejectProduct` (the original `PENDING` → `ACTIVE`/`REJECTED` flow): `PATCH /products/:id/revision/approve`/`reject` (`ProductsService.approveRevision`/`rejectRevision`). Reject takes a required `reason` (`RejectProductDto`) but it's only logged for now, no seller-facing surface shows it yet.
+- Frontend: `GET /products/me` includes `revision` so `quan-ly-tin` can show a "chờ duyệt thay đổi" badge (done — see frontend AGENTS.md). No admin UI to actually review the queue yet — the endpoints above are API-only for now.
+
 ## Seller Profile Gate
 
 Before a listing can go public (`PENDING`), the seller's profile must be complete:
@@ -560,7 +569,7 @@ async handleRegister(registerDto: RegisterDto) {
 - Auth module: ✅ Done — incl. `set-initial-password` (Google-login accounts with no password yet set one for the first time, no old password required — see Seller Profile Gate section)
 - Users module: ✅ Done — get profile (now includes derived `hasPassword: boolean`, never the real hash — feeds the frontend's seller-profile-gate precheck), update profile (incl. optional location fields), update avatar, change password, get public profile (shows province/ward, not `addressDetail`)
 - Categories module: ✅ Done — CRUD, icon upload, 2-level hierarchy enforcement (`validateLeafCategory` used by Products for assignment)
-- Products module: ✅ Core CRUD done — create (PENDING, requires ≥1 image, gated by seller profile completeness — see Seller Profile Gate section), create draft (DRAFT, image optional, NOT gated), update (combined text + image add/delete/reorder, atomic, status unchanged by this endpoint), seller-driven status transitions (`PATCH /:id/status`, whitelisted per current status, gated by seller profile completeness only when the target is `PENDING` — see Seller Profile Gate section), list with filters + pagination, detail (ACTIVE only), admin approve/reject, save/unsave. Location fields migrated to the 2-level `provinceCode`/`provinceName`/`wardCode`/`wardName`/`addressDetail` structure (see Location Fields section) — `province`/`district`/`ward` no longer exist.
+- Products module: ✅ Core CRUD done — create (PENDING, requires ≥1 image, gated by seller profile completeness — see Seller Profile Gate section), create draft (DRAFT, image optional, NOT gated), update (combined text + image add/delete/reorder, atomic, status unchanged by this endpoint; ACTIVE listings stage a `ProductRevision` instead of applying immediately — see Re-review Flow for ACTIVE Edits section), seller-driven status transitions (`PATCH /:id/status`, whitelisted per current status, gated by seller profile completeness only when the target is `PENDING` — see Seller Profile Gate section), list with filters + pagination (public, ACTIVE-only), **seller's own listings across every status** (`GET /products/me`, `findMyProducts` — optional `status`/`keyword` filter, same pagination shape as the public list; must be declared before `@Get(':id')` in the controller or Nest matches `me` as the `:id` param), detail (ACTIVE only), admin approve/reject, admin revision approve/reject (`PATCH /:id/revision/approve`/`reject` — see Re-review Flow for ACTIVE Edits section), save/unsave. Location fields migrated to the 2-level `provinceCode`/`provinceName`/`wardCode`/`wardName`/`addressDetail` structure (see Location Fields section) — `province`/`district`/`ward` no longer exist.
 - Reviews: ⚠️ **Design only** — `Review` model exists in schema, full gating/moderation design documented above, but `ReviewsController`/`ReviewsService` are not implemented yet.
 - Chat module: ✅ Done — REST (`ChatController`/`ChatService`: create/get conversation, list conversations, paginated message history) + WebSocket (`ChatGateway`: join, send, recall, read receipts, online/offline, cross-conversation notifications) — see Chat section for the full event contract.
 - Next: pick up Reviews (schema is ready, just needs Controller/Service), one of the deferred items below, or start `fleazo-frontend`.
@@ -571,10 +580,9 @@ Known gaps, left unimplemented because the blocking module doesn't exist yet. Sc
 
 - `Product.qualityScore` calculation (LLM condition-confidence call + freshness) — blocked on: `fleazo-ai` service work
 - `User.avgRating` / `User.completionRate` / `User.responseRate` — see Product Schema Decisions → User: deferred seller-trust fields
-- Per-tier image limit (`MAX_IMAGES_PER_UPLOAD` is a temporary hard cap of 10) — blocked on: Membership module
+- Per-tier image limit (`MAX_IMAGES_PER_UPLOAD` is a temporary hard cap of 5, in `products.service.ts`) — blocked on: Membership module
 - Per-tier `expiresAt` duration on approve (`DEFAULT_LISTING_DURATION_DAYS` is a flat 30-day placeholder) — blocked on: Membership module
-- Re-review flow when editing a field on an `ACTIVE` listing — not a missing module, just an undecided rule (which fields should revert status to `PENDING`)
-- Seller viewing their own `DRAFT`/`PENDING` listing detail — not built; `GET /products/:id` only returns `ACTIVE`
+- Seller viewing their own `DRAFT`/`PENDING` listing **detail** — still not built; `GET /products/:id` (`findOne`) stays ACTIVE-only, unchanged, for the public detail page. The **list** side is done though — `GET /products/me` (`findMyProducts`, see Products module status line) returns every status for the authenticated seller; only the single-item detail view is still the gap.
 
 ## Agent Behavior
 

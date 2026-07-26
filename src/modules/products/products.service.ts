@@ -21,6 +21,7 @@ import { CategoriesService } from '../categories/categories.service';
 import { parseJsonArray } from '../../common/utils/parse-json-array.util';
 import { CreateProductDto } from './dto/create-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
+import { QueryMyProductsDto } from './dto/query-my-products.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { UpdateProductStatusDto } from './dto/update-product-status.dto';
 import { Prisma, ProductStatus } from '../../generated/prisma/client';
@@ -284,10 +285,13 @@ export class ProductsService {
     dto: UpdateProductDto,
     files: Express.Multer.File[],
   ) {
-    // 1. Fetch product with images, verify existence and ownership
+    // 1. Fetch product with images + category, verify existence and ownership.
+    //    category is only actually needed for the ACTIVE/staged-revision
+    //    response shape below, but fetched unconditionally to keep this one
+    //    query shared by both branches.
     const product = await this.prisma.product.findUnique({
       where: { id: productId },
-      include: { images: true },
+      include: { images: true, category: true },
     });
 
     if (!product) {
@@ -361,7 +365,23 @@ export class ProductsService {
     // 8. Strip image-instruction fields out of dto before using it as Product data
     const { deleteImageIds: _di, imagesOrder: _io, ...productFields } = dto;
 
-    // 9. Apply text update + image delete/reorder/create atomically
+    // 9. ACTIVE listings are already publicly visible — stage the edit as a
+    //    ProductRevision instead of applying it, so the live listing keeps
+    //    showing its current, already-approved content uninterrupted until
+    //    an admin approves or rejects the change (see AGENTS.md → Products:
+    //    Re-review flow for ACTIVE edits). Every other status still applies
+    //    immediately below, same as before.
+    if (product.status === ProductStatus.ACTIVE) {
+      const revision = await this.stageRevision(
+        product,
+        productFields,
+        finalOrder,
+        uploadedImages,
+      );
+      return { ...product, revision };
+    }
+
+    // 10. Apply text update + image delete/reorder/create atomically
     const updated = await this.prisma.$transaction(async (tx) => {
       if (deleteImageIds.length > 0) {
         await tx.productImage.deleteMany({
@@ -394,7 +414,7 @@ export class ProductsService {
       });
     });
 
-    // 10. Clean up deleted images from Cloudinary only after the DB transaction commits
+    // 11. Clean up deleted images from Cloudinary only after the DB transaction commits
     const deletedImages = product.images.filter((img) =>
       deleteImageIds.includes(img.id),
     );
@@ -403,6 +423,223 @@ export class ProductsService {
     );
 
     return updated;
+  }
+
+  // Stages an ACTIVE listing's edit as a ProductRevision instead of applying
+  // it immediately — see updateProduct's step 9 and the model's own doc
+  // comment in schema.prisma. A second edit while one is already pending
+  // replaces it (see step 3 below).
+  private async stageRevision(
+    product: Prisma.ProductGetPayload<{
+      include: { images: true; category: true };
+    }>,
+    productFields: Partial<CreateProductDto>,
+    finalOrder: ImageOrderItem[],
+    uploadedImages: { secure_url: string; public_id: string }[],
+  ) {
+    // 1. Merge the seller's changes over the listing's current values — the
+    //    revision stores a full snapshot, not a partial diff, so approving
+    //    it later is a straight field copy (see schema.prisma comment).
+    const snapshot = {
+      title: productFields.title ?? product.title,
+      description: productFields.description ?? product.description,
+      price: productFields.price ?? product.price,
+      condition: productFields.condition ?? product.condition,
+      categoryId: productFields.categoryId ?? product.categoryId,
+      provinceCode: productFields.provinceCode ?? product.provinceCode,
+      provinceName: productFields.provinceName ?? product.provinceName,
+      wardCode: productFields.wardCode ?? product.wardCode,
+      wardName: productFields.wardName ?? product.wardName,
+      addressDetail:
+        productFields.addressDetail !== undefined
+          ? productFields.addressDetail
+          : product.addressDetail,
+    };
+
+    // 2. Resolve the revision's own image list in finalOrder, copying
+    //    url/publicId from either a kept live image or a newly uploaded one
+    //    — never referencing the live ProductImage rows directly, since
+    //    those must stay untouched while only pending.
+    const imagesById = new Map(product.images.map((img) => [img.id, img]));
+    const revisionImages = finalOrder.map((item, order) => {
+      if (item.type === 'existing') {
+        const img = imagesById.get(item.id);
+        if (!img) {
+          throw new BadRequestException('imagesOrder chứa ảnh không hợp lệ');
+        }
+        return { url: img.url, publicId: img.publicId, order };
+      }
+      const uploaded = uploadedImages[item.fileIndex];
+      return {
+        url: uploaded.secure_url,
+        publicId: uploaded.public_id,
+        order,
+      };
+    });
+
+    // 3. A second edit while one revision is already pending replaces it —
+    //    clean up any of its staged Cloudinary assets that aren't ALSO part
+    //    of the live product (those are still live, never delete them).
+    const existingRevision = await this.prisma.productRevision.findUnique({
+      where: { productId: product.id },
+      include: { images: true },
+    });
+    if (existingRevision) {
+      const livePublicIds = new Set(product.images.map((img) => img.publicId));
+      const orphaned = existingRevision.images.filter(
+        (img) => !livePublicIds.has(img.publicId),
+      );
+      await this.prisma.productRevision.delete({
+        where: { id: existingRevision.id },
+      });
+      await Promise.all(
+        orphaned.map((img) => this.uploadService.deleteImage(img.publicId)),
+      );
+    }
+
+    // 4. Create the fresh revision
+    return this.prisma.productRevision.create({
+      data: {
+        productId: product.id,
+        ...snapshot,
+        images: { create: revisionImages },
+      },
+      include: { images: { orderBy: { order: 'asc' } } },
+    });
+  }
+
+  // Admin approves a pending revision — copies its snapshot onto the live
+  // Product/ProductImage rows, then deletes the revision. Cloudinary cleanup
+  // for images the live listing no longer keeps happens after the DB
+  // transaction commits, same pattern as updateProduct's own last step.
+  async approveRevision(productId: number) {
+    // 1. Fetch product + its pending revision, verify one actually exists
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+      include: { images: true, revision: { include: { images: true } } },
+    });
+    if (!product) {
+      throw new NotFoundException('Sản phẩm không tồn tại');
+    }
+    if (!product.revision) {
+      throw new BadRequestException(
+        'Sản phẩm này không có thay đổi nào đang chờ duyệt',
+      );
+    }
+    const revision = product.revision;
+
+    // 2. Diff the revision's image snapshot against the live images —
+    //    what to remove, what's brand new, what's kept (may just need a
+    //    new order)
+    const keepPublicIds = new Set(revision.images.map((img) => img.publicId));
+    const livePublicIds = new Set(product.images.map((img) => img.publicId));
+    const toDelete = product.images.filter(
+      (img) => !keepPublicIds.has(img.publicId),
+    );
+    const toCreate = revision.images.filter(
+      (img) => !livePublicIds.has(img.publicId),
+    );
+    const toReorder = revision.images.filter((img) =>
+      livePublicIds.has(img.publicId),
+    );
+
+    // 3. Apply the revision's snapshot onto the live Product/ProductImage
+    //    rows, then delete the revision, atomically
+    const updated = await this.prisma.$transaction(async (tx) => {
+      if (toDelete.length > 0) {
+        await tx.productImage.deleteMany({
+          where: { id: { in: toDelete.map((img) => img.id) } },
+        });
+      }
+
+      await Promise.all([
+        ...toCreate.map((img) =>
+          tx.productImage.create({
+            data: {
+              productId,
+              url: img.url,
+              publicId: img.publicId,
+              order: img.order,
+            },
+          }),
+        ),
+        ...toReorder.map((img) => {
+          const live = product.images.find((p) => p.publicId === img.publicId)!;
+          return tx.productImage.update({
+            where: { id: live.id },
+            data: { order: img.order },
+          });
+        }),
+      ]);
+
+      const result = await tx.product.update({
+        where: { id: productId },
+        data: {
+          title: revision.title,
+          description: revision.description,
+          price: revision.price,
+          condition: revision.condition,
+          categoryId: revision.categoryId,
+          provinceCode: revision.provinceCode,
+          provinceName: revision.provinceName,
+          wardCode: revision.wardCode,
+          wardName: revision.wardName,
+          addressDetail: revision.addressDetail,
+        },
+        include: { category: true, images: { orderBy: { order: 'asc' } } },
+      });
+
+      await tx.productRevision.delete({ where: { id: revision.id } });
+
+      return result;
+    });
+
+    // 4. Clean up the now-removed images from Cloudinary only after the DB
+    //    transaction commits — never the ones still referenced by the
+    //    now-live images (toCreate/toReorder all stay)
+    await Promise.all(
+      toDelete.map((img) => this.uploadService.deleteImage(img.publicId)),
+    );
+
+    return updated;
+  }
+
+  // Admin rejects a pending revision — discards it, live listing untouched.
+  // reason is required (mirrors rejectProduct's RejectProductDto) but only
+  // logged for now, since there's no seller-facing surface for it yet — see
+  // AGENTS.md → Products: Re-review flow for ACTIVE edits.
+  async rejectRevision(productId: number, reason: string) {
+    // 1. Fetch product + its pending revision, verify one actually exists
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+      include: { images: true, revision: { include: { images: true } } },
+    });
+    if (!product) {
+      throw new NotFoundException('Sản phẩm không tồn tại');
+    }
+    if (!product.revision) {
+      throw new BadRequestException(
+        'Sản phẩm này không có thay đổi nào đang chờ duyệt',
+      );
+    }
+
+    // 2. Discard the revision, cleaning up any Cloudinary assets it staged
+    //    that aren't also part of the still-live product
+    const livePublicIds = new Set(product.images.map((img) => img.publicId));
+    const orphaned = product.revision.images.filter(
+      (img) => !livePublicIds.has(img.publicId),
+    );
+
+    await this.prisma.productRevision.delete({
+      where: { id: product.revision.id },
+    });
+    await Promise.all(
+      orphaned.map((img) => this.uploadService.deleteImage(img.publicId)),
+    );
+
+    this.logger.log(`Revision for product ${productId} rejected: ${reason}`);
+
+    return { message: 'Đã từ chối thay đổi, tin gốc giữ nguyên.' };
   }
 
   async updateProductStatus(
@@ -633,6 +870,49 @@ export class ProductsService {
     ]);
 
     // 4. Return paginated result
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
+  // Seller's own listings, any status — unlike findAll (always ACTIVE-only,
+  // for public browsing). See backend AGENTS.md → Deferred work: "Seller
+  // viewing their own DRAFT/PENDING listing detail" — this is the list-side
+  // half of that; findOne still stays ACTIVE-only for the public detail page.
+  async findMyProducts(sellerId: number, query: QueryMyProductsDto) {
+    const { status, keyword, page = 1, limit = 20 } = query;
+
+    const where: Prisma.ProductWhereInput = {
+      sellerId,
+      ...(status && { status }),
+      ...(keyword && {
+        title: { contains: keyword, mode: 'insensitive' },
+      }),
+    };
+
+    const [data, total] = await Promise.all([
+      this.prisma.product.findMany({
+        where,
+        // revision: only ever non-null for an ACTIVE listing with a pending
+        // edit (see Re-review Flow for ACTIVE Edits) — `select` keeps this to
+        // just what the "chờ duyệt thay đổi" badge needs, not the full
+        // snapshot content.
+        include: {
+          category: true,
+          images: true,
+          revision: { select: { id: true, updatedAt: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.product.count({ where }),
+    ]);
+
     return {
       data,
       total,

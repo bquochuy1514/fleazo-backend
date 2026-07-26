@@ -23,7 +23,9 @@ import { UserRole } from '../../generated/prisma/client';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
+import { QueryMyProductsDto } from './dto/query-my-products.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { UpdateProductStatusDto } from './dto/update-product-status.dto';
 import { RejectProductDto } from './dto/reject-product.dto';
 
 // Generous hard ceiling multer itself enforces before parsing — just to stop
@@ -95,9 +97,35 @@ export class ProductsController {
     return this.productsService.updateProduct(user.id, id, dto, files);
   }
 
+  // Seller-driven status transitions (submit draft, cancel, mark sold) —
+  // whitelisted per current status in ProductsService.updateProductStatus,
+  // separate from this admin-only approve/reject below. See backend
+  // AGENTS.md → Seller Profile Gate.
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/status')
+  updateProductStatus(
+    @CurrentUser() user: JwtPayload,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateProductStatusDto,
+  ) {
+    return this.productsService.updateProductStatus(user.id, id, dto);
+  }
+
   @Get()
   findAll(@Query() query: QueryProductDto) {
     return this.productsService.findAll(query);
+  }
+
+  // Must come before @Get(':id') — 'me' would otherwise be parsed as the
+  // :id param (and rejected by ParseIntPipe) since Nest matches routes in
+  // declaration order for the same HTTP method.
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  findMyProducts(
+    @CurrentUser() user: JwtPayload,
+    @Query() query: QueryMyProductsDto,
+  ) {
+    return this.productsService.findMyProducts(user.id, query);
   }
 
   @Get(':id')
@@ -120,6 +148,27 @@ export class ProductsController {
     @Body() dto: RejectProductDto,
   ) {
     return this.productsService.rejectProduct(id, dto.reason);
+  }
+
+  // Re-review for an edit made to an already-ACTIVE listing — separate from
+  // approveProduct/rejectProduct above, which are for the original PENDING ->
+  // ACTIVE/REJECTED submission. See ProductRevision in schema.prisma and
+  // ProductsService.stageRevision.
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @Patch(':id/revision/approve')
+  approveRevision(@Param('id', ParseIntPipe) id: number) {
+    return this.productsService.approveRevision(id);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @Patch(':id/revision/reject')
+  rejectRevision(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: RejectProductDto,
+  ) {
+    return this.productsService.rejectRevision(id, dto.reason);
   }
 
   @UseGuards(JwtAuthGuard)
