@@ -28,12 +28,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { UpdateProductStatusDto } from './dto/update-product-status.dto';
 import { RejectProductDto } from './dto/reject-product.dto';
 
-// Generous hard ceiling multer itself enforces before parsing — just to stop
-// a client from attaching an absurd number of files. The real business limit
-// (MAX_IMAGES_PER_UPLOAD, see products.service.ts) is checked in the service
-// with a friendly Vietnamese message instead: multer's own count limit throws
-// an unfriendly raw "Unexpected field - images" BadRequestException when
-// exceeded, so it's deliberately not used as the exact enforcement point.
+// Generous ceiling multer enforces before parsing; the real business limit (MAX_IMAGES_PER_UPLOAD) is checked in the service.
 const MULTER_FILE_COUNT_CEILING = 20;
 
 @Controller('products')
@@ -97,10 +92,7 @@ export class ProductsController {
     return this.productsService.updateProduct(user.id, id, dto, files);
   }
 
-  // Seller-driven status transitions (submit draft, cancel, mark sold) —
-  // whitelisted per current status in ProductsService.updateProductStatus,
-  // separate from this admin-only approve/reject below. See backend
-  // AGENTS.md → Seller Profile Gate.
+  // Seller-driven status transitions, whitelisted per current status in ProductsService.updateProductStatus.
   @UseGuards(JwtAuthGuard)
   @Patch(':id/status')
   updateProductStatus(
@@ -116,9 +108,7 @@ export class ProductsController {
     return this.productsService.findAll(query);
   }
 
-  // Must come before @Get(':id') — 'me' would otherwise be parsed as the
-  // :id param (and rejected by ParseIntPipe) since Nest matches routes in
-  // declaration order for the same HTTP method.
+  // Must come before @Get(':id') — otherwise 'me' is parsed as the :id param and rejected by ParseIntPipe.
   @UseGuards(JwtAuthGuard)
   @Get('me')
   findMyProducts(
@@ -150,10 +140,7 @@ export class ProductsController {
     return this.productsService.rejectProduct(id, dto.reason);
   }
 
-  // Re-review for an edit made to an already-ACTIVE listing — separate from
-  // approveProduct/rejectProduct above, which are for the original PENDING ->
-  // ACTIVE/REJECTED submission. See ProductRevision in schema.prisma and
-  // ProductsService.stageRevision.
+  // Re-review for an edit to an already-ACTIVE listing, separate from the original PENDING -> ACTIVE/REJECTED submission above.
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
   @Patch(':id/revision/approve')

@@ -31,17 +31,10 @@ import fleazoAiConfig from '../../config/fleazo-ai.config';
 // Placeholder listing duration until the Membership tier module sets this per-tier
 const DEFAULT_LISTING_DURATION_DAYS = 30;
 
-// Temporary hard cap until the Membership tier module enforces per-tier image
-// limits. Checked here with a friendly Vietnamese message rather than left to
-// multer's own file-count limit (FilesInterceptor's maxCount) — exceeding
-// that throws an unfriendly raw "Unexpected field - images" BadRequestException
-// (a known multer quirk: .array(field, maxCount) reuses the "unexpected file"
-// error for the over-the-count case, not a dedicated too-many-files message).
+// Temporary hard cap until the Membership tier module enforces per-tier image limits.
 export const MAX_IMAGES_PER_UPLOAD = 5;
 
-// Fields needed to check seller profile completeness — kept in one place so
-// the two call sites (createProduct, updateProductStatus) select exactly the
-// same shape from Prisma.
+// Shared select shape so createProduct and updateProductStatus check the same fields.
 const SELLER_PROFILE_SELECT = {
   phone: true,
   provinceCode: true,
@@ -49,13 +42,9 @@ const SELLER_PROFILE_SELECT = {
   password: true,
 } as const;
 
-// Which status(es) a seller may transition their own listing INTO, keyed by
-// the listing's CURRENT status. Deliberately separate from admin's
-// approve/reject (PENDING -> ACTIVE/REJECTED) — sellers never get those.
-// REJECTED/BANNED/EXPIRED/SOLD/CANCELLED have no seller-initiated way out:
-// a rejected or banned listing can't be resubmitted, the seller must create
-// a new listing instead (see AGENTS.md Money Flow — CANCELLED has no
-// "un-cancel" for the same reason).
+// Which status(es) a seller may transition their own listing INTO, keyed by the
+// listing's CURRENT status. Separate from admin's approve/reject (PENDING -> ACTIVE/REJECTED).
+// Statuses with no seller-initiated way out require creating a new listing instead.
 const SELLER_ALLOWED_STATUS_TRANSITIONS: Record<
   ProductStatus,
   ProductStatus[]
@@ -367,10 +356,9 @@ export class ProductsService {
 
     // 9. ACTIVE listings are already publicly visible — stage the edit as a
     //    ProductRevision instead of applying it, so the live listing keeps
-    //    showing its current, already-approved content uninterrupted until
-    //    an admin approves or rejects the change (see AGENTS.md → Products:
-    //    Re-review flow for ACTIVE edits). Every other status still applies
-    //    immediately below, same as before.
+    //    showing its current, already-approved content until an admin
+    //    approves or rejects the change. Every other status still applies
+    //    immediately below.
     if (product.status === ProductStatus.ACTIVE) {
       const revision = await this.stageRevision(
         product,
@@ -425,10 +413,7 @@ export class ProductsService {
     return updated;
   }
 
-  // Stages an ACTIVE listing's edit as a ProductRevision instead of applying
-  // it immediately — see updateProduct's step 9 and the model's own doc
-  // comment in schema.prisma. A second edit while one is already pending
-  // replaces it (see step 3 below).
+  // Stages an ACTIVE listing's edit as a ProductRevision instead of applying it immediately.
   private async stageRevision(
     product: Prisma.ProductGetPayload<{
       include: { images: true; category: true };
@@ -508,10 +493,7 @@ export class ProductsService {
     });
   }
 
-  // Admin approves a pending revision — copies its snapshot onto the live
-  // Product/ProductImage rows, then deletes the revision. Cloudinary cleanup
-  // for images the live listing no longer keeps happens after the DB
-  // transaction commits, same pattern as updateProduct's own last step.
+  // Copies a pending revision's snapshot onto the live Product/ProductImage rows, then deletes it.
   async approveRevision(productId: number) {
     // 1. Fetch product + its pending revision, verify one actually exists
     const product = await this.prisma.product.findUnique({
@@ -604,10 +586,7 @@ export class ProductsService {
     return updated;
   }
 
-  // Admin rejects a pending revision — discards it, live listing untouched.
-  // reason is required (mirrors rejectProduct's RejectProductDto) but only
-  // logged for now, since there's no seller-facing surface for it yet — see
-  // AGENTS.md → Products: Re-review flow for ACTIVE edits.
+  // Discards a pending revision, live listing untouched; reason is logged only for now.
   async rejectRevision(productId: number, reason: string) {
     // 1. Fetch product + its pending revision, verify one actually exists
     const product = await this.prisma.product.findUnique({
@@ -695,7 +674,16 @@ export class ProductsService {
       include: {
         category: true,
         images: { orderBy: { order: 'asc' } },
-        seller: { select: { id: true, fullName: true, avatar: true } },
+        seller: {
+          select: {
+            id: true,
+            fullName: true,
+            avatar: true,
+            phone: true,
+            avgRating: true,
+            responseRate: true,
+          },
+        },
       },
     });
 
@@ -879,10 +867,7 @@ export class ProductsService {
     };
   }
 
-  // Seller's own listings, any status — unlike findAll (always ACTIVE-only,
-  // for public browsing). See backend AGENTS.md → Deferred work: "Seller
-  // viewing their own DRAFT/PENDING listing detail" — this is the list-side
-  // half of that; findOne still stays ACTIVE-only for the public detail page.
+  // Seller's own listings across every status, unlike findAll (ACTIVE-only, for public browsing).
   async findMyProducts(sellerId: number, query: QueryMyProductsDto) {
     const { status, keyword, page = 1, limit = 20 } = query;
 
@@ -897,10 +882,7 @@ export class ProductsService {
     const [data, total] = await Promise.all([
       this.prisma.product.findMany({
         where,
-        // revision: only ever non-null for an ACTIVE listing with a pending
-        // edit (see Re-review Flow for ACTIVE Edits) — `select` keeps this to
-        // just what the "chờ duyệt thay đổi" badge needs, not the full
-        // snapshot content.
+        // revision: select keeps this to just what the "pending edit" badge needs.
         include: {
           category: true,
           images: true,

@@ -1,4 +1,3 @@
-// src/config/fleazo-ai.config.ts
 import { registerAs } from '@nestjs/config';
 
 export default registerAs('fleazoAi', () => ({

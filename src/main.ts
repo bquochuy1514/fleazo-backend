@@ -31,7 +31,6 @@ async function bootstrap() {
     }),
   );
 
-  // Swagger setup
   const config = new DocumentBuilder()
     .setTitle('Fleazo API')
     .setDescription('Backend API for Fleazo — student secondhand marketplace')

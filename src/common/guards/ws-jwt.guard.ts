@@ -15,9 +15,7 @@ export class WsJwtGuard implements CanActivate {
     // 1. Get the underlying Socket.IO client from the WebSocket context
     const client: Socket = context.switchToWs().getClient();
 
-    // 2. This runs on every @SubscribeMessage call, AFTER connection — user
-    // was already verified once in handleConnection, so client.data.user
-    // should already exist. This guard just re-checks it's still there.
+    // 2. Already verified once in handleConnection — this just re-checks client.data.user is still set
     if (!client.data.user) {
       throw new UnauthorizedException('Chưa xác thực');
     }

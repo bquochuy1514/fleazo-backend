@@ -1,4 +1,3 @@
-// src/modules/auth/dto/resend-otp.dto.ts
 import { IsEmail, IsNotEmpty } from 'class-validator';
 
 export class ResendOtpDto {

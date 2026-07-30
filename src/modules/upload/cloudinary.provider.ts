@@ -1,4 +1,3 @@
-// src/modules/upload/cloudinary.provider.ts
 import { v2 as cloudinary } from 'cloudinary';
 import type { ConfigType } from '@nestjs/config';
 import { Inject, Injectable } from '@nestjs/common';

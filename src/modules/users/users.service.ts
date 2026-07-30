@@ -119,9 +119,10 @@ export class UsersService {
     const defaultAvatar =
       'https://res.cloudinary.com/dazcuspid/image/upload/default_avatar_nj9oa5.avif';
     if (user.avatar && user.avatar !== defaultAvatar) {
-      const afterUpload = user.avatar.split('/upload/')[1]; // "v1234/fleazo/avatars/abc.jpg"
-      const withoutVersion = afterUpload.replace(/^v\d+\//, ''); // "fleazo/avatars/abc.jpg"
-      const publicId = withoutVersion.replace(/\.[^/.]+$/, ''); // "fleazo/avatars/abc"
+      // Extracts the Cloudinary public_id (e.g. "fleazo/avatars/abc") from the URL
+      const afterUpload = user.avatar.split('/upload/')[1];
+      const withoutVersion = afterUpload.replace(/^v\d+\//, '');
+      const publicId = withoutVersion.replace(/\.[^/.]+$/, '');
       await this.uploadService.deleteImage(publicId);
     }
 

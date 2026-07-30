@@ -1,10 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
 
 /**
- * Parses a JSON string (typically sent as a text field in multipart/form-data
- * requests, where arrays/objects arrive as raw strings) into an array.
- * Throws a friendly Vietnamese BadRequestException if the value is missing,
- * not valid JSON, or not an array.
+ * Parses a multipart/form-data text field (raw JSON string) into an array;
+ * throws a friendly Vietnamese error if missing, invalid, or not an array.
  */
 export function parseJsonArray<T>(
   raw: string | undefined,

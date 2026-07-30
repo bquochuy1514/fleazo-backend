@@ -8,9 +8,8 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {
   @IsString({ message: 'deleteImageIds phải là chuỗi JSON hợp lệ' })
   deleteImageIds?: string;
 
-  // JSON string array describing the final image order, mixing existing (by id)
-  // and newly uploaded (by fileIndex) images, e.g.:
-  // '[{"type":"existing","id":12},{"type":"new","fileIndex":0}]'
+  // JSON array of final image order, mixing existing (by id) and new (by fileIndex) items,
+  // e.g. '[{"type":"existing","id":12},{"type":"new","fileIndex":0}]'
   @IsOptional()
   @IsString({ message: 'imagesOrder phải là chuỗi JSON hợp lệ' })
   imagesOrder?: string;

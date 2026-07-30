@@ -69,6 +69,7 @@ src/
 │   ├── users/            # User profile, avatar upload
 │   ├── products/         # Listings, image upload, quality scoring
 │   ├── categories/       # Product categories
+│   ├── universities/     # University list for seller student-identity field (optional)
 │   ├── payments/         # PayOS transactions for Membership/Boost/Extend only
 │   ├── chat/             # 1-to-1 realtime chat (Socket.IO)
 │   ├── reviews/          # Seller reputation (rating + reply)
@@ -115,6 +116,7 @@ Available at `/api/docs` (Swagger UI) when the server is running.
 | Auth           | Done        |
 | Users          | Done        |
 | Categories     | Done        |
+| Universities   | Done        |
 | Products       | Done        |
 | Chat           | Done        |
 | Reviews        | Design only |

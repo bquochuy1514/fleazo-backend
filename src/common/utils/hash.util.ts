@@ -1,4 +1,3 @@
-// src/common/utils/hash.util.ts
 import * as argon2 from 'argon2';
 
 export async function hashPassword(password: string): Promise<string> {

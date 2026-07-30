@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-// src/modules/auth/strategies/refresh-jwt.strategy.ts
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
@@ -8,7 +7,6 @@ import { AuthService } from '../auth.service';
 import jwtConfig from '../../../config/jwt.config';
 import type { ConfigType } from '@nestjs/config';
 
-// RefreshJwtStrategy
 @Injectable()
 export class RefreshJwtStrategy extends PassportStrategy(
   Strategy,

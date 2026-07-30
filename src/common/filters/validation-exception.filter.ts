@@ -22,13 +22,11 @@ export class ValidationExceptionFilter implements ExceptionFilter {
       errorCode?: string;
     };
 
-    // Nếu là validation error (message là array)
     if (Array.isArray(exceptionResponse.message)) {
       const errors: Record<string, string> = {};
 
       (exceptionResponse.message as ValidationError[]).forEach((error) => {
         if (error.property && error.constraints) {
-          // Lấy lỗi đầu tiên của mỗi field
           errors[error.property] = Object.values(error.constraints)[0];
         }
       });
@@ -40,7 +38,6 @@ export class ValidationExceptionFilter implements ExceptionFilter {
       });
     }
 
-    // Các BadRequestException khác (không phải validation)
     return response.status(400).json({
       statusCode: 400,
       message: exceptionResponse.message,

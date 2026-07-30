@@ -5,7 +5,6 @@ import googleConfig from '../../../config/google.config';
 import type { ConfigType } from '@nestjs/config';
 import { AuthService } from '../auth.service';
 
-// GoogleStrategy
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor(

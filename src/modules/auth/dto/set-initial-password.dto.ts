@@ -1,10 +1,7 @@
 import { IsNotEmpty, IsString, Matches, MinLength } from 'class-validator';
 import { Match } from '../../../common/decorators/match.decorator';
 
-// For accounts with no password yet (Google-login users) to set one for the
-// first time — no old password required, unlike the regular change-password
-// flow, since the caller is already authenticated via a valid access token
-// (JwtAuthGuard) at the point this is called.
+// For Google-login accounts with no password yet — no old password required, unlike change-password.
 export class SetInitialPasswordDto {
   @IsString({ message: 'Mật khẩu phải là chuỗi ký tự' })
   @MinLength(6, { message: 'Mật khẩu phải có ít nhất 6 ký tự' })

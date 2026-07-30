@@ -1,4 +1,3 @@
-// reset-password.dto.ts
 import {
   IsEmail,
   IsNotEmpty,

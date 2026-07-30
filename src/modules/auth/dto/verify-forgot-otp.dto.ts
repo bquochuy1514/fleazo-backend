@@ -1,4 +1,3 @@
-// verify-forgot-otp.dto.ts
 import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class VerifyForgotOtpDto {

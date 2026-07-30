@@ -1,4 +1,3 @@
-// src/modules/auth/guards/google-auth.guard.ts
 import { Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
