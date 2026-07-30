@@ -70,8 +70,7 @@ model User {
   completionRate Float @default(0) @map("completion_rate")
   responseRate   Float @default(0) @map("response_rate")
 
-  // — University (student identity, optional — NOT required to sell; not
-  // every seller is a university student, see assertSellerProfileComplete) —
+  // — University (optional student identity, NOT required to sell) —
   universityId Int?        @map("university_id")
   university   University? @relation(fields: [universityId], references: [id])
 
@@ -152,7 +151,7 @@ model Product {
   expiresAt      DateTime? @map("expires_at")
   boostExpiresAt DateTime? @map("boost_expires_at")
 
-  // — Quality Score (LLM-based listing condition/quality assessment — see AGENTS.md) —
+  // — Quality Score —
   qualityScore Float @default(0) @map("quality_score")
   saveCount    Int   @default(0) @map("save_count")
 
@@ -165,8 +164,7 @@ model Product {
   savedBy    SavedProduct[]
   reviews    Review[]
   messages   Message[]
-  // Pending edit awaiting admin re-approval — only ever set while `status`
-  // is ACTIVE, see ProductRevision below. At most one at a time (1:1).
+  // Pending edit awaiting admin re-approval; only set while status is ACTIVE, at most one at a time (1:1).
   revision   ProductRevision?
 
   // — Timestamps —
@@ -194,24 +192,13 @@ model ProductImage {
   @@map("product_images")
 }
 
-// A seller's proposed edit to a listing that's already ACTIVE (publicly
-// visible) — kept separate from the live Product/ProductImage rows so the
-// listing keeps showing its current, already-approved content uninterrupted
-// until an admin approves or rejects the change (see AGENTS.md → Products:
-// Re-review flow for ACTIVE edits). No status field: existence of this row
-// IS "pending" — approving copies its fields onto Product then deletes it,
-// rejecting just deletes it, so there's nothing left to be non-pending.
-// Non-ACTIVE statuses (DRAFT/PENDING/REJECTED/SOLD/EXPIRED/CANCELLED/BANNED)
-// never go through this — updateProduct applies their edits immediately,
-// same as before, since there's no live public view to protect.
+// A seller's proposed edit to an already-ACTIVE listing, kept separate from the live Product
+// rows until an admin approves or rejects it. No status field — the row's existence IS "pending".
 model ProductRevision {
   // — Identity —
   id Int @id @default(autoincrement())
 
-  // — Proposed content — a full snapshot of what Product's scalar fields
-  // would become if approved (dto's provided fields merged over the
-  // listing's current values), not a partial diff — makes "apply on
-  // approve" a straight field copy, no merge logic needed a second time.
+  // — Proposed content (full snapshot, not a diff — approve is a straight field copy) —
   title         String
   description   String           @db.Text
   price         Decimal          @db.Decimal(12, 0)
@@ -235,10 +222,7 @@ model ProductRevision {
   @@map("product_revisions")
 }
 
-// Snapshot of what Product's images would become if the revision is
-// approved — copies of kept live images' url/publicId plus any newly
-// uploaded ones, never the live ProductImage rows themselves (those must
-// stay untouched while the revision is only pending).
+// Snapshot of what Product's images would become if approved; never references the live ProductImage rows directly.
 model ProductRevisionImage {
   // — Identity —
   id       Int    @id @default(autoincrement())
@@ -284,12 +268,7 @@ model Review {
   comment     String? @db.Text
   sellerReply String? @map("seller_reply") @db.Text
 
-  // — Moderation — published immediately on creation (no pre-moderation hold —
-  // matches Chợ Tốt's real terms: reviews go live immediately, bad ones are
-  // taken down reactively via report, never pre-screened before publish).
-  // No isPublished field: with reviews now one-way only (buyer -> seller),
-  // there's no retaliatory counter-review to guard against, so a publish
-  // delay has no one left to protect.
+  // — Moderation (published immediately, no pre-moderation hold, no isPublished field) —
   isHidden Boolean @default(false) @map("is_hidden")
 
   // — Timestamps —
@@ -304,9 +283,7 @@ model Conversation {
   // — Identity —
   id Int @id @default(autoincrement())
 
-  // — Relations — initiator/recipient are fixed at creation, NOT buyer/seller
-  // (a single thread is reused across every product the pair discusses, so
-  // who's buying vs selling depends on the product, not on this conversation)
+  // — Relations — initiator/recipient are NOT buyer/seller; role depends on the product, not the conversation —
   initiatorId Int  @map("initiator_id")
   initiator   User @relation("ConversationsInitiated", fields: [initiatorId], references: [id])
   recipientId Int  @map("recipient_id")
@@ -333,17 +310,17 @@ model Message {
   senderId       Int          @map("sender_id")
   sender         User         @relation("MessagesSent", fields: [senderId], references: [id])
 
-  // Which product this message is about (nullable — a conversation can start or
-  // continue without referencing a specific listing). Feeds Reviews' gate check:
-  // cross-referenced against Product.sellerId to determine actual buyer/seller
-  // role, since Conversation itself no longer tracks that.
+  // Which product this message is about (nullable); cross-referenced against Product.sellerId for the Reviews gate check.
   productId Int?     @map("product_id")
   product   Product? @relation(fields: [productId], references: [id])
 
-  // — Content — content stays in the DB even when recalled (soft-hide only,
-  // for audit/dispute purposes); the frontend renders "message recalled"
-  // in place of content when isRecalled is true. No edit support — see Chat
-  // section for why (recall only, no silent rewriting of negotiation history).
+  // Quote-reply only (not threading); service layer enforces the same-conversation constraint since Prisma can't express it across two FKs.
+  // onDelete: SetNull, not Cascade — a reply shouldn't lose its own content just because the quoted message was deleted.
+  replyToId Int?      @map("reply_to_id")
+  replyTo   Message?  @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies   Message[] @relation("MessageReplies")
+
+  // — Content — recall is soft-hide only (content stays in DB); frontend shows "message recalled" when isRecalled is true, including for a recalled message quoted via replyTo —
   content    String  @db.Text
   isRead     Boolean @default(false) @map("is_read")
   isRecalled Boolean @default(false) @map("is_recalled")

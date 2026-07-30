@@ -45,6 +45,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const payload = this.jwtService.verify<JwtPayload>(token, {
         secret: process.env.JWT_ACCESS_SECRET,
       });
+
       client.data.user = payload;
       console.log(`Client connected: ${client.id}, userId: ${payload.id}`);
 
@@ -80,6 +81,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @UseGuards(WsJwtGuard)
+  @SubscribeMessage('getOnlineStatus')
+  async handleGetOnlineStatus(@ConnectedSocket() client: Socket) {
+    const { id: userId } = client.data.user as JwtPayload;
+    const partnerIds = await this.chatService.getPartnerIds(userId);
+    return {
+      onlineUserIds: partnerIds.filter((id) => this.onlineUsers.has(id)),
+    };
+  }
+
+  @UseGuards(WsJwtGuard)
   @SubscribeMessage('joinConversation')
   async handleJoinConversation(
     @ConnectedSocket() client: Socket,
@@ -112,6 +123,46 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     return { otherUserOnline: this.onlineUsers.has(otherUserId) };
+  }
+
+  @UseGuards(WsJwtGuard)
+  @SubscribeMessage('typing')
+  async handleTyping(
+    @ConnectedSocket() client: Socket,
+    @MessageBody(new ValidationPipe()) dto: WsJoinConversationDto,
+  ) {
+    await this.forwardTypingEvent(client, dto.conversationId, 'typing');
+  }
+
+  @UseGuards(WsJwtGuard)
+  @SubscribeMessage('stopTyping')
+  async handleStopTyping(
+    @ConnectedSocket() client: Socket,
+    @MessageBody(new ValidationPipe()) dto: WsJoinConversationDto,
+  ) {
+    await this.forwardTypingEvent(client, dto.conversationId, 'stopTyping');
+  }
+
+  // Not persisted — just forwarded live to whoever's on the other side of
+  // the conversation, same shape for both typing and stopTyping.
+  private async forwardTypingEvent(
+    client: Socket,
+    conversationId: number,
+    event: 'typing' | 'stopTyping',
+  ) {
+    const { id: userId } = client.data.user as JwtPayload;
+    const conversation = await this.chatService.assertParticipant(
+      userId,
+      conversationId,
+    );
+    const otherUserId =
+      conversation.initiatorId === userId
+        ? conversation.recipientId
+        : conversation.initiatorId;
+
+    this.server
+      .to(`user:${otherUserId}`)
+      .emit(event, { conversationId, userId });
   }
 
   @UseGuards(WsJwtGuard)

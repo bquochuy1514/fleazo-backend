@@ -14,8 +14,7 @@ import { QueryMessagesDto } from './dto/query-messages.dto';
 export class ChatService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // Shared by every method below that operates on an existing conversation —
-  // verifies it exists and the caller is one of its two participants
+  // Verifies a conversation exists and the caller is one of its two participants
   async assertParticipant(userId: number, conversationId: number) {
     const conversation = await this.prisma.conversation.findUnique({
       where: { id: conversationId },
@@ -92,11 +91,27 @@ export class ChatService {
       orderBy: { updatedAt: 'desc' },
     });
 
-    // 2. Shape response — collapse initiator/recipient into "the other person"
-    return conversations.map((c) => ({
+    // 2. Most recent product-tagged message per conversation — a separate
+    // query since Prisma can't include the same "messages" relation twice
+    // with different filters. The frontend paginates messages separately and
+    // can't otherwise tell which product a conversation is currently about
+    // once that message scrolls past whatever page is currently loaded.
+    const latestProductMessages = await Promise.all(
+      conversations.map((c) =>
+        this.prisma.message.findFirst({
+          where: { conversationId: c.id, productId: { not: null } },
+          orderBy: { createdAt: 'desc' },
+          select: { productId: true },
+        }),
+      ),
+    );
+
+    // 3. Shape response — collapse initiator/recipient into "the other person"
+    return conversations.map((c, i) => ({
       id: c.id,
       otherUser: c.initiatorId === userId ? c.recipient : c.initiator,
       lastMessage: c.messages[0] ?? null,
+      latestProductId: latestProductMessages[i]?.productId ?? null,
       unreadCount: c._count.messages,
       updatedAt: c.updatedAt,
     }));
@@ -119,6 +134,7 @@ export class ChatService {
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * limit,
         take: limit,
+        include: { replyTo: true },
       }),
       this.prisma.message.count({ where: { conversationId } }),
     ]);
@@ -141,16 +157,32 @@ export class ChatService {
     // 1. Verify participant
     await this.assertParticipant(userId, conversationId);
 
-    // 2. Create message and bump conversation's updatedAt atomically
+    // 2. A reply must target a real message in THIS conversation — Prisma
+    // can't express that cross-FK constraint, so it's checked here instead.
+    // Recalled messages are still valid reply targets (see schema.prisma —
+    // recall is a display-time concern, not a data-integrity one).
+    if (dto.replyToId) {
+      const target = await this.prisma.message.findUnique({
+        where: { id: dto.replyToId },
+      });
+      if (!target || target.conversationId !== conversationId) {
+        throw new NotFoundException(
+          'Tin nhắn được trả lời không tồn tại trong cuộc trò chuyện này',
+        );
+      }
+    }
+
+    // 3. Create message and bump conversation's updatedAt atomically
     const [message] = await this.prisma.$transaction([
       this.prisma.message.create({
         data: {
           conversationId,
           senderId: userId,
           productId: dto.productId,
+          replyToId: dto.replyToId,
           content: dto.content,
         },
-        include: { conversation: true },
+        include: { conversation: true, replyTo: true },
       }),
       this.prisma.conversation.update({
         where: { id: conversationId },
@@ -176,7 +208,7 @@ export class ChatService {
       );
     }
 
-    // 2. Soft-hide — content stays in the DB (see AGENTS: Chat section)
+    // 2. Soft-hide — content stays in the DB, isRecalled flags it for display
     return this.prisma.message.update({
       where: { id: messageId },
       data: { isRecalled: true },
@@ -184,8 +216,7 @@ export class ChatService {
   }
 
   async getPartnerIds(userId: number): Promise<number[]> {
-    // Every conversation this user is part of — returns the OTHER person's id
-    // each time, used to know who to notify about this user's online status
+    // Returns the OTHER person's id from every conversation this user is part of
     const conversations = await this.prisma.conversation.findMany({
       where: { OR: [{ initiatorId: userId }, { recipientId: userId }] },
       select: { initiatorId: true, recipientId: true },

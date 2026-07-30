@@ -17,4 +17,10 @@ export class SendMessageDto {
   @IsPositive({ message: 'ID sản phẩm không hợp lệ' })
   @IsOptional()
   productId?: number;
+
+  @Type(() => Number)
+  @IsInt({ message: 'ID tin nhắn được trả lời phải là số nguyên' })
+  @IsPositive({ message: 'ID tin nhắn được trả lời không hợp lệ' })
+  @IsOptional()
+  replyToId?: number;
 }

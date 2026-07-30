@@ -92,6 +92,7 @@ Design modeled after Chợ Tốt (a real large-scale C2C marketplace with the sa
 - Unread count (`Message.isRead`)
 - Read receipts ("seen")
 - Message recall (`Message.isRecalled`) — sender can retract a sent message; content stays in the DB (soft-hide only) so it isn't lost, frontend just renders "message recalled" in place of `content` when true
+- Reply to a specific message (`Message.replyToId`, self-relation `"MessageReplies"`) — quote-reply only, not threading: the reply carries a snapshot of the quoted message (via `replyTo` include), no reply-chain UI, no "jump to original". Replying to an already-recalled message is allowed (recall is a display-time concern — see below); a reply must target a message in the SAME conversation, enforced in `ChatService.sendMessage` since Prisma can't express that constraint across two FKs
 - Pagination for loading older messages
 - Online/offline status, notified only to conversation partners (not a global presence list — see below for both halves of this design)
 
@@ -104,6 +105,8 @@ Design modeled after Chợ Tốt (a real large-scale C2C marketplace with the sa
 
 **Reviews gate must not filter out recalled messages.** The gate check (see Reviews section) queries `Message.productId` to confirm two people discussed a given product — that fact is still true even if the message's content was later recalled. Do not add `isRecalled: false` to the gate query; that condition belongs only to whatever renders message content for display.
 
+**Reply-to-message, same rule applies to the quoted message.** `replyTo` on a `Message` response can itself have `isRecalled: true` — the frontend swaps in the "message recalled" placeholder there too, same as it does for a top-level message. The backend never blocks or unlinks a reply just because its target was later recalled.
+
 **Explicitly cut, and why:**
 
 - **Friend system (requests, accept/decline, username search, friends list)** — this is a social-network feature, not a marketplace one. No C2C platform (Chợ Tốt, Shopee, Facebook Marketplace) has a friending layer, because trades are one-off transactions, not a persistent social graph. There's also no `username` field on `User` to search by — adding one just for this would be scope creep with no other consumer.
@@ -115,6 +118,7 @@ Design modeled after Chợ Tốt (a real large-scale C2C marketplace with the sa
 
 - `Conversation.initiatorId`/`recipientId` name the two participants, **not** buyer/seller — those roles aren't fixed for a pair over time (the same two people can each sell to the other on different occasions), so the field names deliberately avoid implying a fixed role.
 - `Message.productId` (nullable) carries "which listing this message is about" instead — this is what makes the Reviews gate check still work: to confirm reviewer/seller-being-reviewed actually exchanged messages about a specific product, cross-reference `Message.productId` against `Product.sellerId` (the only source of truth for who's the seller of that product), rather than trusting anything on `Conversation`.
+- `GET /chat/conversations` also returns `latestProductId` per conversation — the most recent product-tagged message across the whole thread, computed via a separate query (Prisma can't include the same `messages` relation twice with different filters). Needed because message history is paginated separately: without this, the frontend's product-context indicator has no way to know which listing an old conversation was about once that message scrolls past whatever page of messages is currently loaded.
 - No unique DB constraint enforces "one conversation per pair" — Prisma can't express "unordered pair uniqueness" directly (a `(initiatorId, recipientId)` unique index doesn't catch the reversed pair). The service layer must check both directions (`OR: [{initiatorId: A, recipientId: B}, {initiatorId: B, recipientId: A}]`) before creating a new conversation.
 
 ### WebSocket event contract
@@ -123,31 +127,37 @@ Design modeled after Chợ Tốt (a real large-scale C2C marketplace with the sa
 
 **Client → Server (emit):**
 
-| Event              | Payload                                   |
-| ------------------ | ----------------------------------------- |
-| `joinConversation` | `{ conversationId }`                      |
-| `sendMessage`      | `{ conversationId, content, productId? }` |
-| `recallMessage`    | `{ messageId }`                           |
+| Event              | Payload                                                |
+| ------------------ | ------------------------------------------------------- |
+| `getOnlineStatus`  | none                                                    |
+| `joinConversation` | `{ conversationId }`                                   |
+| `sendMessage`      | `{ conversationId, content, productId?, replyToId? }`  |
+| `recallMessage`    | `{ messageId }`                                        |
+| `typing` / `stopTyping` | `{ conversationId }`                              |
 
+- `getOnlineStatus`: returns `{ onlineUserIds }` as an ack — a snapshot of which of the caller's conversation partners are online right now. `userOnline`/`userOffline` below only fire on the exact transition moment, so a client whose socket connected before it started listening (the normal case, since the socket connects app-wide at login — see Socket lifecycle below) needs this to seed its initial state instead of waiting for the next transition.
 - `joinConversation`: joins the `conversation:<id>` room, marks the sender's messages as read, returns `{ otherUserOnline }` as an ack.
-- `sendMessage`: persists the message, broadcasts `newMessage` to the room and `newMessageNotification` to the recipient.
+- `sendMessage`: persists the message, broadcasts `newMessage` to the room and `newMessageNotification` to the recipient. `replyToId` is optional and must reference a message already in the same conversation (404 otherwise).
 - `recallMessage`: sets `isRecalled = true`, broadcasts `messageRecalled` to the room.
+- `typing` / `stopTyping`: not persisted — forwarded live to the other participant only (`user:<id>`, not the conversation room, so it reaches them even before they've opened the thread). The frontend debounces `typing` while the draft input changes and fires `stopTyping` on a pause/send/unmount — the gateway itself has no timeout or debounce logic, it's a pure relay.
 
 **Server → Client (on):**
 
 | Event                        | Payload                                          |
 | ---------------------------- | ------------------------------------------------ |
-| `newMessage`                 | full `Message` row                               |
+| `newMessage`                 | full `Message` row, incl. `replyTo` (the quoted message, or `null`) |
 | `newMessageNotification`     | `{ conversationId, latestMessage, unreadCount }` |
 | `messagesRead`               | `{ conversationId, readerId }`                   |
 | `messageRecalled`            | `{ messageId }`                                  |
 | `userOnline` / `userOffline` | `{ userId }`                                     |
+| `typing` / `stopTyping`      | `{ conversationId, userId }`                     |
 
 - `newMessage`: fires for anyone in the `conversation:<id>` room you've joined.
 - `newMessageNotification`: fires for **any** of your conversations, joined or not — this is what should drive the inbox badge/preview while browsing outside the Chat page.
 - `messagesRead`: the other person just opened the conversation and read your messages.
 - `messageRecalled`: a message in a room you've joined was recalled.
 - `userOnline` / `userOffline`: someone you share a conversation with connected/disconnected (audience explained below).
+- `typing` / `stopTyping`: the other participant in `conversationId` started/stopped typing. `userId` identifies who, in case the frontend ever needs to disambiguate — today it only ever means "the other person," since this is only ever received, never self-fired.
 
 Room naming: `conversation:<id>` (joined explicitly via `joinConversation`) and `user:<id>` (joined automatically on connect, for anything that must reach a person regardless of which conversation they have open).
 
@@ -547,6 +557,13 @@ async handleRegister(registerDto: RegisterDto) {
   // 5. Send OTP email
 }
 ```
+
+### Code comments
+
+- **Default to no comment.** Most lines don't need one — only add a comment when the code would genuinely confuse someone without it (a non-obvious workaround, a gotcha, a "why not the obvious approach" decision). Don't comment routine/self-explanatory code. The numbered step comments in the Service function convention above are the one standing exception (keep those — one short line per step).
+- When a comment is warranted, keep it **one short line**, not a paragraph. No multi-line blocks explaining the history of a decision, alternatives considered, or why something used to be different — that reasoning belongs in conversation, not baked into the file.
+- **Never write "see AGENTS.md" (or any variant — "per AGENTS.md", "AGENTS.md → X section") in a code comment, anywhere, for any reason.** This repo goes public on GitHub for recruiters to read, and `AGENTS.md` gets stripped out of the published version — a comment pointing at a file that isn't there is dead, and that pattern is itself a giveaway that the code was AI-assisted. Read the actual source directly instead of leaving a pointer to this file.
+- Comments document **project decisions** a future reader couldn't infer from the code itself, never the AI's own reasoning/uncertainty while writing it — no "inferred from X", "assuming Y based on Z", no restating what a prior comment already said, no bug-report retrospectives. If something is genuinely unconfirmed, say so once in chat, not as a permanent comment in the file.
 
 ### Other conventions
 
