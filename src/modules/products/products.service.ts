@@ -667,12 +667,13 @@ export class ProductsService {
     });
   }
 
-  async findOne(id: number) {
-    // 1. Fetch product with category, images (ordered), and public seller info
+  async findOne(id: number, userId?: number) {
+    // 1. Fetch product with category (+ parent, for the "Cha/Con" breadcrumb
+    //    line on the detail page), images (ordered), and public seller info
     const product = await this.prisma.product.findUnique({
       where: { id },
       include: {
-        category: true,
+        category: { include: { parent: true } },
         images: { orderBy: { order: 'asc' } },
         seller: {
           select: {
@@ -682,6 +683,7 @@ export class ProductsService {
             phone: true,
             avgRating: true,
             responseRate: true,
+            university: { select: { id: true, name: true } },
           },
         },
       },
@@ -692,7 +694,17 @@ export class ProductsService {
       throw new NotFoundException('Sản phẩm không tồn tại');
     }
 
-    return product;
+    // 3. isSaved only resolvable for a logged-in viewer (OptionalJwtAuthGuard
+    //    lets this endpoint stay public while still reporting save state)
+    const isSaved = userId
+      ? Boolean(
+          await this.prisma.savedProduct.findUnique({
+            where: { userId_productId: { userId, productId: id } },
+          }),
+        )
+      : false;
+
+    return { ...product, isSaved };
   }
 
   async approveProduct(id: number) {

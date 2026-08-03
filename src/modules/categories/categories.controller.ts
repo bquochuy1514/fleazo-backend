@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -8,12 +7,8 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  UploadedFile,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { memoryStorage } from 'multer';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -51,20 +46,6 @@ export class CategoriesController {
     @Body() dto: UpdateCategoryDto,
   ) {
     return this.categoriesService.update(id, dto);
-  }
-
-  @Put(':id/icon')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.ADMIN)
-  @UseInterceptors(FileInterceptor('icon', { storage: memoryStorage() }))
-  async updateIcon(
-    @Param('id', ParseIntPipe) id: number,
-    @UploadedFile() file: Express.Multer.File,
-  ) {
-    if (!file) {
-      throw new BadRequestException('Vui lòng chọn ảnh để tải lên.');
-    }
-    return this.categoriesService.updateIcon(id, file);
   }
 
   @Delete(':id')

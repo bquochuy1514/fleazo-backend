@@ -10,10 +10,10 @@ export class UpdateCategoryDto {
   slug?: string;
 
   @IsOptional()
-  @IsString({ message: 'Icon phải là chuỗi ký tự' })
-  icon?: string;
-
-  @IsOptional()
   @IsInt({ message: 'parentId phải là số nguyên' })
   parentId?: number;
+
+  @IsOptional()
+  @IsString({ message: 'image phải là chuỗi ký tự' })
+  image?: string;
 }

@@ -4,16 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
-import { UploadService } from '../upload/upload.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoriesService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly uploadService: UploadService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
     // 1. Fetch all root categories (parentId = null) with children
@@ -108,34 +104,6 @@ export class CategoriesService {
 
     // 3. Update category
     return this.prisma.category.update({ where: { id }, data: dto });
-  }
-
-  async updateIcon(id: number, file: Express.Multer.File) {
-    // 1. Verify category exists
-    const category = await this.findOne(id);
-
-    // 2. Delete old icon from Cloudinary (if exists)
-    if (category.icon) {
-      const afterUpload = category.icon.split('/upload/')[1];
-      const withoutVersion = afterUpload.replace(/^v\d+\//, '');
-      const publicId = withoutVersion.replace(/\.[^/.]+$/, '');
-      await this.uploadService.deleteImage(publicId);
-    }
-
-    // 3. Upload new icon
-    const result = await this.uploadService.uploadImage(
-      file,
-      'fleazo/categories',
-    );
-
-    // 4. Update category icon URL
-    await this.prisma.category.update({
-      where: { id },
-      data: { icon: result.secure_url },
-    });
-
-    // 5. Return new icon URL
-    return { icon: result.secure_url };
   }
 
   async remove(id: number) {

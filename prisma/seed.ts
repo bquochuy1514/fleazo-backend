@@ -1,6 +1,7 @@
-import { PrismaClient } from '../src/generated/prisma/client';
+import { PrismaClient, UserRole } from '../src/generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import 'dotenv/config';
+import { hashPassword } from '../src/common/utils/hash.util';
 import { categoriesSeedData } from './seed-data/categories';
 import { universitiesSeedData } from './seed-data/universities';
 
@@ -47,9 +48,31 @@ async function seedUniversities() {
   console.log('Seeded universities.');
 }
 
+async function seedAdmin() {
+  console.log('Seeding admin account...');
+
+  const email = 'admin@fleazo.com';
+  const password = await hashPassword('Fleazoadmin123!');
+
+  await prisma.user.upsert({
+    where: { email },
+    update: {},
+    create: {
+      email,
+      password,
+      fullName: 'Fleazo Admin',
+      role: UserRole.ADMIN,
+      isActive: true,
+    },
+  });
+
+  console.log('Seeded admin account.');
+}
+
 async function main() {
   await seedCategories();
   await seedUniversities();
+  await seedAdmin();
   console.log('Seeding completed.');
 }
 

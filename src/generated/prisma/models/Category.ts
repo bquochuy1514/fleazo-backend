@@ -40,7 +40,7 @@ export type CategoryMinAggregateOutputType = {
   id: number | null
   name: string | null
   slug: string | null
-  icon: string | null
+  image: string | null
   parentId: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -50,7 +50,7 @@ export type CategoryMaxAggregateOutputType = {
   id: number | null
   name: string | null
   slug: string | null
-  icon: string | null
+  image: string | null
   parentId: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -60,7 +60,7 @@ export type CategoryCountAggregateOutputType = {
   id: number
   name: number
   slug: number
-  icon: number
+  image: number
   parentId: number
   createdAt: number
   updatedAt: number
@@ -82,7 +82,7 @@ export type CategoryMinAggregateInputType = {
   id?: true
   name?: true
   slug?: true
-  icon?: true
+  image?: true
   parentId?: true
   createdAt?: true
   updatedAt?: true
@@ -92,7 +92,7 @@ export type CategoryMaxAggregateInputType = {
   id?: true
   name?: true
   slug?: true
-  icon?: true
+  image?: true
   parentId?: true
   createdAt?: true
   updatedAt?: true
@@ -102,7 +102,7 @@ export type CategoryCountAggregateInputType = {
   id?: true
   name?: true
   slug?: true
-  icon?: true
+  image?: true
   parentId?: true
   createdAt?: true
   updatedAt?: true
@@ -199,7 +199,7 @@ export type CategoryGroupByOutputType = {
   id: number
   name: string
   slug: string
-  icon: string
+  image: string | null
   parentId: number | null
   createdAt: Date
   updatedAt: Date
@@ -232,7 +232,7 @@ export type CategoryWhereInput = {
   id?: Prisma.IntFilter<"Category"> | number
   name?: Prisma.StringFilter<"Category"> | string
   slug?: Prisma.StringFilter<"Category"> | string
-  icon?: Prisma.StringFilter<"Category"> | string
+  image?: Prisma.StringNullableFilter<"Category"> | string | null
   parentId?: Prisma.IntNullableFilter<"Category"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Category"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Category"> | Date | string
@@ -245,7 +245,7 @@ export type CategoryOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
-  icon?: Prisma.SortOrder
+  image?: Prisma.SortOrderInput | Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -261,7 +261,7 @@ export type CategoryWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.CategoryWhereInput[]
   NOT?: Prisma.CategoryWhereInput | Prisma.CategoryWhereInput[]
   name?: Prisma.StringFilter<"Category"> | string
-  icon?: Prisma.StringFilter<"Category"> | string
+  image?: Prisma.StringNullableFilter<"Category"> | string | null
   parentId?: Prisma.IntNullableFilter<"Category"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Category"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Category"> | Date | string
@@ -274,7 +274,7 @@ export type CategoryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
-  icon?: Prisma.SortOrder
+  image?: Prisma.SortOrderInput | Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -292,7 +292,7 @@ export type CategoryScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Category"> | number
   name?: Prisma.StringWithAggregatesFilter<"Category"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Category"> | string
-  icon?: Prisma.StringWithAggregatesFilter<"Category"> | string
+  image?: Prisma.StringNullableWithAggregatesFilter<"Category"> | string | null
   parentId?: Prisma.IntNullableWithAggregatesFilter<"Category"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Category"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Category"> | Date | string
@@ -301,7 +301,7 @@ export type CategoryScalarWhereWithAggregatesInput = {
 export type CategoryCreateInput = {
   name: string
   slug: string
-  icon?: string
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
@@ -313,7 +313,7 @@ export type CategoryUncheckedCreateInput = {
   id?: number
   name: string
   slug: string
-  icon?: string
+  image?: string | null
   parentId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -324,7 +324,7 @@ export type CategoryUncheckedCreateInput = {
 export type CategoryUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
@@ -336,7 +336,7 @@ export type CategoryUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -348,7 +348,7 @@ export type CategoryCreateManyInput = {
   id?: number
   name: string
   slug: string
-  icon?: string
+  image?: string | null
   parentId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -357,7 +357,7 @@ export type CategoryCreateManyInput = {
 export type CategoryUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -366,7 +366,7 @@ export type CategoryUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -391,7 +391,7 @@ export type CategoryCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
-  icon?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -406,7 +406,7 @@ export type CategoryMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
-  icon?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -416,7 +416,7 @@ export type CategoryMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
-  icon?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -507,7 +507,7 @@ export type CategoryUpdateOneRequiredWithoutProductsNestedInput = {
 export type CategoryCreateWithoutChildrenInput = {
   name: string
   slug: string
-  icon?: string
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
@@ -518,7 +518,7 @@ export type CategoryUncheckedCreateWithoutChildrenInput = {
   id?: number
   name: string
   slug: string
-  icon?: string
+  image?: string | null
   parentId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -533,7 +533,7 @@ export type CategoryCreateOrConnectWithoutChildrenInput = {
 export type CategoryCreateWithoutParentInput = {
   name: string
   slug: string
-  icon?: string
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   children?: Prisma.CategoryCreateNestedManyWithoutParentInput
@@ -544,7 +544,7 @@ export type CategoryUncheckedCreateWithoutParentInput = {
   id?: number
   name: string
   slug: string
-  icon?: string
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   children?: Prisma.CategoryUncheckedCreateNestedManyWithoutParentInput
@@ -575,7 +575,7 @@ export type CategoryUpdateToOneWithWhereWithoutChildrenInput = {
 export type CategoryUpdateWithoutChildrenInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
@@ -586,7 +586,7 @@ export type CategoryUncheckedUpdateWithoutChildrenInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -616,7 +616,7 @@ export type CategoryScalarWhereInput = {
   id?: Prisma.IntFilter<"Category"> | number
   name?: Prisma.StringFilter<"Category"> | string
   slug?: Prisma.StringFilter<"Category"> | string
-  icon?: Prisma.StringFilter<"Category"> | string
+  image?: Prisma.StringNullableFilter<"Category"> | string | null
   parentId?: Prisma.IntNullableFilter<"Category"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Category"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Category"> | Date | string
@@ -625,7 +625,7 @@ export type CategoryScalarWhereInput = {
 export type CategoryCreateWithoutProductsInput = {
   name: string
   slug: string
-  icon?: string
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
@@ -636,7 +636,7 @@ export type CategoryUncheckedCreateWithoutProductsInput = {
   id?: number
   name: string
   slug: string
-  icon?: string
+  image?: string | null
   parentId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -662,7 +662,7 @@ export type CategoryUpdateToOneWithWhereWithoutProductsInput = {
 export type CategoryUpdateWithoutProductsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
@@ -673,7 +673,7 @@ export type CategoryUncheckedUpdateWithoutProductsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -684,7 +684,7 @@ export type CategoryCreateManyParentInput = {
   id?: number
   name: string
   slug: string
-  icon?: string
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -692,7 +692,7 @@ export type CategoryCreateManyParentInput = {
 export type CategoryUpdateWithoutParentInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   children?: Prisma.CategoryUpdateManyWithoutParentNestedInput
@@ -703,7 +703,7 @@ export type CategoryUncheckedUpdateWithoutParentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   children?: Prisma.CategoryUncheckedUpdateManyWithoutParentNestedInput
@@ -714,7 +714,7 @@ export type CategoryUncheckedUpdateManyWithoutParentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -763,7 +763,7 @@ export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   id?: boolean
   name?: boolean
   slug?: boolean
-  icon?: boolean
+  image?: boolean
   parentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -777,7 +777,7 @@ export type CategorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   name?: boolean
   slug?: boolean
-  icon?: boolean
+  image?: boolean
   parentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -788,7 +788,7 @@ export type CategorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   name?: boolean
   slug?: boolean
-  icon?: boolean
+  image?: boolean
   parentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -799,13 +799,13 @@ export type CategorySelectScalar = {
   id?: boolean
   name?: boolean
   slug?: boolean
-  icon?: boolean
+  image?: boolean
   parentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "icon" | "parentId" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
+export type CategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "image" | "parentId" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
 export type CategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parent?: boolean | Prisma.Category$parentArgs<ExtArgs>
   children?: boolean | Prisma.Category$childrenArgs<ExtArgs>
@@ -830,7 +830,7 @@ export type $CategoryPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     id: number
     name: string
     slug: string
-    icon: string
+    image: string | null
     parentId: number | null
     createdAt: Date
     updatedAt: Date
@@ -1263,7 +1263,7 @@ export interface CategoryFieldRefs {
   readonly id: Prisma.FieldRef<"Category", 'Int'>
   readonly name: Prisma.FieldRef<"Category", 'String'>
   readonly slug: Prisma.FieldRef<"Category", 'String'>
-  readonly icon: Prisma.FieldRef<"Category", 'String'>
+  readonly image: Prisma.FieldRef<"Category", 'String'>
   readonly parentId: Prisma.FieldRef<"Category", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Category", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Category", 'DateTime'>

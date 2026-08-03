@@ -41,7 +41,7 @@ model User {
   // — Profile —
   fullName String   @map("full_name")
   phone    String?  @db.VarChar(20)
-  avatar   String   @default("https://res.cloudinary.com/dazcuspid/image/upload/default_avatar_nj9oa5.avif")
+  avatar   String   @default("https://res.cloudinary.com/dazcuspid/image/upload/default-avatar_v8w01n.png")
   role     UserRole @default(CUSTOMER)
 
   // — Location (optional, 2-level structure — for location-based features) —
@@ -95,7 +95,11 @@ model Category {
   id   Int    @id @default(autoincrement())
   name String
   slug String @unique
-  icon String @default("https://res.cloudinary.com/dazcuspid/image/upload/default_category_qswbed.jpg")
+  // Transparent PNG cutout for the homepage category circles. Root
+  // categories only — the frontend section that renders these never shows
+  // leaf categories. Recommended source: 1:1 square, subject centered with
+  // margin (not edge-to-edge), ≥400×400px, transparent background.
+  image String?
 
   // — Hierarchy —
   parentId Int?       @map("parent_id")
