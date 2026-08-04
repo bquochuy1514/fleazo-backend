@@ -867,4 +867,985 @@ export const universitiesSeedData = [
     name: 'Trường Đại học Công nghệ Thông tin và Truyền thông Việt Hàn - Đại học Đà Nẵng',
     slug: 'truong-dai-hoc-cong-nghe-thong-tin-va-truyen-thong-viet-han---dai-hoc-da-nang',
   }, // VKU
+
+  // Colleges
+  { name: 'Trường Cao Đẳng Sài Gòn', slug: 'truong-cao-dang-sai-gon' }, // CDD0209
+  {
+    name: 'Trường Cao đẳng Giao thông vận tải trung ương VI',
+    slug: 'truong-cao-dang-giao-thong-van-tai-trung-uong-vi',
+  }, // CDT026
+  {
+    name: 'Trường Cao đẳng Bách khoa Nam Sài Gòn',
+    slug: 'truong-cao-dang-bach-khoa-nam-sai-gon',
+  }, // CDD0229
+  {
+    name: 'Trường Cao Đẳng Công Nghệ Ngoại Thương',
+    slug: 'truong-cao-dang-cong-nghe-ngoai-thuong',
+  }, // CDD0410
+  {
+    name: 'Trường Cao đẳng nghề Phú Thọ',
+    slug: 'truong-cao-dang-nghe-phu-tho',
+  }, // 063
+  {
+    name: 'Trường Cao đẳng Nghề Kỹ thuật và Nghiệp vụ Hà Nội',
+    slug: 'truong-cao-dang-nghe-ky-thuat-va-nghiep-vu-ha-noi',
+  }, // CDT0124
+  {
+    name: 'Trường Cao đẳng nghề Công nghiệp Hà Nội',
+    slug: 'truong-cao-dang-nghe-cong-nghiep-ha-noi',
+  }, // CDD0101
+  {
+    name: 'Trường Cao đẳng Giao thông vận tải Trung ương I',
+    slug: 'truong-cao-dang-giao-thong-van-tai-trung-uong-i',
+  }, // CDT0113
+  {
+    name: 'Trường Cao đẳng Sài Gòn Gia Định',
+    slug: 'truong-cao-dang-sai-gon-gia-dinh',
+  }, // CDD0216
+  {
+    name: 'Trường Cao đẳng Y Khoa Phạm Ngọc Thạch',
+    slug: 'truong-cao-dang-y-khoa-pham-ngoc-thach',
+  }, // CBK1
+  {
+    name: 'Trường Cao đẳng Than Khoáng sản Việt Nam',
+    slug: 'truong-cao-dang-than-khoang-san-viet-nam',
+  }, // CDT1701
+  {
+    name: 'Trường Cao đẳng Hàng hải và Đường thủy I',
+    slug: 'truong-cao-dang-hang-hai-va-duong-thuy-i',
+  }, // CDT2104
+  { name: 'Trường Cao đẳng Dược Hà Nội', slug: 'truong-cao-dang-duoc-ha-noi' }, // CDD1904
+  {
+    name: 'Trường Cao đẳng Du lịch Hải Phòng',
+    slug: 'truong-cao-dang-du-lich-hai-phong',
+  }, // CDT0308
+  {
+    name: 'Trường Cao đẳng Giao thông vận tải trung ương II',
+    slug: 'truong-cao-dang-giao-thong-van-tai-trung-uong-ii',
+  }, // CDT0302
+  { name: 'Trường Cao đẳng Tuyên Quang', slug: 'truong-cao-dang-tuyen-quang' }, // D08
+  {
+    name: 'Trường Cao đẳng Y tế Bắc Ninh',
+    slug: 'truong-cao-dang-y-te-bac-ninh',
+  }, // CDD1908
+  {
+    name: 'Trường Cao đẳng Y Dược Sài Gòn',
+    slug: 'truong-cao-dang-y-duoc-sai-gon',
+  }, // CDD4102
+  {
+    name: 'Trường Cao đẳng Y tế Đặng Văn Ngữ',
+    slug: 'truong-cao-dang-y-te-dang-van-ngu',
+  }, // YT02
+  {
+    name: 'Trường Cao đẳng Nghề Thành phố Hồ Chí Minh',
+    slug: 'truong-cao-dang-nghe-thanh-pho-ho-chi-minh',
+  }, // CDD0201
+  {
+    name: 'Trường Cao đẳng Y Dược Hồng Đức',
+    slug: 'truong-cao-dang-y-duoc-hong-duc',
+  }, // CHD
+  {
+    name: 'Trường Cao đẳng Thủ Thiêm – TP. Hồ Chí Minh',
+    slug: 'truong-cao-dang-thu-thiem-tp-ho-chi-minh',
+  }, // CDT0218
+  {
+    name: 'Trường Cao đẳng nghề Kỹ thuật Mỹ nghệ Việt Nam',
+    slug: 'truong-cao-dang-nghe-ky-thuat-my-nghe-viet-nam',
+  }, // CDT0110
+  {
+    name: 'Trường Cao đẳng nghề Công nghệ cao Đồng An',
+    slug: 'truong-cao-dang-nghe-cong-nghe-cao-dong-an',
+  }, // CDD4402
+  {
+    name: 'Trường Cao đẳng Y – Dược Cộng đồng',
+    slug: 'truong-cao-dang-y-duoc-cong-dong',
+  }, // CDD1909
+  { name: 'Trường Cao đẳng Vĩnh Phúc', slug: 'truong-cao-dang-vinh-phuc' }, // C161
+  {
+    name: 'Trường Đại học Khánh Hòa - Hệ Cao đẳng',
+    slug: 'truong-dai-hoc-khanh-hoa-he-cao-dang',
+  }, // UKH_CD
+  {
+    name: 'Trường Đại học Công nghiệp - Hệ Cao đẳng',
+    slug: 'truong-dai-hoc-cong-nghiep-he-cao-dang',
+  }, // DCN_CD
+  { name: 'Trường Cao đẳng Kỹ nghệ II', slug: 'truong-cao-dang-ky-nghe-ii' }, // CT0202
+  {
+    name: 'Trường Cao đẳng Kỹ thuật Nguyễn Trường Tộ',
+    slug: 'truong-cao-dang-ky-thuat-nguyen-truong-to',
+  }, // CDD0211
+  {
+    name: 'Trường Cao đẳng Quốc Tế Sài Gòn',
+    slug: 'truong-cao-dang-quoc-te-sai-gon',
+  }, // CDD4
+  {
+    name: 'Trường Cao đẳng Văn Lang Sài Gòn',
+    slug: 'truong-cao-dang-van-lang-sai-gon',
+  }, // VLSC
+  {
+    name: 'Trường Cao Đẳng Bình Minh Sài Gòn',
+    slug: 'truong-cao-dang-binh-minh-sai-gon',
+  }, // CDD0225
+  {
+    name: 'Trường Cao đẳng An ninh mạng iSPACE',
+    slug: 'truong-cao-dang-an-ninh-mang-ispace',
+  }, // C0208
+  {
+    name: 'Trường Cao đẳng Điện lực miền Bắc',
+    slug: 'truong-cao-dang-dien-luc-mien-bac',
+  }, // CDT0103
+  {
+    name: 'Trường Cao đẳng Công nghiệp và Thương mại',
+    slug: 'truong-cao-dang-cong-nghiep-va-thuong-mai',
+  }, // CDT1601
+  {
+    name: 'Trường Cao đẳng nghề số 1 – Bộ Quốc phòng',
+    slug: 'truong-cao-dang-nghe-so-1-bo-quoc-phong',
+  }, // CDT1203
+  {
+    name: 'Trường Cao đẳng Văn hóa Nghệ thuật và Du lịch Nam Định',
+    slug: 'truong-cao-dang-van-hoa-nghe-thuat-va-du-lich-nam-dinh',
+  }, // CDD2502
+  {
+    name: 'Trường Cao đẳng nghề Kinh tế – Kỹ thuật Tô Hiệu',
+    slug: 'truong-cao-dang-nghe-kinh-te-ky-thuat-to-hieu',
+  }, // CDD2201
+  {
+    name: 'Trường Cao đẳng nghề Sông Đà',
+    slug: 'truong-cao-dang-nghe-song-da',
+  }, // CDT2301
+  {
+    name: 'Trường Cao đẳng Cơ giới Xây dựng',
+    slug: 'truong-cao-dang-co-gioi-xay-dung',
+  }, // CDT2103
+  { name: 'Trường Cao đẳng nghề Hà Nam', slug: 'truong-cao-dang-nghe-ha-nam' }, // CDD2402
+  {
+    name: 'Trường Cao đẳng Kỹ thuật và Công nghệ tỉnh Hà Giang',
+    slug: 'truong-cao-dang-ky-thuat-va-cong-nghe-tinh-ha-giang',
+  }, // CDD0501
+  {
+    name: 'Trường Cao đẳng nghề Điện Biên',
+    slug: 'truong-cao-dang-nghe-dien-bien',
+  }, // CDD6201
+  {
+    name: 'Trường Cao đẳng nghề Long Biên',
+    slug: 'truong-cao-dang-nghe-long-bien',
+  }, // CDT0112
+  {
+    name: 'Trường Cao đẳng Ngoại ngữ và Công nghệ Hà Nội',
+    slug: 'truong-cao-dang-ngoai-ngu-va-cong-nghe-ha-noi',
+  }, // CDD0115
+  {
+    name: 'Trường Cao đẳng nghề Hoa Sen',
+    slug: 'truong-cao-dang-nghe-hoa-sen',
+  }, // CDD0402
+  {
+    name: 'Trường Cao đẳng Ngoại ngữ Hà Nội',
+    slug: 'truong-cao-dang-ngoai-ngu-ha-noi',
+  }, // CDT119
+  {
+    name: 'Trường Cao đẳng Y Dược Pasteur Yên Bái',
+    slug: 'truong-cao-dang-y-duoc-pasteur-yen-bai',
+  }, // CDD1301
+  {
+    name: 'Trường Cao đẳng Y Dược Phú Thọ',
+    slug: 'truong-cao-dang-y-duoc-phu-tho',
+  }, // CDT1507
+  {
+    name: 'Trường Cao đẳng Ngô Gia Tự Bắc Giang',
+    slug: 'truong-cao-dang-ngo-gia-tu-bac-giang',
+  }, // CDD1803
+  {
+    name: 'Trường Cao đẳng nghề Công nghiệp Hải Phòng',
+    slug: 'truong-cao-dang-nghe-cong-nghiep-hai-phong',
+  }, // CDD0304
+  {
+    name: 'Trường Cao đẳng nghề Bách nghệ Hải Phòng',
+    slug: 'truong-cao-dang-nghe-bach-nghe-hai-phong',
+  }, // CDD0305
+  {
+    name: 'Trường Cao đẳng nghề Hải Dương',
+    slug: 'truong-cao-dang-nghe-hai-duong',
+  }, // CDHD2101
+  {
+    name: 'Trường Cao đẳng Kỹ thuật công nghệ Sơn La',
+    slug: 'truong-cao-dang-ky-thuat-cong-nghe-son-la',
+  }, // CDD1401
+  {
+    name: 'Trường Cao đẳng nghề Thái Bình',
+    slug: 'truong-cao-dang-nghe-thai-binh',
+  }, // CDD2601
+  {
+    name: 'Trường Cao đẳng nghề Việt – Hàn Quảng Ninh',
+    slug: 'truong-cao-dang-nghe-viet-han-quang-ninh',
+  }, // CDD1701
+  {
+    name: 'Trường Cao đẳng Công Thương Phú Thọ',
+    slug: 'truong-cao-dang-cong-thuong-phu-tho',
+  }, // CDT1502
+  {
+    name: 'Trường Cao đẳng Thương mại và Du lịch Thái Nguyên',
+    slug: 'truong-cao-dang-thuong-mai-va-du-lich-thai-nguyen',
+  }, // CTM1
+  { name: 'Trường Cao đẳng VMU', slug: 'truong-cao-dang-vmu' }, // CDT0306
+  {
+    name: 'Trường Cao đẳng nghề Kỹ thuật Công nghệ',
+    slug: 'truong-cao-dang-nghe-ky-thuat-cong-nghe',
+  }, // CDT0104
+  {
+    name: 'Trường Cao đẳng nghề Cơ điện Hà Nội',
+    slug: 'truong-cao-dang-nghe-co-dien-ha-noi',
+  }, // CT0105
+  {
+    name: 'Trường Cao đẳng nghề Cơ điện xây dựng Việt Xô',
+    slug: 'truong-cao-dang-nghe-co-dien-xay-dung-viet-xo',
+  }, // CDT2701
+  {
+    name: 'Trường Cao đẳng nghề Lạng Sơn',
+    slug: 'truong-cao-dang-nghe-lang-son',
+  }, // CDD1001
+  {
+    name: 'Trường Cao đẳng nghề Lao động – Xã hội Hải Phòng',
+    slug: 'truong-cao-dang-nghe-lao-dong-xa-hoi-hai-phong',
+  }, // CDD03051
+  {
+    name: 'Trường Cao đẳng Kinh tế và Công nghệ thực phẩm',
+    slug: 'truong-cao-dang-kinh-te-va-cong-nghe-thuc-pham',
+  }, // CDT0307
+  { name: 'Trường Cao đẳng Hậu cần 2', slug: 'truong-cao-dang-hau-can-2' }, // HFH2
+  { name: 'Trường Cao đẳng Hậu cần 1', slug: 'truong-cao-dang-hau-can-1' }, // HFH1
+  {
+    name: 'Trường Cao đẳng nghề Viglacera',
+    slug: 'truong-cao-dang-nghe-viglacera',
+  }, // CDD0116
+  {
+    name: 'Trường Cao đẳng Kỹ Thuật - Du Lịch Sài Gòn',
+    slug: 'truong-cao-dang-ky-thuat-du-lich-sai-gon',
+  }, // CDD0234
+  {
+    name: 'Trường Cao Đẳng Y Tế Thanh Hóa',
+    slug: 'truong-cao-dang-y-te-thanh-hoa',
+  }, // CYT
+  {
+    name: 'Trường Cao Đẳng Y Tế Bạc Liêu',
+    slug: 'truong-cao-dang-y-te-bac-lieu',
+  }, // CYB
+  {
+    name: 'Trường Cao đẳng nghề An Giang',
+    slug: 'truong-cao-dang-nghe-an-giang',
+  }, // CDD5101
+  {
+    name: 'Trường Cao Đẳng Sư Phạm Bà Rịa – Vũng Tàu',
+    slug: 'truong-cao-dang-su-pham-ba-ria-vung-tau',
+  }, // C52
+  {
+    name: 'Trường Cao Đẳng Công Nghiệp In',
+    slug: 'truong-cao-dang-cong-nghiep-in',
+  }, // CCI
+  {
+    name: 'Trường Cao Đẳng Y Tế Hà Tĩnh',
+    slug: 'truong-cao-dang-y-te-ha-tinh',
+  }, // CYN
+  {
+    name: 'Trường Cao đẳng Y tế Đắk Lắk',
+    slug: 'truong-cao-dang-y-te-dak-lak',
+  }, // CDD4004
+  {
+    name: 'Trường Cao đẳng Đại Việt Đà Nẵng',
+    slug: 'truong-cao-dang-dai-viet-da-nang',
+  }, // CCZ
+  {
+    name: 'Trường Cao Đẳng Bách Khoa Đà Nẵng',
+    slug: 'truong-cao-dang-bach-khoa-da-nang',
+  }, // CKB
+  { name: 'Trường Cao Đẳng Bến Tre', slug: 'truong-cao-dang-ben-tre' }, // C56
+  { name: 'Trường Cao Đẳng Thương Mại', slug: 'truong-cao-dang-thuong-mai' }, // CMS
+  {
+    name: 'Trường Cao Đẳng Văn Hóa Nghệ Thuật Việt Bắc',
+    slug: 'truong-cao-dang-van-hoa-nghe-thuat-viet-bac',
+  }, // CNV
+  { name: 'Trường Cao Đẳng Cần Thơ', slug: 'truong-cao-dang-can-tho' }, // C55
+  { name: 'Trường Cao Đẳng Sơn La', slug: 'truong-cao-dang-son-la' }, // C14
+  {
+    name: 'Trường Cao Đẳng Cộng Đồng Hậu Giang',
+    slug: 'truong-cao-dang-cong-dong-hau-giang',
+  }, // D64
+  {
+    name: 'Trường Cao Đẳng Sư Phạm Kiên Giang',
+    slug: 'truong-cao-dang-su-pham-kien-giang',
+  }, // C54
+  {
+    name: 'Trường Cao Đẳng Cộng Đồng Sóc Trăng',
+    slug: 'truong-cao-dang-cong-dong-soc-trang',
+  }, // CST
+  {
+    name: 'Trường Cao Đẳng Y Tế Trà Vinh',
+    slug: 'truong-cao-dang-y-te-tra-vinh',
+  }, // YTV
+  { name: 'Trường Cao Đẳng Vĩnh Long', slug: 'truong-cao-dang-vinh-long' }, // D57
+  {
+    name: 'Trường Cao Đẳng Y Tế Bạch Mai',
+    slug: 'truong-cao-dang-y-te-bach-mai',
+  }, // CBM
+  {
+    name: 'Trường Cao Đẳng Xây Dựng Số 1',
+    slug: 'truong-cao-dang-xay-dung-so-1',
+  }, // CXH
+  { name: 'Trường Cao Đẳng Việt Mỹ', slug: 'truong-cao-dang-viet-my' }, // CKN
+  {
+    name: 'Trường Cao Đẳng Cơ Điện Và Nông Nghiệp Nam Bộ',
+    slug: 'truong-cao-dang-co-dien-va-nong-nghiep-nam-bo',
+  }, // CEN
+  {
+    name: 'Trường Cao đẳng Văn hoá Nghệ thuật Cần Thơ',
+    slug: 'truong-cao-dang-van-hoa-nghe-thuat-can-tho',
+  }, // CDD5505
+  { name: 'Trường Cao đẳng Thống kê II', slug: 'truong-cao-dang-thong-ke-ii' }, // CDT4803
+  {
+    name: 'Trường Cao Đẳng Y Tế Đồng Nai',
+    slug: 'truong-cao-dang-y-te-dong-nai',
+  }, // CYD
+  { name: 'Trường Cao đẳng Bách Khoa', slug: 'truong-cao-dang-bach-khoa' }, // D70
+  {
+    name: 'Trường Cao đẳng Việt Nam-Hàn Quốc Bình Dương',
+    slug: 'truong-cao-dang-viet-nam-han-quoc-binh-duong',
+  }, // CDD4403
+  {
+    name: 'Trường Cao Đẳng Kinh Tế – Kỹ Thuật Cần Thơ',
+    slug: 'truong-cao-dang-kinh-te-ky-thuat-can-tho',
+  }, // CEC
+  {
+    name: 'Trường Cao Đẳng Y Tế Cần Thơ',
+    slug: 'truong-cao-dang-y-te-can-tho',
+  }, // CYC
+  {
+    name: 'Trường Cao Đẳng Công Nghệ Và Kinh Tế Bảo Lộc',
+    slug: 'truong-cao-dang-cong-nghe-va-kinh-te-bao-loc',
+  }, // CBL
+  {
+    name: 'Trường Cao Đẳng Y Tế Bình Dương',
+    slug: 'truong-cao-dang-y-te-binh-duong',
+  }, // CBY
+  {
+    name: 'Trường Cao đẳng Du lịch Vũng Tàu',
+    slug: 'truong-cao-dang-du-lich-vung-tau',
+  }, // CDT5202
+  {
+    name: 'Trường Cao đẳng Kiến trúc - Xây dựng TPHCM',
+    slug: 'truong-cao-dang-kien-truc-xay-dung-tphcm',
+  }, // C94
+  {
+    name: 'Trường Cao đẳng nghề Việt Nam – Singapore',
+    slug: 'truong-cao-dang-nghe-viet-nam-singapore',
+  }, // CDD4401
+  {
+    name: 'Trường Cao đẳng Kỹ nghệ Dung Quất',
+    slug: 'truong-cao-dang-ky-nghe-dung-quat',
+  }, // CDT3501
+  {
+    name: 'Trường Cao đẳng Hòa Bình Xuân Lộc',
+    slug: 'truong-cao-dang-hoa-binh-xuan-loc',
+  }, // CDD4808
+  { name: 'Trường Cao đẳng Kiên Giang', slug: 'truong-cao-dang-kien-giang' }, // CDG
+  { name: 'Trường Cao Đẳng Bình Phước', slug: 'truong-cao-dang-binh-phuoc' }, // C43
+  {
+    name: 'Trường Cao Đẳng Y Tế Tiền Giang',
+    slug: 'truong-cao-dang-y-te-tien-giang',
+  }, // CYV
+  {
+    name: 'Trường Cao đẳng Y tế Đặng Thùy Trâm',
+    slug: 'truong-cao-dang-y-te-dang-thuy-tram',
+  }, // CDD3501
+  { name: 'Trường Cao đẳng Đà Lạt', slug: 'truong-cao-dang-da-lat' }, // CDD4201
+  {
+    name: 'Trường Cao Đẳng Sư Phạm TW Nha Trang',
+    slug: 'truong-cao-dang-su-pham-tw-nha-trang',
+  }, // CM2
+  {
+    name: 'Trường Cao Đẳng Y Tế Hà Đông',
+    slug: 'truong-cao-dang-y-te-ha-dong',
+  }, // CYM
+  {
+    name: 'Trường Cao Đẳng Công Thương Miền Trung',
+    slug: 'truong-cao-dang-cong-thuong-mien-trung',
+  }, // CCP
+  {
+    name: 'Trường Cao Đẳng Văn Hóa Nghệ Thuật Tây Bắc',
+    slug: 'truong-cao-dang-van-hoa-nghe-thuat-tay-bac',
+  }, // CVB
+  { name: 'Trường Cao đẳng Kon Tum', slug: 'truong-cao-dang-kon-tum' }, // CDD3601
+  {
+    name: 'Trường Cao đẳng Du lịch Đà Nẵng',
+    slug: 'truong-cao-dang-du-lich-da-nang',
+  }, // CDT0404
+  {
+    name: 'Trường Cao đẳng Kỹ thuật Công nghệ Quy Nhơn',
+    slug: 'truong-cao-dang-ky-thuat-cong-nghe-quy-nhon',
+  }, // CDD3702
+  {
+    name: 'Trường Cao đẳng Cơ điện – Xây dựng và Nông lâm Trung Bộ',
+    slug: 'truong-cao-dang-co-dien-xay-dung-va-nong-lam-trung-bo',
+  }, // CDT3701
+  { name: 'Trường Cao Đẳng Miền Nam', slug: 'truong-cao-dang-mien-nam' }, // CKM
+  {
+    name: 'Trường Cao đẳng Công Nghệ Y- Dược Việt Nam',
+    slug: 'truong-cao-dang-cong-nghe-y-duoc-viet-nam',
+  }, // CDD0408
+  {
+    name: 'Trường Cao Đẳng Xây Dựng TPHCM',
+    slug: 'truong-cao-dang-xay-dung-tphcm',
+  }, // CDT0213
+  {
+    name: 'Trường Cao Đẳng Sư Phạm Trung Ương TPHCM',
+    slug: 'truong-cao-dang-su-pham-trung-uong-tphcm',
+  }, // CM3
+  {
+    name: 'Trường Cao Đẳng Lý Tự Trọng TPHCM',
+    slug: 'truong-cao-dang-ly-tu-trong-tphcm',
+  }, // CKP
+  { name: 'Trường Cao đẳng Lào Cai', slug: 'truong-cao-dang-lao-cai' }, // CDD0801
+  {
+    name: 'Trường Cao Đẳng Giao Thông Vận Tải Trung Ương III',
+    slug: 'truong-cao-dang-giao-thong-van-tai-trung-uong-iii',
+  }, // CGS
+  { name: 'Trường Cao Đẳng Lạng Sơn', slug: 'truong-cao-dang-lang-son' }, // C10
+  { name: 'Trường Cao Đẳng Lai Châu', slug: 'truong-cao-dang-lai-chau' }, // CLC
+  {
+    name: 'Trường Cao Đẳng Giao Thông Vận Tải TPHCM',
+    slug: 'truong-cao-dang-giao-thong-van-tai-tphcm',
+  }, // CGT
+  {
+    name: 'Trường Cao Đẳng Sư Phạm Hòa Bình',
+    slug: 'truong-cao-dang-su-pham-hoa-binh',
+  }, // C23
+  {
+    name: 'Trường Cao Đẳng Điện Lực TPHCM',
+    slug: 'truong-cao-dang-dien-luc-tphcm',
+  }, // CDT0211
+  {
+    name: 'Trường Cao đẳng Cơ điện và Xây dựng Bắc Ninh',
+    slug: 'truong-cao-dang-co-dien-va-xay-dung-bac-ninh',
+  }, // CDT1901
+  { name: 'Trường Cao đẳng Du lịch Huế', slug: 'truong-cao-dang-du-lich-hue' }, // CDT3301
+  {
+    name: 'Trường Cao Đẳng Sư Phạm Trung Ương',
+    slug: 'truong-cao-dang-su-pham-trung-uong',
+  }, // CM1
+  {
+    name: 'Trường Cao Đẳng Thương Mại Và Du Lịch Hà Nội',
+    slug: 'truong-cao-dang-thuong-mai-va-du-lich-ha-noi',
+  }, // CDD0130
+  { name: 'Trường Cao Đẳng Y Tế Hà Nội', slug: 'truong-cao-dang-y-te-ha-noi' }, // CYZ
+  {
+    name: 'Trường Cao Đẳng Cộng Đồng Hà Tây',
+    slug: 'truong-cao-dang-cong-dong-ha-tay',
+  }, // D20
+  {
+    name: 'Trường Cao Đẳng Nông Lâm Đông Bắc',
+    slug: 'truong-cao-dang-nong-lam-dong-bac',
+  }, // CDP
+  {
+    name: 'Trường Cao Đẳng Ngoại Ngữ – Công Nghệ Việt Nhật',
+    slug: 'truong-cao-dang-ngoai-ngu-cong-nghe-viet-nhat',
+  }, // CNC
+  { name: 'Trường Cao Đẳng Thống Kê', slug: 'truong-cao-dang-thong-ke' }, // CTE
+  {
+    name: 'Trường Cao Đẳng Phương Đông – Đà Nẵng',
+    slug: 'truong-cao-dang-phuong-dong-da-nang',
+  }, // CPN
+  {
+    name: 'Trường Cao Đẳng Sư Phạm Nam Định',
+    slug: 'truong-cao-dang-su-pham-nam-dinh',
+  }, // C25
+  {
+    name: 'Trường Cao Đẳng Y Tế Hải Phòng',
+    slug: 'truong-cao-dang-y-te-hai-phong',
+  }, // CYF
+  {
+    name: 'Trường Cao Đẳng Dược Trung Ương',
+    slug: 'truong-cao-dang-duoc-trung-uong',
+  }, // CYS
+  {
+    name: 'Trường Cao Đẳng Sư Phạm Bắc Ninh',
+    slug: 'truong-cao-dang-su-pham-bac-ninh',
+  }, // C19
+  {
+    name: 'Trường Cao Đẳng Nông Nghiệp Nam Bộ',
+    slug: 'truong-cao-dang-nong-nghiep-nam-bo',
+  }, // CNN
+  {
+    name: 'Trường Cao đẳng Quốc tế TPHCM',
+    slug: 'truong-cao-dang-quoc-te-tphcm',
+  }, // CDD0206
+  {
+    name: 'Trường Cao Đẳng Kinh Tế TPHCM',
+    slug: 'truong-cao-dang-kinh-te-tphcm',
+  }, // CDD0212
+  {
+    name: 'Trường Cao Đẳng Kinh Tế Kỹ Thuật TP HCM',
+    slug: 'truong-cao-dang-kinh-te-ky-thuat-tp-hcm',
+  }, // CPL
+  {
+    name: 'Trường Cao Đẳng Truyền Hình Việt Nam',
+    slug: 'truong-cao-dang-truyen-hinh-viet-nam',
+  }, // CDT0131
+  {
+    name: 'Trường Cao Đẳng Kinh Tế Công Nghiệp Hà Nội',
+    slug: 'truong-cao-dang-kinh-te-cong-nghiep-ha-noi',
+  }, // CCK
+  {
+    name: 'Trường Cao Đẳng Đại Việt Sài Gòn',
+    slug: 'truong-cao-dang-dai-viet-sai-gon',
+  }, // CSG
+  {
+    name: 'Trường Cao Đẳng Công Nghệ TPHCM',
+    slug: 'truong-cao-dang-cong-nghe-tphcm',
+  }, // CCS
+  {
+    name: 'Trường Cao Đẳng Kỹ Thuật Cao Thắng',
+    slug: 'truong-cao-dang-ky-thuat-cao-thang',
+  }, // CKC
+  {
+    name: 'Trường Cao đẳng Công Nghệ Thông Tin TPHCM',
+    slug: 'truong-cao-dang-cong-nghe-thong-tin-tphcm',
+  }, // CDC
+  {
+    name: 'Trường Cao Đẳng Phát Thanh Truyền Hình II',
+    slug: 'truong-cao-dang-phat-thanh-truyen-hinh-ii',
+  }, // CPS
+  {
+    name: 'Trường Cao Đẳng Công Thương TPHCM',
+    slug: 'truong-cao-dang-cong-thuong-tphcm',
+  }, // CES
+  {
+    name: 'Trường Cao Đẳng Kinh Tế Đối Ngoại',
+    slug: 'truong-cao-dang-kinh-te-doi-ngoai',
+  }, // CDT0209
+  {
+    name: 'Trường Cao đẳng Công thương Việt Nam',
+    slug: 'truong-cao-dang-cong-thuong-viet-nam',
+  }, // CDD1204
+  {
+    name: 'Trường Cao Đẳng Công Nghệ và Thương Mại Hà Nội',
+    slug: 'truong-cao-dang-cong-nghe-va-thuong-mai-ha-noi',
+  }, // CBT
+  {
+    name: 'Trường Cao Đẳng Điện Tử - Điện Lạnh Hà Nội',
+    slug: 'truong-cao-dang-dien-tu-dien-lanh-ha-noi',
+  }, // CLH
+  {
+    name: 'Trường Cao Đẳng Xây Dựng Công Trình Đô Thị',
+    slug: 'truong-cao-dang-xay-dung-cong-trinh-do-thi',
+  }, // CDT
+  {
+    name: 'Trường Cao Đẳng Công Nghệ Thủ Đức',
+    slug: 'truong-cao-dang-cong-nghe-thu-duc',
+  }, // CCO
+  {
+    name: 'Trường Cao Đẳng Du Lịch Hà Nội',
+    slug: 'truong-cao-dang-du-lich-ha-noi',
+  }, // CDH
+  {
+    name: 'Trường Cao Đẳng Y Tế Thái Bình',
+    slug: 'truong-cao-dang-y-te-thai-binh',
+  }, // CYE
+  {
+    name: 'Trường Cao đẳng Kỹ thuật Công – Nông nghiệp Quảng Bình',
+    slug: 'truong-cao-dang-ky-thuat-cong-nong-nghiep-quang-binh',
+  }, // CDD3102
+  {
+    name: 'Trường Cao đẳng Quốc tế Kent',
+    slug: 'truong-cao-dang-quoc-te-kent',
+  }, // CDD0227
+  {
+    name: 'Trường Cao Đẳng Kinh Tế-Công Nghệ TPHCM',
+    slug: 'truong-cao-dang-kinh-te-cong-nghe-tphcm',
+  }, // CET
+  {
+    name: 'Trường Cao Đẳng Văn Hóa Nghệ Thuật TPHCM',
+    slug: 'truong-cao-dang-van-hoa-nghe-thuat-tphcm',
+  }, // CVN
+  {
+    name: 'Trường Cao Đẳng Văn Hóa Nghệ Thuật và Du Lịch Sài Gòn',
+    slug: 'truong-cao-dang-van-hoa-nghe-thuat-va-du-lich-sai-gon',
+  }, // CVS
+  {
+    name: 'Trường Cao đẳng Hàng hải và Đường thủy II',
+    slug: 'truong-cao-dang-hang-hai-va-duong-thuy-ii',
+  }, // CDT0207
+  {
+    name: 'Trường Cao đẳng Đại Việt Cần Thơ',
+    slug: 'truong-cao-dang-dai-viet-can-tho',
+  }, // CCZ1
+  {
+    name: 'Trường Cao đẳng Du lịch Sài Gòn',
+    slug: 'truong-cao-dang-du-lich-sai-gon',
+  }, // D42
+  { name: 'Trường Cao đẳng Tây Đô', slug: 'truong-cao-dang-tay-do' }, // CDT0120
+  {
+    name: 'Trường Cao đẳng Công nghiệp Bắc Ninh',
+    slug: 'truong-cao-dang-cong-nghiep-bac-ninh',
+  }, // CCD1902
+  {
+    name: 'Trường Cao đẳng Kỹ thuật Công nghệ Hòa Bình',
+    slug: 'truong-cao-dang-ky-thuat-cong-nghe-hoa-binh',
+  }, // CDD2303
+  {
+    name: 'Trường Cao đẳng Công nghệ Bách khoa Hà Nội',
+    slug: 'truong-cao-dang-cong-nghe-bach-khoa-ha-noi',
+  }, // CDD0308
+  {
+    name: 'Trường Cao Đẳng Bán Công Công Nghệ và Quản Trị Doanh Nghiệp',
+    slug: 'truong-cao-dang-ban-cong-cong-nghe-va-quan-tri-doanh-nghiep',
+  }, // CBC
+  {
+    name: 'Trường Cao đẳng Kinh tế Công nghệ Hà Nội',
+    slug: 'truong-cao-dang-kinh-te-cong-nghe-ha-noi',
+  }, // CDD0121
+  { name: 'Trường Cao đẳng Yên Bái', slug: 'truong-cao-dang-yen-bai' }, // C13
+  {
+    name: 'Trường Cao đẳng nghề Trà Vinh',
+    slug: 'truong-cao-dang-nghe-tra-vinh',
+  }, // 039
+  {
+    name: 'Trường Cao đẳng nghề Công nghệ cao Đồng Nai',
+    slug: 'truong-cao-dang-nghe-cong-nghe-cao-dong-nai',
+  }, // CDD4805
+  {
+    name: 'Trường Cao đẳng nghề Cơ giới và Thủy lợi',
+    slug: 'truong-cao-dang-nghe-co-gioi-va-thuy-loi',
+  }, // CDT4804
+  { name: 'Trường Cao Đẳng Viễn Đông', slug: 'truong-cao-dang-vien-dong' }, // CDV
+  { name: 'Trường Cao Đẳng Bách Việt', slug: 'truong-cao-dang-bach-viet' }, // CBV
+  {
+    name: 'Trường Cao đẳng Kinh tế – Kỹ thuật Lâm Đồng',
+    slug: 'truong-cao-dang-kinh-te-ky-thuat-lam-dong',
+  }, // CDD4202
+  {
+    name: 'Trường Cao Đẳng Cộng Đồng Hà Nội',
+    slug: 'truong-cao-dang-cong-dong-ha-noi',
+  }, // CHN
+  {
+    name: 'Trường Cao đẳng nghề Sóc Trăng',
+    slug: 'truong-cao-dang-nghe-soc-trang',
+  }, // CDD5901
+  {
+    name: 'Trường Cao Đẳng Công Nghệ và Quản Trị Sonadezi',
+    slug: 'truong-cao-dang-cong-nghe-va-quan-tri-sonadezi',
+  }, // CDS
+  { name: 'Trường Cao Đẳng Y Tế Cà Mau', slug: 'truong-cao-dang-y-te-ca-mau' }, // CMY
+  { name: 'Trường Cao Đẳng Hàng Hải I', slug: 'truong-cao-dang-hang-hai-i' }, // CHH
+  { name: 'Trường Cao Đẳng Y Tế Hà Nam', slug: 'truong-cao-dang-y-te-ha-nam' }, // CYH
+  {
+    name: 'Trường Cao Đẳng Y Tế Bình Định',
+    slug: 'truong-cao-dang-y-te-binh-dinh',
+  }, // CYR
+  {
+    name: 'Trường Cao Đẳng Y Tế Quảng Nam',
+    slug: 'truong-cao-dang-y-te-quang-nam',
+  }, // CYU
+  {
+    name: 'Trường Cao Đẳng Sư Phạm Tây Ninh',
+    slug: 'truong-cao-dang-su-pham-tay-ninh',
+  }, // C46
+  {
+    name: 'Trường Cao Đẳng Y Tế Kiên Giang',
+    slug: 'truong-cao-dang-y-te-kien-giang',
+  }, // CYG
+  {
+    name: 'Trường Cao Đẳng Nghệ Thuật Hà Nội',
+    slug: 'truong-cao-dang-nghe-thuat-ha-noi',
+  }, // CNT
+  {
+    name: 'Trường Cao Đẳng Công Nghiệp Quốc Phòng',
+    slug: 'truong-cao-dang-cong-nghiep-quoc-phong',
+  }, // QPH
+  {
+    name: 'Trường Cao đẳng Kỹ thuật Đồng Nai',
+    slug: 'truong-cao-dang-ky-thuat-dong-nai',
+  }, // CDD4803
+  {
+    name: 'Trường Cao đẳng Quốc tế Vabis',
+    slug: 'truong-cao-dang-quoc-te-vabis',
+  }, // CDD5204
+  {
+    name: 'Trường Cao đẳng Công nghệ – Kinh tế và Thủy lợi miền Trung',
+    slug: 'truong-cao-dang-cong-nghe-kinh-te-va-thuy-loi-mien-trung',
+  }, // CDT3401
+  {
+    name: 'Trường Cao đẳng Việt Đức Nghệ An',
+    slug: 'truong-cao-dang-viet-duc-nghe-an',
+  }, // CDD2901
+  {
+    name: 'Trường Cao đẳng Giao thông vận tải Trung ương IV',
+    slug: 'truong-cao-dang-giao-thong-van-tai-trung-uong-iv',
+  }, // CDT2901
+  {
+    name: 'Trường Cao đẳng Cộng đồng Đắk Nông',
+    slug: 'truong-cao-dang-cong-dong-dak-nong',
+  }, // CDD6301
+  {
+    name: 'Trường Cao đẳng nghề Nguyễn Văn Trỗi',
+    slug: 'truong-cao-dang-nghe-nguyen-van-troi',
+  }, // CDD0403
+  {
+    name: 'Trường Cao đẳng nghề Đà Nẵng',
+    slug: 'truong-cao-dang-nghe-da-nang',
+  }, // CDD0401
+  {
+    name: 'Trường Cao Đẳng Văn Hóa Nghệ Thuật Đăk Lăk',
+    slug: 'truong-cao-dang-van-hoa-nghe-thuat-dak-lak',
+  }, // CVL
+  {
+    name: 'Trường Cao Đẳng Văn Hóa Nghệ Thuật Du Lịch Yên Bái',
+    slug: 'truong-cao-dang-van-hoa-nghe-thuat-du-lich-yen-bai',
+  }, // CVY
+  {
+    name: 'Trường Cao Đẳng Lương Thực Thực Phẩm',
+    slug: 'truong-cao-dang-luong-thuc-thuc-pham',
+  }, // CLT
+  {
+    name: 'Trường Cao Đẳng Du Lịch và Công Thương',
+    slug: 'truong-cao-dang-du-lich-va-cong-thuong',
+  }, // CDT2108
+  { name: 'Trường Cao đẳng Quảng Nam', slug: 'truong-cao-dang-quang-nam' }, // CDD3403
+  {
+    name: 'Trường Cao Đẳng Cộng Đồng Đồng Tháp',
+    slug: 'truong-cao-dang-cong-dong-dong-thap',
+  }, // D50
+  {
+    name: 'Trường Cao Đẳng Y Tế Lâm Đồng',
+    slug: 'truong-cao-dang-y-te-lam-dong',
+  }, // CLY
+  {
+    name: 'Trường Cao đẳng Bách Khoa Sài Gòn',
+    slug: 'truong-cao-dang-bach-khoa-sai-gon',
+  }, // BKC
+  { name: 'Trường Cao đẳng Lê Quý Đôn', slug: 'truong-cao-dang-le-quy-don' }, // CDD4806
+  {
+    name: 'Trường Cao đẳng Giao thông vận tải Trung ương V',
+    slug: 'truong-cao-dang-giao-thong-van-tai-trung-uong-v',
+  }, // CDT0402
+  {
+    name: 'Trường Cao Đẳng Y Tế Đồng Tháp',
+    slug: 'truong-cao-dang-y-te-dong-thap',
+  }, // CYA
+  {
+    name: 'Trường Cao đẳng Công nghệ và Nông lâm Nam Bộ',
+    slug: 'truong-cao-dang-cong-nghe-va-nong-lam-nam-bo',
+  }, // CDT4403
+  { name: 'Trường Cao đẳng Bắc Kạn', slug: 'truong-cao-dang-bac-kan' }, // C111
+  {
+    name: 'Trường Cao Đẳng Kỹ Thuật Công Nghiệp',
+    slug: 'truong-cao-dang-ky-thuat-cong-nghiep',
+  }, // CCE
+  {
+    name: 'Trường Cao đẳng Y tế An Giang',
+    slug: 'truong-cao-dang-y-te-an-giang',
+  }, // CDD5102
+  { name: 'Trường Cao đẳng Y Hà Nội', slug: 'truong-cao-dang-y-ha-noi' }, // CDD0122
+  {
+    name: 'Trường Cao đẳng Y dược Pasteur TPHCM',
+    slug: 'truong-cao-dang-y-duoc-pasteur-tphcm',
+  }, // CDD13011
+  {
+    name: 'Trường Cao đẳng Công thương Hà Nội',
+    slug: 'truong-cao-dang-cong-thuong-ha-noi',
+  }, // D76
+  {
+    name: 'Trường Cao Đẳng Y Tế Lạng Sơn',
+    slug: 'truong-cao-dang-y-te-lang-son',
+  }, // CYL
+  {
+    name: 'Trường Cao Đẳng Y Tế Phú Thọ',
+    slug: 'truong-cao-dang-y-te-phu-tho',
+  }, // CYP
+  {
+    name: 'Trường Cao Đẳng Y Tế Khánh Hòa',
+    slug: 'truong-cao-dang-y-te-khanh-hoa',
+  }, // CYK
+  {
+    name: 'Trường Cao đẳng Y tế Phú Yên',
+    slug: 'truong-cao-dang-y-te-phu-yen',
+  }, // YPY
+  {
+    name: 'Trường Cao đẳng Y – Dược Hợp Lực, Thanh Hóa',
+    slug: 'truong-cao-dang-y-duoc-hop-luc-thanh-hoa',
+  }, // CDD2810
+  {
+    name: 'Trường Cao Đẳng Y Tế Ninh Bình',
+    slug: 'truong-cao-dang-y-te-ninh-binh',
+  }, // CNY
+  { name: 'Trường Cao Đẳng Y Tế Huế', slug: 'truong-cao-dang-y-te-hue' }, // CYY
+  { name: 'Trường Cao Đẳng Y Tế Sơn La', slug: 'truong-cao-dang-y-te-son-la' }, // YSL
+  {
+    name: 'Trường Cao Đẳng Công Nghiệp Việt Đức',
+    slug: 'truong-cao-dang-cong-nghiep-viet-duc',
+  }, // CCV
+  {
+    name: 'Trường Cao Đẳng Công Nghệ và Kinh Tế Công Nghiệp',
+    slug: 'truong-cao-dang-cong-nghe-va-kinh-te-cong-nghiep',
+  }, // CXD
+  {
+    name: 'Trường Cao Đẳng Công Nghiệp và Xây Dựng',
+    slug: 'truong-cao-dang-cong-nghiep-va-xay-dung',
+  }, // CCX
+  {
+    name: 'Trường Cao Đẳng Kinh Tế – Kỹ Thuật Thương Mại',
+    slug: 'truong-cao-dang-kinh-te-ky-thuat-thuong-mai',
+  }, // CTH
+  {
+    name: 'Trường Cao đẳng Kỹ thuật Công nghệ Bà Rịa – Vũng Tàu',
+    slug: 'truong-cao-dang-ky-thuat-cong-nghe-ba-ria-vung-tau',
+  }, // CDD5203
+  { name: 'Trường Cao đẳng Quảng Ngãi', slug: 'truong-cao-dang-quang-ngai' }, // CDT3503
+  {
+    name: 'Trường Cao Đẳng Công Nghiệp Hưng Yên',
+    slug: 'truong-cao-dang-cong-nghiep-hung-yen',
+  }, // CCY
+  {
+    name: 'Trường Cao đẳng Kỹ thuật Công nghệ Nha Trang',
+    slug: 'truong-cao-dang-ky-thuat-cong-nghe-nha-trang',
+  }, // CDD4101
+  {
+    name: 'Trường Cao đẳng Kinh tế – Kỹ thuật Bạc Liêu',
+    slug: 'truong-cao-dang-kinh-te-ky-thuat-bac-lieu',
+  }, // CDD6002
+  {
+    name: 'Trường Cao đẳng Công nghệ Quốc tế LILAMA-2',
+    slug: 'truong-cao-dang-cong-nghe-quoc-te-lilama-2',
+  }, // CDT4801
+  { name: 'Trường Cao đẳng Đồng Khởi', slug: 'truong-cao-dang-dong-khoi' }, // CDT5601
+  { name: 'Trường Cao đẳng Thaco', slug: 'truong-cao-dang-thaco' }, // CDD3401
+  {
+    name: 'Trường Cao Đẳng Văn Hóa Nghệ Thuật Nghệ An',
+    slug: 'truong-cao-dang-van-hoa-nghe-thuat-nghe-an',
+  }, // CVV
+  {
+    name: 'Trường Cao đẳng nghề Việt-Đức Hà Tĩnh',
+    slug: 'truong-cao-dang-nghe-viet-duc-ha-tinh',
+  }, // CDD3001
+  {
+    name: 'Trường Cao Đẳng Công Nghiệp Huế',
+    slug: 'truong-cao-dang-cong-nghiep-hue',
+  }, // CCH
+  {
+    name: 'Trường Cao Đẳng Sư Phạm Thái Bình',
+    slug: 'truong-cao-dang-su-pham-thai-binh',
+  }, // C26
+  {
+    name: 'Trường Cao Đẳng Kinh Tế Kỹ Thuật Điện Biên',
+    slug: 'truong-cao-dang-kinh-te-ky-thuat-dien-bien',
+  }, // CDB
+  {
+    name: 'Trường Cao đẳng Văn hóa – Nghệ thuật Đà Nẵng',
+    slug: 'truong-cao-dang-van-hoa-nghe-thuat-da-nang',
+  }, // CDD0409
+  {
+    name: 'Trường Cao đẳng nghề Công nghệ Hà Tĩnh',
+    slug: 'truong-cao-dang-nghe-cong-nghe-ha-tinh',
+  }, // CDT3001
+  {
+    name: 'Trường Cao đẳng nghề Kiên Giang',
+    slug: 'truong-cao-dang-nghe-kien-giang',
+  }, // CDD5401
+  {
+    name: 'Trường Cao đẳng nghề Việt Nam-Hàn Quốc Quảng Ngãi',
+    slug: 'truong-cao-dang-nghe-viet-nam-han-quoc-quang-ngai',
+  }, // CDD35021
+  {
+    name: 'Trường Cao đẳng nghề Cơ giới Quảng Ngãi',
+    slug: 'truong-cao-dang-nghe-co-gioi-quang-ngai',
+  }, // CDD3502
+  {
+    name: 'Trường Cao đẳng nghề Kinh tế – Kỹ thuật số 1 Nghệ An',
+    slug: 'truong-cao-dang-nghe-kinh-te-ky-thuat-so-1-nghe-an',
+  }, // CDT2904
+  {
+    name: 'Trường Cao Đẳng Mỹ Thuật Trang Trí Đồng Nai',
+    slug: 'truong-cao-dang-my-thuat-trang-tri-dong-nai',
+  }, // CDN
+  {
+    name: 'Trường Cao đẳng nghề Cần Thơ',
+    slug: 'truong-cao-dang-nghe-can-tho',
+  }, // CDD5501
+  { name: 'Trường Cao đẳng Dầu khí', slug: 'truong-cao-dang-dau-khi' }, // CDT5201
+  {
+    name: 'Trường Cao Đẳng Cộng Đồng Cà Mau',
+    slug: 'truong-cao-dang-cong-dong-ca-mau',
+  }, // D61
+  {
+    name: 'Trường Cao đẳng Du lịch Nha Trang',
+    slug: 'truong-cao-dang-du-lich-nha-trang',
+  }, // CDT4103
+  {
+    name: 'Trường Cao đẳng Kỹ thuật Đắk Lắk',
+    slug: 'truong-cao-dang-ky-thuat-dak-lak',
+  }, // CDD4002
+  {
+    name: 'Trường Cao Đẳng Văn Hóa Nghệ Thuật Thái Bình',
+    slug: 'truong-cao-dang-van-hoa-nghe-thuat-thai-binh',
+  }, // CNB
+  {
+    name: 'Trường Cao Đẳng Công Nghiệp Nam Định',
+    slug: 'truong-cao-dang-cong-nghiep-nam-dinh',
+  }, // CND
+  {
+    name: 'Trường Cao Đẳng Kinh Tế – Kế Hoạch Đà Nẵng',
+    slug: 'truong-cao-dang-kinh-te-ke-hoach-da-nang',
+  }, // CDT0407
+  {
+    name: 'Trường Cao Đẳng Công Nghệ Hà Nội',
+    slug: 'truong-cao-dang-cong-nghe-ha-noi',
+  }, // CNH
+  { name: 'Trường Cao đẳng Lý Thái Tổ', slug: 'truong-cao-dang-ly-thai-to' }, // CDD1910
+  {
+    name: 'Trường Cao đẳng nghề Việt - Úc Đà Nẵng',
+    slug: 'truong-cao-dang-nghe-viet-uc-da-nang',
+  }, // CDD0406
+  {
+    name: 'Trường Cao Đẳng Phát Thanh Truyền Hình I',
+    slug: 'truong-cao-dang-phat-thanh-truyen-hinh-i',
+  }, // CPT
+  {
+    name: 'Trường Cao Đẳng Sư Phạm Vĩnh Long',
+    slug: 'truong-cao-dang-su-pham-vinh-long',
+  }, // C57
+  {
+    name: 'Trường Cao Đẳng Sư Phạm Sóc Trăng',
+    slug: 'truong-cao-dang-su-pham-soc-trang',
+  }, // C59
+  {
+    name: 'Trường Cao Đẳng Sư Phạm Quảng Trị',
+    slug: 'truong-cao-dang-su-pham-quang-tri',
+  }, // C32
+  {
+    name: 'Trường Cao Đẳng Sư Phạm Đăk Lăk',
+    slug: 'truong-cao-dang-su-pham-dak-lak',
+  }, // C40
+  {
+    name: 'Trường Cao Đẳng Công Nghiệp Thái Nguyên',
+    slug: 'truong-cao-dang-cong-nghiep-thai-nguyen',
+  }, // CCB
+  {
+    name: 'Trường Cao Đẳng Cộng Đồng Lào Cai',
+    slug: 'truong-cao-dang-cong-dong-lao-cai',
+  }, // CLA
+  {
+    name: 'Trường Cao Đẳng Kinh Tế, Kỹ Thuật Và Thủy Sản',
+    slug: 'truong-cao-dang-kinh-te-ky-thuat-va-thuy-san',
+  }, // CSB
+  { name: 'Trường Cao Đẳng Bình Thuận', slug: 'truong-cao-dang-binh-thuan' }, // CYX
+  {
+    name: 'Trường Cao Đẳng Sư Phạm Điện Biên',
+    slug: 'truong-cao-dang-su-pham-dien-bien',
+  }, // C62
+  {
+    name: 'Trường Cao Đẳng Giao Thông Vận Tải II',
+    slug: 'truong-cao-dang-giao-thong-van-tai-ii',
+  }, // CGD
+  {
+    name: 'Trường Cao Đẳng Điện Lực Miền Trung',
+    slug: 'truong-cao-dang-dien-luc-mien-trung',
+  }, // CLD
 ];

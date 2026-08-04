@@ -11,6 +11,8 @@
 export type * from './models/User.js'
 export type * from './models/Category.js'
 export type * from './models/University.js'
+export type * from './models/Province.js'
+export type * from './models/Ward.js'
 export type * from './models/Product.js'
 export type * from './models/ProductImage.js'
 export type * from './models/ProductRevision.js'

@@ -132,6 +132,27 @@ model University {
   @@map("universities")
 }
 
+model Province {
+  // Uses the official administrative code instead of an auto-increment id so
+  // existing location snapshots on users and products stay compatible.
+  code  Int    @id
+  name  String
+  wards Ward[]
+
+  @@map("provinces")
+}
+
+model Ward {
+  // Ward codes are unique nationwide in the source administrative dataset.
+  code         Int      @id
+  name         String
+  provinceCode Int      @map("province_code")
+  province     Province @relation(fields: [provinceCode], references: [code], onDelete: Restrict)
+
+  @@index([provinceCode])
+  @@map("wards")
+}
+
 model Product {
   // — Identity —
   id          Int     @id @default(autoincrement())

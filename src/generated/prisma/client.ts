@@ -55,6 +55,16 @@ export type Category = Prisma.CategoryModel
  */
 export type University = Prisma.UniversityModel
 /**
+ * Model Province
+ * 
+ */
+export type Province = Prisma.ProvinceModel
+/**
+ * Model Ward
+ * 
+ */
+export type Ward = Prisma.WardModel
+/**
  * Model Product
  * 
  */

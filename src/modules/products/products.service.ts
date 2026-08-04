@@ -876,6 +876,9 @@ export class ProductsService {
         include: {
           category: true,
           images: true,
+          seller: {
+            select: { universityId: true },
+          },
           savedBy: {
             where: { userId: userId ?? -1 },
             select: { productId: true },
@@ -890,8 +893,9 @@ export class ProductsService {
 
     // 4. Return paginated result
     return {
-      data: data.map(({ savedBy, ...product }) => ({
+      data: data.map(({ savedBy, seller, ...product }) => ({
         ...product,
+        sellerUniversityId: seller.universityId,
         isSaved: savedBy.length > 0,
       })),
       total,

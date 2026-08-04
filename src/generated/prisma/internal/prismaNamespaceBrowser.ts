@@ -54,6 +54,8 @@ export const ModelName = {
   User: 'User',
   Category: 'Category',
   University: 'University',
+  Province: 'Province',
+  Ward: 'Ward',
   Product: 'Product',
   ProductImage: 'ProductImage',
   ProductRevision: 'ProductRevision',
@@ -132,6 +134,23 @@ export const UniversityScalarFieldEnum = {
 } as const
 
 export type UniversityScalarFieldEnum = (typeof UniversityScalarFieldEnum)[keyof typeof UniversityScalarFieldEnum]
+
+
+export const ProvinceScalarFieldEnum = {
+  code: 'code',
+  name: 'name'
+} as const
+
+export type ProvinceScalarFieldEnum = (typeof ProvinceScalarFieldEnum)[keyof typeof ProvinceScalarFieldEnum]
+
+
+export const WardScalarFieldEnum = {
+  code: 'code',
+  name: 'name',
+  provinceCode: 'provinceCode'
+} as const
+
+export type WardScalarFieldEnum = (typeof WardScalarFieldEnum)[keyof typeof WardScalarFieldEnum]
 
 
 export const ProductScalarFieldEnum = {

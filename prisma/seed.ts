@@ -3,6 +3,7 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import 'dotenv/config';
 import { hashPassword } from '../src/common/utils/hash.util';
 import { categoriesSeedData } from './seed-data/categories';
+import { locationsSeedData } from './seed-data/locations';
 import { universitiesSeedData } from './seed-data/universities';
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
@@ -40,12 +41,46 @@ async function seedUniversities() {
   for (const uni of universitiesSeedData) {
     await prisma.university.upsert({
       where: { slug: uni.slug },
-      update: {},
+      update: { name: uni.name },
       create: uni,
     });
   }
 
   console.log('Seeded universities.');
+}
+
+async function seedLocations() {
+  console.log(`Seeding ${locationsSeedData.length} provinces...`);
+
+  for (const province of locationsSeedData) {
+    await prisma.province.upsert({
+      where: { code: province.code },
+      update: { name: province.name },
+      create: { code: province.code, name: province.name },
+    });
+  }
+
+  const wards = locationsSeedData.flatMap((province) =>
+    province.wards.map((ward) => ({
+      code: ward.code,
+      name: ward.name,
+      provinceCode: province.code,
+    })),
+  );
+
+  for (let index = 0; index < wards.length; index += 500) {
+    await prisma.$transaction(
+      wards.slice(index, index + 500).map((ward) =>
+        prisma.ward.upsert({
+          where: { code: ward.code },
+          update: { name: ward.name, provinceCode: ward.provinceCode },
+          create: ward,
+        }),
+      ),
+    );
+  }
+
+  console.log(`Seeded ${wards.length} wards.`);
 }
 
 async function seedAdmin() {
@@ -72,6 +107,7 @@ async function seedAdmin() {
 async function main() {
   await seedCategories();
   await seedUniversities();
+  await seedLocations();
   await seedAdmin();
   console.log('Seeding completed.');
 }
