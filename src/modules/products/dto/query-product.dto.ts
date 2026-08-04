@@ -24,6 +24,16 @@ export class QueryProductDto {
 
   @IsOptional()
   @Type(() => Number)
+  @IsInt({ message: 'Mã trường phải là số nguyên' })
+  sellerUniversityId?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt({ message: 'Mã người bán phải là số nguyên' })
+  sellerId?: number;
+
+  @IsOptional()
+  @Type(() => Number)
   @IsInt({ message: 'Giá tối thiểu phải là số nguyên' })
   @Min(0, { message: 'Giá tối thiểu phải lớn hơn hoặc bằng 0' })
   minPrice?: number;

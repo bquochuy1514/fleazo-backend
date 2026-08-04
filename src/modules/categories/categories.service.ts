@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '../../prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { ProductStatus } from '../../generated/prisma/client';
 
 @Injectable()
 export class CategoriesService {
@@ -13,11 +14,42 @@ export class CategoriesService {
 
   async findAll() {
     // 1. Fetch all root categories (parentId = null) with children
-    return this.prisma.category.findMany({
+    const categories = await this.prisma.category.findMany({
       where: { parentId: null },
       include: { children: true },
       orderBy: { name: 'asc' },
     });
+
+    // 2. Roll up ACTIVE product counts per root. Products only ever attach
+    //    to leaf/child categories (see validateLeafCategory below), so a
+    //    root never has a direct categoryId match — its count is the sum
+    //    of its children's counts.
+    const childIds = categories.flatMap((category) =>
+      category.children.map((child) => child.id),
+    );
+    const grouped = childIds.length
+      ? await this.prisma.product.groupBy({
+          by: ['categoryId'],
+          where: { categoryId: { in: childIds }, status: ProductStatus.ACTIVE },
+          _count: true,
+        })
+      : [];
+    const countByChildId = new Map(
+      grouped.map((group) => [group.categoryId, group._count]),
+    );
+
+    // 3. Attach productCount, then sort roots by it — the categories with
+    //    the most active listings surface first everywhere /categories is
+    //    consumed (homepage featured picks, header nav, ...).
+    const withCounts = categories.map((category) => ({
+      ...category,
+      productCount: category.children.reduce(
+        (sum, child) => sum + (countByChildId.get(child.id) ?? 0),
+        0,
+      ),
+    }));
+
+    return withCounts.sort((a, b) => b.productCount - a.productCount);
   }
 
   async findOne(id: number) {

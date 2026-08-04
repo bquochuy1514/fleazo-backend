@@ -25,6 +25,7 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 import { QueryMyProductsDto } from './dto/query-my-products.dto';
+import { QuerySavedProductsDto } from './dto/query-saved-products.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { UpdateProductStatusDto } from './dto/update-product-status.dto';
 import { RejectProductDto } from './dto/reject-product.dto';
@@ -104,9 +105,13 @@ export class ProductsController {
     return this.productsService.updateProductStatus(user.id, id, dto);
   }
 
+  @UseGuards(OptionalJwtAuthGuard)
   @Get()
-  findAll(@Query() query: QueryProductDto) {
-    return this.productsService.findAll(query);
+  findAll(
+    @Query() query: QueryProductDto,
+    @CurrentUser() user: JwtPayload | null,
+  ) {
+    return this.productsService.findAll(query, user?.id);
   }
 
   // Must come before @Get(':id') — otherwise 'me' is parsed as the :id param and rejected by ParseIntPipe.
@@ -117,6 +122,16 @@ export class ProductsController {
     @Query() query: QueryMyProductsDto,
   ) {
     return this.productsService.findMyProducts(user.id, query);
+  }
+
+  // Must come before @Get(':id') for the same reason as 'me' above.
+  @UseGuards(JwtAuthGuard)
+  @Get('saved')
+  findSavedProducts(
+    @CurrentUser() user: JwtPayload,
+    @Query() query: QuerySavedProductsDto,
+  ) {
+    return this.productsService.findSavedProducts(user.id, query);
   }
 
   @UseGuards(OptionalJwtAuthGuard)

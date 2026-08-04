@@ -22,6 +22,7 @@ import { parseJsonArray } from '../../common/utils/parse-json-array.util';
 import { CreateProductDto } from './dto/create-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 import { QueryMyProductsDto } from './dto/query-my-products.dto';
+import { QuerySavedProductsDto } from './dto/query-saved-products.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { UpdateProductStatusDto } from './dto/update-product-status.dto';
 import { Prisma, ProductStatus } from '../../generated/prisma/client';
@@ -765,7 +766,12 @@ export class ProductsService {
       throw new NotFoundException('Sản phẩm không tồn tại');
     }
 
-    // 2. Prevent duplicate saves
+    // 2. Sellers cannot save their own listings
+    if (product.sellerId === userId) {
+      throw new ForbiddenException('Bạn không thể lưu tin của chính mình');
+    }
+
+    // 3. Prevent duplicate saves
     const existing = await this.prisma.savedProduct.findUnique({
       where: { userId_productId: { userId, productId } },
     });
@@ -773,7 +779,7 @@ export class ProductsService {
       throw new ConflictException('Sản phẩm đã được lưu trước đó');
     }
 
-    // 3. Save and keep the saveCount cache in sync, atomically
+    // 4. Save and keep the saveCount cache in sync, atomically
     await this.prisma.$transaction([
       this.prisma.savedProduct.create({ data: { userId, productId } }),
       this.prisma.product.update({
@@ -808,7 +814,7 @@ export class ProductsService {
     return { saved: false };
   }
 
-  async findAll(query: QueryProductDto) {
+  async findAll(query: QueryProductDto, userId?: number) {
     const {
       categoryId,
       provinceCode,
@@ -817,6 +823,8 @@ export class ProductsService {
       minPrice,
       maxPrice,
       keyword,
+      sellerUniversityId,
+      sellerId,
       page = 1,
       limit = 20,
     } = query;
@@ -855,13 +863,24 @@ export class ProductsService {
       ...(keyword && {
         title: { contains: keyword, mode: 'insensitive' },
       }),
+      ...(sellerUniversityId && {
+        seller: { universityId: sellerUniversityId },
+      }),
+      ...(sellerId && { sellerId }),
     };
 
     // 3. Query products and total count in parallel
     const [data, total] = await Promise.all([
       this.prisma.product.findMany({
         where,
-        include: { category: true, images: true },
+        include: {
+          category: true,
+          images: true,
+          savedBy: {
+            where: { userId: userId ?? -1 },
+            select: { productId: true },
+          },
+        },
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * limit,
         take: limit,
@@ -871,7 +890,10 @@ export class ProductsService {
 
     // 4. Return paginated result
     return {
-      data,
+      data: data.map(({ savedBy, ...product }) => ({
+        ...product,
+        isSaved: savedBy.length > 0,
+      })),
       total,
       page,
       limit,
@@ -909,6 +931,38 @@ export class ProductsService {
 
     return {
       data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
+  async findSavedProducts(userId: number, query: QuerySavedProductsDto) {
+    const { page = 1, limit = 20 } = query;
+    const where: Prisma.SavedProductWhereInput = {
+      userId,
+      product: { status: ProductStatus.ACTIVE },
+    };
+
+    // 1. Fetch saved listings and their total using the same snapshot filters
+    const [savedProducts, total] = await Promise.all([
+      this.prisma.savedProduct.findMany({
+        where,
+        include: { product: { include: { category: true, images: true } } },
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.savedProduct.count({ where }),
+    ]);
+
+    // 2. Keep the bookmark timestamp while returning the familiar product shape
+    return {
+      data: savedProducts.map(({ product, createdAt }) => ({
+        product,
+        savedAt: createdAt,
+      })),
       total,
       page,
       limit,

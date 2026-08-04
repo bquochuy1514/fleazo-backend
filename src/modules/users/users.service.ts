@@ -45,9 +45,11 @@ export class UsersService {
   }
 
   async handleGetProfile(user: JwtPayload) {
-    // 1. Find user by id
+    // 1. Find user by id — include university (id/name only) so the
+    // frontend can show/filter by school name without a second lookup.
     const foundUser = await this.prisma.user.findUnique({
       where: { id: user.id },
+      include: { university: { select: { id: true, name: true } } },
     });
 
     if (!foundUser) {

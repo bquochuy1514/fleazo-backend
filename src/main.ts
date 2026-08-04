@@ -1,8 +1,11 @@
+import * as https from 'node:https';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { ValidationExceptionFilter } from './common/filters/validation-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
+https.globalAgent.options.family = 4;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
