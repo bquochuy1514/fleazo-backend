@@ -187,7 +187,6 @@ model Product {
   category   Category         @relation(fields: [categoryId], references: [id])
   images     ProductImage[]
   savedBy    SavedProduct[]
-  reviews    Review[]
   messages   Message[]
   // Pending edit awaiting admin re-approval; only set while status is ACTIVE, at most one at a time (1:1).
   revision   ProductRevision?
@@ -276,30 +275,31 @@ model SavedProduct {
   @@map("saved_products")
 }
 
+// Rates the seller as a person, not a specific listing — Fleazo has no Order
+// model (a listing sells once, off-platform, with no buyer record kept), so
+// there's nothing product-shaped left to attach a review to. Eligibility is
+// gated on the pair having exchanged at least one Message (see ReviewsService),
+// not on productId, which is why this model carries no product reference.
 model Review {
   // — Identity —
   id Int @id @default(autoincrement())
 
   // — Relations —
-  reviewerId Int     @map("reviewer_id")
-  reviewer   User    @relation("ReviewsWritten", fields: [reviewerId], references: [id])
-  sellerId   Int     @map("seller_id")
-  seller     User    @relation("ReviewsReceived", fields: [sellerId], references: [id])
-  productId  Int     @map("product_id")
-  product    Product @relation(fields: [productId], references: [id])
+  reviewerId Int  @map("reviewer_id")
+  reviewer   User @relation("ReviewsWritten", fields: [reviewerId], references: [id])
+  sellerId   Int  @map("seller_id")
+  seller     User @relation("ReviewsReceived", fields: [sellerId], references: [id])
 
   // — Content —
-  rating      Int
-  comment     String? @db.Text
-  sellerReply String? @map("seller_reply") @db.Text
-
-  // — Moderation (published immediately, no pre-moderation hold, no isPublished field) —
-  isHidden Boolean @default(false) @map("is_hidden")
+  rating  Int
+  comment String? @db.Text
 
   // — Timestamps —
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  // One review per reviewer-seller pair, ever — reviewing again (e.g. a
+  // repeat purchase) upserts this row instead of creating a new one.
   @@unique([reviewerId, sellerId])
   @@map("reviews")
 }

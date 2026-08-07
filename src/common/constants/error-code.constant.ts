@@ -21,6 +21,10 @@ export const ErrorCode = {
 
   // set-initial-password — account already has a password; use the regular change-password flow instead.
   PASSWORD_ALREADY_SET: 'PASSWORD_ALREADY_SET',
+
+  // reviews
+  CANNOT_REVIEW_SELF: 'CANNOT_REVIEW_SELF',
+  NOT_ELIGIBLE_TO_REVIEW: 'NOT_ELIGIBLE_TO_REVIEW',
 } as const;
 
 export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode];

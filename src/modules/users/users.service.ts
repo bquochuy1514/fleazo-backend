@@ -13,12 +13,14 @@ import * as argon2 from 'argon2';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { comparePassword } from '../../common/utils/hash.util';
 import { AdminUpdateUserDto } from './dto/admin-update-user.dto';
+import { ReviewsService } from '../reviews/reviews.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly uploadService: UploadService,
+    private readonly reviewsService: ReviewsService,
   ) {}
 
   async findUserByEmail(email: string) {
@@ -179,7 +181,12 @@ export class UsersService {
 
     if (!user) throw new NotFoundException('Người dùng không tồn tại.');
 
-    // 2. Return only public fields — provinceName/wardName shown for rough
+    // 2. Rating summary computed live from the reviews table (see
+    // ReviewsService.getSellerRatingSummary) — no denormalized/cached field.
+    const { avgRating, reviewCount } =
+      await this.reviewsService.getSellerRatingSummary(targetUserId);
+
+    // 3. Return only public fields — provinceName/wardName shown for rough
     // location context, addressDetail and codes withheld (street-level = home address)
     return {
       id: user.id,
@@ -188,6 +195,8 @@ export class UsersService {
       provinceName: user.provinceName,
       wardName: user.wardName,
       createdAt: user.createdAt,
+      avgRating,
+      reviewCount,
     };
   }
 
