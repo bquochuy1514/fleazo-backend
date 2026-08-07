@@ -10,6 +10,7 @@
  */
 export type * from './models/User.js'
 export type * from './models/Category.js'
+export type * from './models/CategorySearchAlias.js'
 export type * from './models/University.js'
 export type * from './models/Province.js'
 export type * from './models/Ward.js'

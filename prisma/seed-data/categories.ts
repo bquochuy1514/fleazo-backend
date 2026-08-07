@@ -9,7 +9,11 @@ export const categoriesSeedData = [
       'https://res.cloudinary.com/dazcuspid/image/upload/dien-tu-cong-nghe_av1ujn.png',
     children: [
       { name: 'Laptop', slug: 'laptop' },
-      { name: 'Điện thoại', slug: 'dien-thoai' },
+      {
+        name: 'Điện thoại',
+        slug: 'dien-thoai',
+        searchAliases: ['đt', 'phone', 'smartphone'],
+      },
       { name: 'Máy tính bảng', slug: 'may-tinh-bang' },
       { name: 'Máy ảnh & Máy quay phim', slug: 'may-anh-may-quay-phim' },
       { name: 'Tai nghe & Loa', slug: 'tai-nghe-loa' },

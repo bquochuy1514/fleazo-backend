@@ -50,6 +50,11 @@ export type User = Prisma.UserModel
  */
 export type Category = Prisma.CategoryModel
 /**
+ * Model CategorySearchAlias
+ * 
+ */
+export type CategorySearchAlias = Prisma.CategorySearchAliasModel
+/**
  * Model University
  * 
  */

@@ -52,6 +52,8 @@ export type ProductMinAggregateOutputType = {
   id: number | null
   title: string | null
   description: string | null
+  searchTitle: string | null
+  searchText: string | null
   price: runtime.Decimal | null
   provinceCode: number | null
   provinceName: string | null
@@ -75,6 +77,8 @@ export type ProductMaxAggregateOutputType = {
   id: number | null
   title: string | null
   description: string | null
+  searchTitle: string | null
+  searchText: string | null
   price: runtime.Decimal | null
   provinceCode: number | null
   provinceName: string | null
@@ -98,6 +102,8 @@ export type ProductCountAggregateOutputType = {
   id: number
   title: number
   description: number
+  searchTitle: number
+  searchText: number
   price: number
   provinceCode: number
   provinceName: number
@@ -145,6 +151,8 @@ export type ProductMinAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  searchTitle?: true
+  searchText?: true
   price?: true
   provinceCode?: true
   provinceName?: true
@@ -168,6 +176,8 @@ export type ProductMaxAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  searchTitle?: true
+  searchText?: true
   price?: true
   provinceCode?: true
   provinceName?: true
@@ -191,6 +201,8 @@ export type ProductCountAggregateInputType = {
   id?: true
   title?: true
   description?: true
+  searchTitle?: true
+  searchText?: true
   price?: true
   provinceCode?: true
   provinceName?: true
@@ -301,6 +313,8 @@ export type ProductGroupByOutputType = {
   id: number
   title: string
   description: string
+  searchTitle: string
+  searchText: string
   price: runtime.Decimal
   provinceCode: number
   provinceName: string
@@ -347,6 +361,8 @@ export type ProductWhereInput = {
   id?: Prisma.IntFilter<"Product"> | number
   title?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
+  searchTitle?: Prisma.StringFilter<"Product"> | string
+  searchText?: Prisma.StringFilter<"Product"> | string
   price?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFilter<"Product"> | number
   provinceName?: Prisma.StringFilter<"Product"> | string
@@ -376,6 +392,8 @@ export type ProductOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  searchTitle?: Prisma.SortOrder
+  searchText?: Prisma.SortOrder
   price?: Prisma.SortOrder
   provinceCode?: Prisma.SortOrder
   provinceName?: Prisma.SortOrder
@@ -408,6 +426,8 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ProductWhereInput | Prisma.ProductWhereInput[]
   title?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
+  searchTitle?: Prisma.StringFilter<"Product"> | string
+  searchText?: Prisma.StringFilter<"Product"> | string
   price?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFilter<"Product"> | number
   provinceName?: Prisma.StringFilter<"Product"> | string
@@ -437,6 +457,8 @@ export type ProductOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  searchTitle?: Prisma.SortOrder
+  searchText?: Prisma.SortOrder
   price?: Prisma.SortOrder
   provinceCode?: Prisma.SortOrder
   provinceName?: Prisma.SortOrder
@@ -468,6 +490,8 @@ export type ProductScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Product"> | number
   title?: Prisma.StringWithAggregatesFilter<"Product"> | string
   description?: Prisma.StringWithAggregatesFilter<"Product"> | string
+  searchTitle?: Prisma.StringWithAggregatesFilter<"Product"> | string
+  searchText?: Prisma.StringWithAggregatesFilter<"Product"> | string
   price?: Prisma.DecimalWithAggregatesFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntWithAggregatesFilter<"Product"> | number
   provinceName?: Prisma.StringWithAggregatesFilter<"Product"> | string
@@ -490,6 +514,8 @@ export type ProductScalarWhereWithAggregatesInput = {
 export type ProductCreateInput = {
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -517,6 +543,8 @@ export type ProductUncheckedCreateInput = {
   id?: number
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -543,6 +571,8 @@ export type ProductUncheckedCreateInput = {
 export type ProductUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -570,6 +600,8 @@ export type ProductUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -597,6 +629,8 @@ export type ProductCreateManyInput = {
   id?: number
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -619,6 +653,8 @@ export type ProductCreateManyInput = {
 export type ProductUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -640,6 +676,8 @@ export type ProductUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -673,6 +711,8 @@ export type ProductCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  searchTitle?: Prisma.SortOrder
+  searchText?: Prisma.SortOrder
   price?: Prisma.SortOrder
   provinceCode?: Prisma.SortOrder
   provinceName?: Prisma.SortOrder
@@ -707,6 +747,8 @@ export type ProductMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  searchTitle?: Prisma.SortOrder
+  searchText?: Prisma.SortOrder
   price?: Prisma.SortOrder
   provinceCode?: Prisma.SortOrder
   provinceName?: Prisma.SortOrder
@@ -730,6 +772,8 @@ export type ProductMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  searchTitle?: Prisma.SortOrder
+  searchText?: Prisma.SortOrder
   price?: Prisma.SortOrder
   provinceCode?: Prisma.SortOrder
   provinceName?: Prisma.SortOrder
@@ -931,6 +975,8 @@ export type ProductUpdateOneWithoutMessagesNestedInput = {
 export type ProductCreateWithoutSellerInput = {
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -957,6 +1003,8 @@ export type ProductUncheckedCreateWithoutSellerInput = {
   id?: number
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -1012,6 +1060,8 @@ export type ProductScalarWhereInput = {
   id?: Prisma.IntFilter<"Product"> | number
   title?: Prisma.StringFilter<"Product"> | string
   description?: Prisma.StringFilter<"Product"> | string
+  searchTitle?: Prisma.StringFilter<"Product"> | string
+  searchText?: Prisma.StringFilter<"Product"> | string
   price?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFilter<"Product"> | number
   provinceName?: Prisma.StringFilter<"Product"> | string
@@ -1034,6 +1084,8 @@ export type ProductScalarWhereInput = {
 export type ProductCreateWithoutCategoryInput = {
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -1060,6 +1112,8 @@ export type ProductUncheckedCreateWithoutCategoryInput = {
   id?: number
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -1111,6 +1165,8 @@ export type ProductUpdateManyWithWhereWithoutCategoryInput = {
 export type ProductCreateWithoutImagesInput = {
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -1137,6 +1193,8 @@ export type ProductUncheckedCreateWithoutImagesInput = {
   id?: number
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -1178,6 +1236,8 @@ export type ProductUpdateToOneWithWhereWithoutImagesInput = {
 export type ProductUpdateWithoutImagesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1204,6 +1264,8 @@ export type ProductUncheckedUpdateWithoutImagesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1229,6 +1291,8 @@ export type ProductUncheckedUpdateWithoutImagesInput = {
 export type ProductCreateWithoutRevisionInput = {
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -1255,6 +1319,8 @@ export type ProductUncheckedCreateWithoutRevisionInput = {
   id?: number
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -1296,6 +1362,8 @@ export type ProductUpdateToOneWithWhereWithoutRevisionInput = {
 export type ProductUpdateWithoutRevisionInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1322,6 +1390,8 @@ export type ProductUncheckedUpdateWithoutRevisionInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1347,6 +1417,8 @@ export type ProductUncheckedUpdateWithoutRevisionInput = {
 export type ProductCreateWithoutSavedByInput = {
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -1373,6 +1445,8 @@ export type ProductUncheckedCreateWithoutSavedByInput = {
   id?: number
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -1414,6 +1488,8 @@ export type ProductUpdateToOneWithWhereWithoutSavedByInput = {
 export type ProductUpdateWithoutSavedByInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1440,6 +1516,8 @@ export type ProductUncheckedUpdateWithoutSavedByInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1465,6 +1543,8 @@ export type ProductUncheckedUpdateWithoutSavedByInput = {
 export type ProductCreateWithoutMessagesInput = {
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -1491,6 +1571,8 @@ export type ProductUncheckedCreateWithoutMessagesInput = {
   id?: number
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -1532,6 +1614,8 @@ export type ProductUpdateToOneWithWhereWithoutMessagesInput = {
 export type ProductUpdateWithoutMessagesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1558,6 +1642,8 @@ export type ProductUncheckedUpdateWithoutMessagesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1584,6 +1670,8 @@ export type ProductCreateManySellerInput = {
   id?: number
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -1605,6 +1693,8 @@ export type ProductCreateManySellerInput = {
 export type ProductUpdateWithoutSellerInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1631,6 +1721,8 @@ export type ProductUncheckedUpdateWithoutSellerInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1657,6 +1749,8 @@ export type ProductUncheckedUpdateManyWithoutSellerInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1679,6 +1773,8 @@ export type ProductCreateManyCategoryInput = {
   id?: number
   title: string
   description: string
+  searchTitle?: string
+  searchText?: string
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode: number
   provinceName: string
@@ -1700,6 +1796,8 @@ export type ProductCreateManyCategoryInput = {
 export type ProductUpdateWithoutCategoryInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1726,6 +1824,8 @@ export type ProductUncheckedUpdateWithoutCategoryInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1752,6 +1852,8 @@ export type ProductUncheckedUpdateManyWithoutCategoryInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  searchTitle?: Prisma.StringFieldUpdateOperationsInput | string
+  searchText?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   provinceCode?: Prisma.IntFieldUpdateOperationsInput | number
   provinceName?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1823,6 +1925,8 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   title?: boolean
   description?: boolean
+  searchTitle?: boolean
+  searchText?: boolean
   price?: boolean
   provinceCode?: boolean
   provinceName?: boolean
@@ -1853,6 +1957,8 @@ export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   title?: boolean
   description?: boolean
+  searchTitle?: boolean
+  searchText?: boolean
   price?: boolean
   provinceCode?: boolean
   provinceName?: boolean
@@ -1878,6 +1984,8 @@ export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   title?: boolean
   description?: boolean
+  searchTitle?: boolean
+  searchText?: boolean
   price?: boolean
   provinceCode?: boolean
   provinceName?: boolean
@@ -1903,6 +2011,8 @@ export type ProductSelectScalar = {
   id?: boolean
   title?: boolean
   description?: boolean
+  searchTitle?: boolean
+  searchText?: boolean
   price?: boolean
   provinceCode?: boolean
   provinceName?: boolean
@@ -1922,7 +2032,7 @@ export type ProductSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "price" | "provinceCode" | "provinceName" | "wardCode" | "wardName" | "addressDetail" | "condition" | "status" | "rejectedReason" | "expiresAt" | "boostExpiresAt" | "qualityScore" | "saveCount" | "sellerId" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "searchTitle" | "searchText" | "price" | "provinceCode" | "provinceName" | "wardCode" | "wardName" | "addressDetail" | "condition" | "status" | "rejectedReason" | "expiresAt" | "boostExpiresAt" | "qualityScore" | "saveCount" | "sellerId" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["product"]>
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
@@ -1955,6 +2065,8 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: number
     title: string
     description: string
+    searchTitle: string
+    searchText: string
     price: runtime.Decimal
     provinceCode: number
     provinceName: string
@@ -2404,6 +2516,8 @@ export interface ProductFieldRefs {
   readonly id: Prisma.FieldRef<"Product", 'Int'>
   readonly title: Prisma.FieldRef<"Product", 'String'>
   readonly description: Prisma.FieldRef<"Product", 'String'>
+  readonly searchTitle: Prisma.FieldRef<"Product", 'String'>
+  readonly searchText: Prisma.FieldRef<"Product", 'String'>
   readonly price: Prisma.FieldRef<"Product", 'Decimal'>
   readonly provinceCode: Prisma.FieldRef<"Product", 'Int'>
   readonly provinceName: Prisma.FieldRef<"Product", 'String'>

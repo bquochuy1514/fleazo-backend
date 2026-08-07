@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   Category: 'Category',
+  CategorySearchAlias: 'CategorySearchAlias',
   University: 'University',
   Province: 'Province',
   Ward: 'Ward',
@@ -412,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "category" | "university" | "province" | "ward" | "product" | "productImage" | "productRevision" | "productRevisionImage" | "savedProduct" | "review" | "conversation" | "message"
+    modelProps: "user" | "category" | "categorySearchAlias" | "university" | "province" | "ward" | "product" | "productImage" | "productRevision" | "productRevisionImage" | "savedProduct" | "review" | "conversation" | "message"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -561,6 +562,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CategoryCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CategoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    CategorySearchAlias: {
+      payload: Prisma.$CategorySearchAliasPayload<ExtArgs>
+      fields: Prisma.CategorySearchAliasFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CategorySearchAliasFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategorySearchAliasPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CategorySearchAliasFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategorySearchAliasPayload>
+        }
+        findFirst: {
+          args: Prisma.CategorySearchAliasFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategorySearchAliasPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CategorySearchAliasFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategorySearchAliasPayload>
+        }
+        findMany: {
+          args: Prisma.CategorySearchAliasFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategorySearchAliasPayload>[]
+        }
+        create: {
+          args: Prisma.CategorySearchAliasCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategorySearchAliasPayload>
+        }
+        createMany: {
+          args: Prisma.CategorySearchAliasCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CategorySearchAliasCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategorySearchAliasPayload>[]
+        }
+        delete: {
+          args: Prisma.CategorySearchAliasDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategorySearchAliasPayload>
+        }
+        update: {
+          args: Prisma.CategorySearchAliasUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategorySearchAliasPayload>
+        }
+        deleteMany: {
+          args: Prisma.CategorySearchAliasDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CategorySearchAliasUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CategorySearchAliasUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategorySearchAliasPayload>[]
+        }
+        upsert: {
+          args: Prisma.CategorySearchAliasUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategorySearchAliasPayload>
+        }
+        aggregate: {
+          args: Prisma.CategorySearchAliasAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCategorySearchAlias>
+        }
+        groupBy: {
+          args: Prisma.CategorySearchAliasGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CategorySearchAliasGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CategorySearchAliasCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CategorySearchAliasCountAggregateOutputType> | number
         }
       }
     }
@@ -1460,6 +1535,17 @@ export const CategoryScalarFieldEnum = {
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
 
 
+export const CategorySearchAliasScalarFieldEnum = {
+  id: 'id',
+  normalizedTerm: 'normalizedTerm',
+  categoryId: 'categoryId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CategorySearchAliasScalarFieldEnum = (typeof CategorySearchAliasScalarFieldEnum)[keyof typeof CategorySearchAliasScalarFieldEnum]
+
+
 export const UniversityScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -1492,6 +1578,8 @@ export const ProductScalarFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
+  searchTitle: 'searchTitle',
+  searchText: 'searchText',
   price: 'price',
   provinceCode: 'provinceCode',
   provinceName: 'provinceName',
@@ -1866,6 +1954,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   category?: Prisma.CategoryOmit
+  categorySearchAlias?: Prisma.CategorySearchAliasOmit
   university?: Prisma.UniversityOmit
   province?: Prisma.ProvinceOmit
   ward?: Prisma.WardOmit

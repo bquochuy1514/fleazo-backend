@@ -2,6 +2,7 @@ import { PrismaClient, UserRole } from '../src/generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import 'dotenv/config';
 import { hashPassword } from '../src/common/utils/hash.util';
+import { normalizeSearchText } from '../src/common/utils/normalize-search-text.util';
 import { categoriesSeedData } from './seed-data/categories';
 import { locationsSeedData } from './seed-data/locations';
 import { universitiesSeedData } from './seed-data/universities';
@@ -24,11 +25,23 @@ async function seedCategories() {
 
     // 2. Upsert each child category
     for (const child of children) {
-      await prisma.category.upsert({
+      const { searchAliases = [], ...childData } = child;
+      const childCategory = await prisma.category.upsert({
         where: { slug: child.slug },
         update: {},
-        create: { ...child, parentId: parent.id },
+        create: { ...childData, parentId: parent.id },
       });
+
+      for (const alias of searchAliases) {
+        await prisma.categorySearchAlias.upsert({
+          where: { normalizedTerm: normalizeSearchText(alias) },
+          update: { categoryId: childCategory.id },
+          create: {
+            normalizedTerm: normalizeSearchText(alias),
+            categoryId: childCategory.id,
+          },
+        });
+      }
     }
   }
 

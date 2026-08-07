@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Category: 'Category',
+  CategorySearchAlias: 'CategorySearchAlias',
   University: 'University',
   Province: 'Province',
   Ward: 'Ward',
@@ -125,6 +126,17 @@ export const CategoryScalarFieldEnum = {
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
 
 
+export const CategorySearchAliasScalarFieldEnum = {
+  id: 'id',
+  normalizedTerm: 'normalizedTerm',
+  categoryId: 'categoryId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CategorySearchAliasScalarFieldEnum = (typeof CategorySearchAliasScalarFieldEnum)[keyof typeof CategorySearchAliasScalarFieldEnum]
+
+
 export const UniversityScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -157,6 +169,8 @@ export const ProductScalarFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
+  searchTitle: 'searchTitle',
+  searchText: 'searchText',
   price: 'price',
   provinceCode: 'provinceCode',
   provinceName: 'provinceName',

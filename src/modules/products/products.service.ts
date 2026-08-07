@@ -27,7 +27,12 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { UpdateProductStatusDto } from './dto/update-product-status.dto';
 import { Prisma, ProductStatus } from '../../generated/prisma/client';
 import { assertSellerProfileComplete } from '../../common/utils/assert-seller-profile-complete.util';
+import {
+  buildProductSearchText,
+  normalizeSearchText,
+} from '../../common/utils/normalize-search-text.util';
 import fleazoAiConfig from '../../config/fleazo-ai.config';
+import { resolveProductSearch } from './product-search.util';
 
 // Placeholder listing duration until the Membership tier module sets this per-tier
 const DEFAULT_LISTING_DURATION_DAYS = 30;
@@ -219,6 +224,8 @@ export class ProductsService {
     return this.prisma.product.create({
       data: {
         ...dto,
+        searchTitle: normalizeSearchText(dto.title),
+        searchText: buildProductSearchText(dto.title, dto.description),
         sellerId,
         status: ProductStatus.PENDING,
         images: {
@@ -255,6 +262,8 @@ export class ProductsService {
     return this.prisma.product.create({
       data: {
         ...dto,
+        searchTitle: normalizeSearchText(dto.title),
+        searchText: buildProductSearchText(dto.title, dto.description),
         sellerId,
         status: ProductStatus.DRAFT,
         images: {
@@ -396,9 +405,16 @@ export class ProductsService {
         ),
       );
 
+      const title = productFields.title ?? product.title;
+      const description = productFields.description ?? product.description;
+
       return tx.product.update({
         where: { id: productId },
-        data: productFields,
+        data: {
+          ...productFields,
+          searchTitle: normalizeSearchText(title),
+          searchText: buildProductSearchText(title, description),
+        },
         include: { category: true, images: { orderBy: { order: 'asc' } } },
       });
     });
@@ -560,6 +576,11 @@ export class ProductsService {
         data: {
           title: revision.title,
           description: revision.description,
+          searchTitle: normalizeSearchText(revision.title),
+          searchText: buildProductSearchText(
+            revision.title,
+            revision.description,
+          ),
           price: revision.price,
           condition: revision.condition,
           categoryId: revision.categoryId,
@@ -848,6 +869,113 @@ export class ProductsService {
     }
 
     // 2. Build where clause — public listing only ever shows ACTIVE products
+    const normalizedKeyword = keyword ? normalizeSearchText(keyword) : '';
+    if (normalizedKeyword) {
+      const categories = await this.prisma.category.findMany({
+        include: { children: { select: { id: true } }, searchAliases: true },
+      });
+      const search = resolveProductSearch(normalizedKeyword, categories);
+      const searchCategoryIds =
+        categoryFilter && search.categoryIds
+          ? categoryFilter.filter((id) => search.categoryIds!.includes(id))
+          : (search.categoryIds ?? categoryFilter);
+
+      if (search.categoryIds && searchCategoryIds?.length === 0) {
+        return { data: [], total: 0, page, limit, totalPages: 0 };
+      }
+
+      const conditions: Prisma.Sql[] = [
+        Prisma.sql`p.status = ${ProductStatus.ACTIVE}`,
+      ];
+      if (searchCategoryIds) {
+        conditions.push(
+          Prisma.sql`p.category_id IN (${Prisma.join(searchCategoryIds)})`,
+        );
+      }
+      if (provinceCode)
+        conditions.push(Prisma.sql`p.province_code = ${provinceCode}`);
+      if (wardCode) conditions.push(Prisma.sql`p.ward_code = ${wardCode}`);
+      if (condition) conditions.push(Prisma.sql`p.condition = ${condition}`);
+      if (minPrice !== undefined)
+        conditions.push(Prisma.sql`p.price >= ${minPrice}`);
+      if (maxPrice !== undefined)
+        conditions.push(Prisma.sql`p.price <= ${maxPrice}`);
+      if (sellerUniversityId) {
+        conditions.push(
+          Prisma.sql`EXISTS (SELECT 1 FROM users s WHERE s.id = p.seller_id AND s.university_id = ${sellerUniversityId})`,
+        );
+      }
+      if (sellerId) conditions.push(Prisma.sql`p.seller_id = ${sellerId}`);
+
+      const tokenConditions = search.searchTokens.map(
+        (token) => Prisma.sql`p.search_text LIKE ${`%${token}%`}`,
+      );
+      const titleTokenConditions = search.searchTokens.map(
+        (token) => Prisma.sql`p.search_title LIKE ${`%${token}%`}`,
+      );
+      const textCondition = tokenConditions.length
+        ? Prisma.sql`(${Prisma.join(tokenConditions, ' AND ')})`
+        : undefined;
+      const titleCondition = titleTokenConditions.length
+        ? Prisma.sql`(${Prisma.join(titleTokenConditions, ' AND ')})`
+        : undefined;
+      let rank: Prisma.Sql;
+
+      if (search.categoryOnly && search.categoryIds) {
+        const fullKeywordPattern = `%${search.normalizedKeyword}%`;
+        conditions.push(
+          Prisma.sql`(p.search_text LIKE ${fullKeywordPattern} OR p.category_id IN (${Prisma.join(searchCategoryIds!)}))`,
+        );
+        rank = Prisma.sql`CASE WHEN p.search_title LIKE ${fullKeywordPattern} THEN 0 WHEN p.search_text LIKE ${fullKeywordPattern} THEN 1 ELSE 2 END`;
+      } else {
+        if (textCondition) conditions.push(textCondition);
+        rank = titleCondition
+          ? Prisma.sql`CASE WHEN ${titleCondition} THEN 0 ELSE 1 END`
+          : Prisma.sql`0`;
+      }
+
+      const whereSql = Prisma.join(conditions, ' AND ');
+      const [{ total }] = await this.prisma.$queryRaw<{ total: number }[]>(
+        Prisma.sql`SELECT COUNT(*)::int AS total FROM products p WHERE ${whereSql}`,
+      );
+      const rows = await this.prisma.$queryRaw<{ id: number }[]>(
+        Prisma.sql`SELECT p.id FROM products p WHERE ${whereSql} ORDER BY ${rank}, p.created_at DESC LIMIT ${limit} OFFSET ${(page - 1) * limit}`,
+      );
+      const ids = rows.map((row) => row.id);
+      const data = ids.length
+        ? await this.prisma.product.findMany({
+            where: { id: { in: ids } },
+            include: {
+              category: true,
+              images: true,
+              seller: { select: { universityId: true } },
+              savedBy: {
+                where: { userId: userId ?? -1 },
+                select: { productId: true },
+              },
+            },
+          })
+        : [];
+      const productsById = new Map(
+        data.map((product) => [product.id, product]),
+      );
+
+      return {
+        data: ids.map((id) => {
+          const { savedBy, seller, ...product } = productsById.get(id)!;
+          return {
+            ...product,
+            sellerUniversityId: seller.universityId,
+            isSaved: savedBy.length > 0,
+          };
+        }),
+        total: Number(total),
+        page,
+        limit,
+        totalPages: Math.ceil(Number(total) / limit),
+      };
+    }
+
     const where: Prisma.ProductWhereInput = {
       status: ProductStatus.ACTIVE,
       ...(categoryFilter && { categoryId: { in: categoryFilter } }),
@@ -859,9 +987,6 @@ export class ProductsService {
           ...(minPrice !== undefined && { gte: minPrice }),
           ...(maxPrice !== undefined && { lte: maxPrice }),
         },
-      }),
-      ...(keyword && {
-        title: { contains: keyword, mode: 'insensitive' },
       }),
       ...(sellerUniversityId && {
         seller: { universityId: sellerUniversityId },
