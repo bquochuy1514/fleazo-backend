@@ -12,6 +12,7 @@ import { UniversitiesModule } from './modules/universities/universities.module';
 import { LocationsModule } from './modules/locations/locations.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import { MembershipModule } from './modules/membership/membership.module';
+import { ChatbotModule } from './modules/chatbot/chatbot.module';
 import jwtConfig from './config/jwt.config';
 import googleConfig from './config/google.config';
 import mailConfig from './config/mail.config';
@@ -43,6 +44,7 @@ import payosConfig from './config/payos.config';
     LocationsModule,
     ReviewsModule,
     MembershipModule,
+    ChatbotModule,
   ],
   controllers: [AppController],
   providers: [AppService],

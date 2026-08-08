@@ -29,6 +29,7 @@ import { QuerySavedProductsDto } from './dto/query-saved-products.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { UpdateProductStatusDto } from './dto/update-product-status.dto';
 import { RejectProductDto } from './dto/reject-product.dto';
+import { QueryQueueDto } from './dto/query-queue.dto';
 
 // Generous ceiling multer enforces before parsing; the real business limit (MAX_IMAGES_PER_UPLOAD) is checked in the service.
 const MULTER_FILE_COUNT_CEILING = 20;
@@ -132,6 +133,22 @@ export class ProductsController {
     @Query() query: QuerySavedProductsDto,
   ) {
     return this.productsService.findSavedProducts(user.id, query);
+  }
+
+  // Must come before @Get(':id') for the same reason as 'me'/'saved' above.
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @Get('admin/pending')
+  findPendingProducts(@Query() query: QueryQueueDto) {
+    return this.productsService.findPendingProducts(query);
+  }
+
+  // Must come before @Get(':id') for the same reason as 'me'/'saved' above.
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.ADMIN)
+  @Get('admin/revisions')
+  findPendingRevisions(@Query() query: QueryQueueDto) {
+    return this.productsService.findPendingRevisions(query);
   }
 
   @UseGuards(OptionalJwtAuthGuard)

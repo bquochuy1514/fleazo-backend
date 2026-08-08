@@ -23,6 +23,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 import { QueryMyProductsDto } from './dto/query-my-products.dto';
 import { QuerySavedProductsDto } from './dto/query-saved-products.dto';
+import { QueryQueueDto } from './dto/query-queue.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { UpdateProductStatusDto } from './dto/update-product-status.dto';
 import { Prisma, ProductStatus } from '../../generated/prisma/client';
@@ -47,6 +48,12 @@ const SELLER_PROFILE_SELECT = {
   provinceCode: true,
   wardCode: true,
   password: true,
+} as const;
+
+// Enough context for an admin reviewing a moderation queue to know who
+// submitted a listing/edit — never phone/address, this isn't a full profile.
+const ADMIN_SELLER_SELECT = {
+  select: { id: true, fullName: true, avatar: true, email: true },
 } as const;
 
 // Which status(es) a seller may transition their own listing INTO, keyed by the
@@ -1111,6 +1118,59 @@ export class ProductsService {
       limit,
       totalPages: Math.ceil(total / limit),
     };
+  }
+
+  // Admin moderation queue #1 — every PENDING product across all sellers,
+  // oldest first (FIFO, so nobody's submission sits waiting indefinitely
+  // while newer ones get reviewed first).
+  async findPendingProducts(query: QueryQueueDto) {
+    const { page = 1, limit = 20 } = query;
+    const where: Prisma.ProductWhereInput = { status: ProductStatus.PENDING };
+
+    const [data, total] = await Promise.all([
+      this.prisma.product.findMany({
+        where,
+        include: { category: true, images: true, seller: ADMIN_SELLER_SELECT },
+        orderBy: { createdAt: 'asc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.product.count({ where }),
+    ]);
+
+    return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
+  }
+
+  // Admin moderation queue #2 — every ACTIVE listing with a staged edit
+  // waiting on ProductRevision, oldest first. A row's mere existence IS
+  // "pending" (see schema.prisma comment), so no status filter needed here.
+  async findPendingRevisions(query: QueryQueueDto) {
+    const { page = 1, limit = 20 } = query;
+
+    const [data, total] = await Promise.all([
+      this.prisma.productRevision.findMany({
+        include: {
+          images: true,
+          // ProductRevision.categoryId has no `category` relation defined
+          // (only Product does) — the live product's category is enough
+          // context for the admin queue; the proposed categoryId itself is
+          // still on the row if it ever needs to be resolved.
+          product: {
+            include: {
+              category: true,
+              images: true,
+              seller: ADMIN_SELLER_SELECT,
+            },
+          },
+        },
+        orderBy: { updatedAt: 'asc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.productRevision.count(),
+    ]);
+
+    return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
   async findSavedProducts(userId: number, query: QuerySavedProductsDto) {
