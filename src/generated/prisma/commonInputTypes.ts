@@ -257,20 +257,6 @@ export type DecimalFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDecimalFilter<$PrismaModel> | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
-export type EnumProductConditionFilter<$PrismaModel = never> = {
-  equals?: $Enums.ProductCondition | Prisma.EnumProductConditionFieldRefInput<$PrismaModel>
-  in?: $Enums.ProductCondition[] | Prisma.ListEnumProductConditionFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ProductCondition[] | Prisma.ListEnumProductConditionFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumProductConditionFilter<$PrismaModel> | $Enums.ProductCondition
-}
-
-export type EnumProductStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.ProductStatus | Prisma.EnumProductStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.ProductStatus[] | Prisma.ListEnumProductStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ProductStatus[] | Prisma.ListEnumProductStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumProductStatusFilter<$PrismaModel> | $Enums.ProductStatus
-}
-
 export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
   equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
   in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel>
@@ -285,6 +271,37 @@ export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedDecimalFilter<$PrismaModel>
   _min?: Prisma.NestedDecimalFilter<$PrismaModel>
   _max?: Prisma.NestedDecimalFilter<$PrismaModel>
+}
+
+export type EnumMembershipTransactionStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.MembershipTransactionStatus | Prisma.EnumMembershipTransactionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.MembershipTransactionStatus[] | Prisma.ListEnumMembershipTransactionStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MembershipTransactionStatus[] | Prisma.ListEnumMembershipTransactionStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMembershipTransactionStatusFilter<$PrismaModel> | $Enums.MembershipTransactionStatus
+}
+
+export type EnumMembershipTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MembershipTransactionStatus | Prisma.EnumMembershipTransactionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.MembershipTransactionStatus[] | Prisma.ListEnumMembershipTransactionStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MembershipTransactionStatus[] | Prisma.ListEnumMembershipTransactionStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMembershipTransactionStatusWithAggregatesFilter<$PrismaModel> | $Enums.MembershipTransactionStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMembershipTransactionStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMembershipTransactionStatusFilter<$PrismaModel>
+}
+
+export type EnumProductConditionFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProductCondition | Prisma.EnumProductConditionFieldRefInput<$PrismaModel>
+  in?: $Enums.ProductCondition[] | Prisma.ListEnumProductConditionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProductCondition[] | Prisma.ListEnumProductConditionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProductConditionFilter<$PrismaModel> | $Enums.ProductCondition
+}
+
+export type EnumProductStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProductStatus | Prisma.EnumProductStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ProductStatus[] | Prisma.ListEnumProductStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProductStatus[] | Prisma.ListEnumProductStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProductStatusFilter<$PrismaModel> | $Enums.ProductStatus
 }
 
 export type EnumProductConditionWithAggregatesFilter<$PrismaModel = never> = {
@@ -552,20 +569,6 @@ export type NestedDecimalFilter<$PrismaModel = never> = {
   not?: Prisma.NestedDecimalFilter<$PrismaModel> | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
-export type NestedEnumProductConditionFilter<$PrismaModel = never> = {
-  equals?: $Enums.ProductCondition | Prisma.EnumProductConditionFieldRefInput<$PrismaModel>
-  in?: $Enums.ProductCondition[] | Prisma.ListEnumProductConditionFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ProductCondition[] | Prisma.ListEnumProductConditionFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumProductConditionFilter<$PrismaModel> | $Enums.ProductCondition
-}
-
-export type NestedEnumProductStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.ProductStatus | Prisma.EnumProductStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.ProductStatus[] | Prisma.ListEnumProductStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.ProductStatus[] | Prisma.ListEnumProductStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumProductStatusFilter<$PrismaModel> | $Enums.ProductStatus
-}
-
 export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
   equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel>
   in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel>
@@ -580,6 +583,37 @@ export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedDecimalFilter<$PrismaModel>
   _min?: Prisma.NestedDecimalFilter<$PrismaModel>
   _max?: Prisma.NestedDecimalFilter<$PrismaModel>
+}
+
+export type NestedEnumMembershipTransactionStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.MembershipTransactionStatus | Prisma.EnumMembershipTransactionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.MembershipTransactionStatus[] | Prisma.ListEnumMembershipTransactionStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MembershipTransactionStatus[] | Prisma.ListEnumMembershipTransactionStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMembershipTransactionStatusFilter<$PrismaModel> | $Enums.MembershipTransactionStatus
+}
+
+export type NestedEnumMembershipTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MembershipTransactionStatus | Prisma.EnumMembershipTransactionStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.MembershipTransactionStatus[] | Prisma.ListEnumMembershipTransactionStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MembershipTransactionStatus[] | Prisma.ListEnumMembershipTransactionStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMembershipTransactionStatusWithAggregatesFilter<$PrismaModel> | $Enums.MembershipTransactionStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMembershipTransactionStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMembershipTransactionStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumProductConditionFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProductCondition | Prisma.EnumProductConditionFieldRefInput<$PrismaModel>
+  in?: $Enums.ProductCondition[] | Prisma.ListEnumProductConditionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProductCondition[] | Prisma.ListEnumProductConditionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProductConditionFilter<$PrismaModel> | $Enums.ProductCondition
+}
+
+export type NestedEnumProductStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ProductStatus | Prisma.EnumProductStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ProductStatus[] | Prisma.ListEnumProductStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ProductStatus[] | Prisma.ListEnumProductStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumProductStatusFilter<$PrismaModel> | $Enums.ProductStatus
 }
 
 export type NestedEnumProductConditionWithAggregatesFilter<$PrismaModel = never> = {

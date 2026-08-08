@@ -33,11 +33,12 @@ import {
 } from '../../common/utils/normalize-search-text.util';
 import fleazoAiConfig from '../../config/fleazo-ai.config';
 import { resolveProductSearch } from './product-search.util';
+import { MembershipService } from '../membership/membership.service';
+import { ErrorCode } from '../../common/constants/error-code.constant';
+import { ACTIVE_LISTING_STATUSES } from '../../common/constants/listing-limit.constant';
 
-// Placeholder listing duration until the Membership tier module sets this per-tier
-const DEFAULT_LISTING_DURATION_DAYS = 30;
-
-// Temporary hard cap until the Membership tier module enforces per-tier image limits.
+// Not a seller-facing listing limit — caps how many images go into one AI
+// suggestion call (cost/latency guard), unrelated to membership tiers.
 export const MAX_IMAGES_PER_UPLOAD = 5;
 
 // Shared select shape so createProduct and updateProductStatus check the same fields.
@@ -83,10 +84,33 @@ export class ProductsService {
     private readonly prisma: PrismaService,
     private readonly uploadService: UploadService,
     private readonly categoriesService: CategoriesService,
+    private readonly membershipService: MembershipService,
     private readonly httpService: HttpService,
     @Inject(fleazoAiConfig.KEY)
     private readonly fleazoAiConfiguration: ConfigType<typeof fleazoAiConfig>,
   ) {}
+
+  // Shared by createProduct and updateProductStatus (the two paths that put a
+  // listing into PENDING) — both must be gated by the same plan-derived cap.
+  // Returns the resolved plan so callers can reuse it (e.g. for the
+  // per-plan image limit) instead of fetching it a second time.
+  private async assertUnderActiveListingCap(sellerId: number) {
+    const [plan, activeCount] = await Promise.all([
+      this.membershipService.getEffectivePlan(sellerId),
+      this.prisma.product.count({
+        where: { sellerId, status: { in: ACTIVE_LISTING_STATUSES } },
+      }),
+    ]);
+
+    if (activeCount >= plan.maxActiveListings) {
+      throw new BadRequestException({
+        message: `Bạn đã đạt giới hạn ${plan.maxActiveListings} tin đang hoạt động của gói ${plan.name}. Hãy bán/huỷ bớt tin hoặc nâng cấp gói để đăng thêm.`,
+        errorCode: ErrorCode.LISTING_LIMIT_REACHED,
+      });
+    }
+
+    return plan;
+  }
 
   private async uploadProductImages(files: Express.Multer.File[]) {
     // 1. Upload images one by one, tracking what succeeded so far
@@ -203,24 +227,30 @@ export class ProductsService {
     });
     assertSellerProfileComplete(seller);
 
-    // 2. Validate category exists and is a leaf category
+    // 2. This creates a PENDING listing directly, so it counts against the
+    //    seller's plan the same as an already-ACTIVE one — check the cap
+    //    before doing any upload work. Reuses the resolved plan below for
+    //    the image-count limit instead of fetching it twice.
+    const plan = await this.assertUnderActiveListingCap(sellerId);
+
+    // 3. Validate category exists and is a leaf category
     await this.categoriesService.validateLeafCategory(dto.categoryId);
 
-    // 3. Submitting for review requires at least 1 image, and at most
-    //    MAX_IMAGES_PER_UPLOAD
+    // 4. Submitting for review requires at least 1 image, and at most
+    //    the seller's plan.maxImagesPerListing
     if (!files || files.length === 0) {
       throw new BadRequestException('Vui lòng tải lên ít nhất 1 ảnh sản phẩm');
     }
-    if (files.length > MAX_IMAGES_PER_UPLOAD) {
+    if (files.length > plan.maxImagesPerListing) {
       throw new BadRequestException(
-        `Chỉ được tải lên tối đa ${MAX_IMAGES_PER_UPLOAD} ảnh mỗi tin đăng`,
+        `Gói ${plan.name} chỉ cho phép tối đa ${plan.maxImagesPerListing} ảnh mỗi tin đăng`,
       );
     }
 
-    // 4. Upload all images to Cloudinary, rolling back on partial failure
+    // 5. Upload all images to Cloudinary, rolling back on partial failure
     const uploadedImages = await this.uploadProductImages(files);
 
-    // 5. Create product and its images atomically (single Prisma nested write)
+    // 6. Create product and its images atomically (single Prisma nested write)
     return this.prisma.product.create({
       data: {
         ...dto,
@@ -248,11 +278,14 @@ export class ProductsService {
     // 1. Validate category exists and is a leaf category
     await this.categoriesService.validateLeafCategory(dto.categoryId);
 
-    // 2. Images are optional for drafts — upload whatever was provided (can be
-    //    none), but still capped at MAX_IMAGES_PER_UPLOAD
-    if (files && files.length > MAX_IMAGES_PER_UPLOAD) {
+    // 2. Drafts don't count against the active-listing cap (see
+    //    ACTIVE_LISTING_STATUSES), but the image count is still capped at
+    //    the seller's plan limit so a draft never exceeds what it could
+    //    hold once submitted.
+    const plan = await this.membershipService.getEffectivePlan(sellerId);
+    if (files && files.length > plan.maxImagesPerListing) {
       throw new BadRequestException(
-        `Chỉ được tải lên tối đa ${MAX_IMAGES_PER_UPLOAD} ảnh mỗi tin đăng`,
+        `Gói ${plan.name} chỉ cho phép tối đa ${plan.maxImagesPerListing} ảnh mỗi tin đăng`,
       );
     }
     const uploadedImages =
@@ -328,16 +361,17 @@ export class ProductsService {
       );
 
     // 5. Enforce at least 1 image in the final result (unless still a draft),
-    //    and at most MAX_IMAGES_PER_UPLOAD regardless of status
+    //    and at most the seller's plan.maxImagesPerListing regardless of status
+    const plan = await this.membershipService.getEffectivePlan(sellerId);
     const finalImageCount = remainingImages.length + newFilesCount;
     if (product.status !== ProductStatus.DRAFT && finalImageCount === 0) {
       throw new BadRequestException(
         'Sản phẩm phải có ít nhất 1 ảnh, không thể xoá hết ảnh',
       );
     }
-    if (finalImageCount > MAX_IMAGES_PER_UPLOAD) {
+    if (finalImageCount > plan.maxImagesPerListing) {
       throw new BadRequestException(
-        `Chỉ được có tối đa ${MAX_IMAGES_PER_UPLOAD} ảnh mỗi tin đăng`,
+        `Gói ${plan.name} chỉ cho phép tối đa ${plan.maxImagesPerListing} ảnh mỗi tin đăng`,
       );
     }
 
@@ -672,13 +706,17 @@ export class ProductsService {
       );
     }
 
-    // 3. Submitting for review (-> PENDING) requires a complete seller profile
+    // 3. Submitting for review (-> PENDING) requires a complete seller
+    //    profile AND a free slot under the seller's active-listing cap —
+    //    this is the DRAFT -> PENDING path, the other way a listing reaches
+    //    PENDING besides createProduct.
     if (dto.status === ProductStatus.PENDING) {
       const seller = await this.prisma.user.findUnique({
         where: { id: sellerId },
         select: SELLER_PROFILE_SELECT,
       });
       assertSellerProfileComplete(seller);
+      await this.assertUnderActiveListingCap(sellerId);
     }
 
     // 4. Apply the transition
@@ -741,12 +779,20 @@ export class ProductsService {
       throw new BadRequestException('Chỉ có thể duyệt sản phẩm đang chờ duyệt');
     }
 
-    // 3. Activate the listing, starting the listing duration countdown
+    // 3. Listing duration comes from the seller's plan AT THE TIME OF
+    //    APPROVAL, not when they submitted it — a seller who upgrades while
+    //    a listing sits in the review queue gets the longer duration once
+    //    it's actually approved.
+    const plan = await this.membershipService.getEffectivePlan(
+      product.sellerId,
+    );
+
+    // 4. Activate the listing, starting the listing duration countdown
     return this.prisma.product.update({
       where: { id },
       data: {
         status: ProductStatus.ACTIVE,
-        expiresAt: dayjs().add(DEFAULT_LISTING_DURATION_DAYS, 'day').toDate(),
+        expiresAt: dayjs().add(plan.listingDurationDays, 'day').toDate(),
         rejectedReason: null,
       },
       include: { category: true, images: true },

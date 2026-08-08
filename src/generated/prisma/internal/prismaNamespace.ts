@@ -390,6 +390,8 @@ export const ModelName = {
   University: 'University',
   Province: 'Province',
   Ward: 'Ward',
+  MembershipPlan: 'MembershipPlan',
+  MembershipTransaction: 'MembershipTransaction',
   Product: 'Product',
   ProductImage: 'ProductImage',
   ProductRevision: 'ProductRevision',
@@ -413,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "category" | "categorySearchAlias" | "university" | "province" | "ward" | "product" | "productImage" | "productRevision" | "productRevisionImage" | "savedProduct" | "review" | "conversation" | "message"
+    modelProps: "user" | "category" | "categorySearchAlias" | "university" | "province" | "ward" | "membershipPlan" | "membershipTransaction" | "product" | "productImage" | "productRevision" | "productRevisionImage" | "savedProduct" | "review" | "conversation" | "message"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -858,6 +860,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.WardCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.WardCountAggregateOutputType> | number
+        }
+      }
+    }
+    MembershipPlan: {
+      payload: Prisma.$MembershipPlanPayload<ExtArgs>
+      fields: Prisma.MembershipPlanFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MembershipPlanFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MembershipPlanFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPayload>
+        }
+        findFirst: {
+          args: Prisma.MembershipPlanFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MembershipPlanFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPayload>
+        }
+        findMany: {
+          args: Prisma.MembershipPlanFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPayload>[]
+        }
+        create: {
+          args: Prisma.MembershipPlanCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPayload>
+        }
+        createMany: {
+          args: Prisma.MembershipPlanCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MembershipPlanCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPayload>[]
+        }
+        delete: {
+          args: Prisma.MembershipPlanDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPayload>
+        }
+        update: {
+          args: Prisma.MembershipPlanUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPayload>
+        }
+        deleteMany: {
+          args: Prisma.MembershipPlanDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MembershipPlanUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MembershipPlanUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPayload>[]
+        }
+        upsert: {
+          args: Prisma.MembershipPlanUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipPlanPayload>
+        }
+        aggregate: {
+          args: Prisma.MembershipPlanAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMembershipPlan>
+        }
+        groupBy: {
+          args: Prisma.MembershipPlanGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MembershipPlanGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MembershipPlanCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MembershipPlanCountAggregateOutputType> | number
+        }
+      }
+    }
+    MembershipTransaction: {
+      payload: Prisma.$MembershipTransactionPayload<ExtArgs>
+      fields: Prisma.MembershipTransactionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MembershipTransactionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTransactionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MembershipTransactionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTransactionPayload>
+        }
+        findFirst: {
+          args: Prisma.MembershipTransactionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTransactionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MembershipTransactionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTransactionPayload>
+        }
+        findMany: {
+          args: Prisma.MembershipTransactionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTransactionPayload>[]
+        }
+        create: {
+          args: Prisma.MembershipTransactionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTransactionPayload>
+        }
+        createMany: {
+          args: Prisma.MembershipTransactionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MembershipTransactionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTransactionPayload>[]
+        }
+        delete: {
+          args: Prisma.MembershipTransactionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTransactionPayload>
+        }
+        update: {
+          args: Prisma.MembershipTransactionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTransactionPayload>
+        }
+        deleteMany: {
+          args: Prisma.MembershipTransactionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MembershipTransactionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MembershipTransactionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTransactionPayload>[]
+        }
+        upsert: {
+          args: Prisma.MembershipTransactionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MembershipTransactionPayload>
+        }
+        aggregate: {
+          args: Prisma.MembershipTransactionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMembershipTransaction>
+        }
+        groupBy: {
+          args: Prisma.MembershipTransactionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MembershipTransactionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MembershipTransactionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MembershipTransactionCountAggregateOutputType> | number
         }
       }
     }
@@ -1515,6 +1665,8 @@ export const UserScalarFieldEnum = {
   completionRate: 'completionRate',
   responseRate: 'responseRate',
   universityId: 'universityId',
+  membershipPlanId: 'membershipPlanId',
+  membershipExpiresAt: 'membershipExpiresAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1572,6 +1724,38 @@ export const WardScalarFieldEnum = {
 } as const
 
 export type WardScalarFieldEnum = (typeof WardScalarFieldEnum)[keyof typeof WardScalarFieldEnum]
+
+
+export const MembershipPlanScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  name: 'name',
+  price: 'price',
+  durationDays: 'durationDays',
+  maxActiveListings: 'maxActiveListings',
+  listingDurationDays: 'listingDurationDays',
+  maxImagesPerListing: 'maxImagesPerListing',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MembershipPlanScalarFieldEnum = (typeof MembershipPlanScalarFieldEnum)[keyof typeof MembershipPlanScalarFieldEnum]
+
+
+export const MembershipTransactionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  planId: 'planId',
+  amount: 'amount',
+  status: 'status',
+  payosOrderCode: 'payosOrderCode',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MembershipTransactionScalarFieldEnum = (typeof MembershipTransactionScalarFieldEnum)[keyof typeof MembershipTransactionScalarFieldEnum]
 
 
 export const ProductScalarFieldEnum = {
@@ -1816,6 +2000,20 @@ export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMo
 
 
 /**
+ * Reference to a field of type 'MembershipTransactionStatus'
+ */
+export type EnumMembershipTransactionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MembershipTransactionStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'MembershipTransactionStatus[]'
+ */
+export type ListEnumMembershipTransactionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MembershipTransactionStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'ProductCondition'
  */
 export type EnumProductConditionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductCondition'>
@@ -1958,6 +2156,8 @@ export type GlobalOmitConfig = {
   university?: Prisma.UniversityOmit
   province?: Prisma.ProvinceOmit
   ward?: Prisma.WardOmit
+  membershipPlan?: Prisma.MembershipPlanOmit
+  membershipTransaction?: Prisma.MembershipTransactionOmit
   product?: Prisma.ProductOmit
   productImage?: Prisma.ProductImageOmit
   productRevision?: Prisma.ProductRevisionOmit

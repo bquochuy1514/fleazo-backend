@@ -25,6 +25,11 @@ export const ErrorCode = {
   // reviews
   CANNOT_REVIEW_SELF: 'CANNOT_REVIEW_SELF',
   NOT_ELIGIBLE_TO_REVIEW: 'NOT_ELIGIBLE_TO_REVIEW',
+
+  // membership / listing cap
+  LISTING_LIMIT_REACHED: 'LISTING_LIMIT_REACHED',
+  MEMBERSHIP_PLAN_NOT_FOUND: 'MEMBERSHIP_PLAN_NOT_FOUND',
+  MEMBERSHIP_PLAN_NOT_PURCHASABLE: 'MEMBERSHIP_PLAN_NOT_PURCHASABLE',
 } as const;
 
 export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode];

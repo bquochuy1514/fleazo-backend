@@ -34,6 +34,7 @@ export type UserAvgAggregateOutputType = {
   completionRate: number | null
   responseRate: number | null
   universityId: number | null
+  membershipPlanId: number | null
 }
 
 export type UserSumAggregateOutputType = {
@@ -44,6 +45,7 @@ export type UserSumAggregateOutputType = {
   completionRate: number | null
   responseRate: number | null
   universityId: number | null
+  membershipPlanId: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -69,6 +71,8 @@ export type UserMinAggregateOutputType = {
   completionRate: number | null
   responseRate: number | null
   universityId: number | null
+  membershipPlanId: number | null
+  membershipExpiresAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -96,6 +100,8 @@ export type UserMaxAggregateOutputType = {
   completionRate: number | null
   responseRate: number | null
   universityId: number | null
+  membershipPlanId: number | null
+  membershipExpiresAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -123,6 +129,8 @@ export type UserCountAggregateOutputType = {
   completionRate: number
   responseRate: number
   universityId: number
+  membershipPlanId: number
+  membershipExpiresAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -137,6 +145,7 @@ export type UserAvgAggregateInputType = {
   completionRate?: true
   responseRate?: true
   universityId?: true
+  membershipPlanId?: true
 }
 
 export type UserSumAggregateInputType = {
@@ -147,6 +156,7 @@ export type UserSumAggregateInputType = {
   completionRate?: true
   responseRate?: true
   universityId?: true
+  membershipPlanId?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -172,6 +182,8 @@ export type UserMinAggregateInputType = {
   completionRate?: true
   responseRate?: true
   universityId?: true
+  membershipPlanId?: true
+  membershipExpiresAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -199,6 +211,8 @@ export type UserMaxAggregateInputType = {
   completionRate?: true
   responseRate?: true
   universityId?: true
+  membershipPlanId?: true
+  membershipExpiresAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -226,6 +240,8 @@ export type UserCountAggregateInputType = {
   completionRate?: true
   responseRate?: true
   universityId?: true
+  membershipPlanId?: true
+  membershipExpiresAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -340,6 +356,8 @@ export type UserGroupByOutputType = {
   completionRate: number
   responseRate: number
   universityId: number | null
+  membershipPlanId: number | null
+  membershipExpiresAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -390,9 +408,12 @@ export type UserWhereInput = {
   completionRate?: Prisma.FloatFilter<"User"> | number
   responseRate?: Prisma.FloatFilter<"User"> | number
   universityId?: Prisma.IntNullableFilter<"User"> | number | null
+  membershipPlanId?: Prisma.IntNullableFilter<"User"> | number | null
+  membershipExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   university?: Prisma.XOR<Prisma.UniversityNullableScalarRelationFilter, Prisma.UniversityWhereInput> | null
+  membershipPlan?: Prisma.XOR<Prisma.MembershipPlanNullableScalarRelationFilter, Prisma.MembershipPlanWhereInput> | null
   products?: Prisma.ProductListRelationFilter
   savedProducts?: Prisma.SavedProductListRelationFilter
   reviewsWritten?: Prisma.ReviewListRelationFilter
@@ -400,6 +421,7 @@ export type UserWhereInput = {
   conversationsInitiated?: Prisma.ConversationListRelationFilter
   conversationsReceived?: Prisma.ConversationListRelationFilter
   messagesSent?: Prisma.MessageListRelationFilter
+  membershipTransactions?: Prisma.MembershipTransactionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -425,9 +447,12 @@ export type UserOrderByWithRelationInput = {
   completionRate?: Prisma.SortOrder
   responseRate?: Prisma.SortOrder
   universityId?: Prisma.SortOrderInput | Prisma.SortOrder
+  membershipPlanId?: Prisma.SortOrderInput | Prisma.SortOrder
+  membershipExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   university?: Prisma.UniversityOrderByWithRelationInput
+  membershipPlan?: Prisma.MembershipPlanOrderByWithRelationInput
   products?: Prisma.ProductOrderByRelationAggregateInput
   savedProducts?: Prisma.SavedProductOrderByRelationAggregateInput
   reviewsWritten?: Prisma.ReviewOrderByRelationAggregateInput
@@ -435,6 +460,7 @@ export type UserOrderByWithRelationInput = {
   conversationsInitiated?: Prisma.ConversationOrderByRelationAggregateInput
   conversationsReceived?: Prisma.ConversationOrderByRelationAggregateInput
   messagesSent?: Prisma.MessageOrderByRelationAggregateInput
+  membershipTransactions?: Prisma.MembershipTransactionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -463,9 +489,12 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   completionRate?: Prisma.FloatFilter<"User"> | number
   responseRate?: Prisma.FloatFilter<"User"> | number
   universityId?: Prisma.IntNullableFilter<"User"> | number | null
+  membershipPlanId?: Prisma.IntNullableFilter<"User"> | number | null
+  membershipExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   university?: Prisma.XOR<Prisma.UniversityNullableScalarRelationFilter, Prisma.UniversityWhereInput> | null
+  membershipPlan?: Prisma.XOR<Prisma.MembershipPlanNullableScalarRelationFilter, Prisma.MembershipPlanWhereInput> | null
   products?: Prisma.ProductListRelationFilter
   savedProducts?: Prisma.SavedProductListRelationFilter
   reviewsWritten?: Prisma.ReviewListRelationFilter
@@ -473,6 +502,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   conversationsInitiated?: Prisma.ConversationListRelationFilter
   conversationsReceived?: Prisma.ConversationListRelationFilter
   messagesSent?: Prisma.MessageListRelationFilter
+  membershipTransactions?: Prisma.MembershipTransactionListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -498,6 +528,8 @@ export type UserOrderByWithAggregationInput = {
   completionRate?: Prisma.SortOrder
   responseRate?: Prisma.SortOrder
   universityId?: Prisma.SortOrderInput | Prisma.SortOrder
+  membershipPlanId?: Prisma.SortOrderInput | Prisma.SortOrder
+  membershipExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -533,6 +565,8 @@ export type UserScalarWhereWithAggregatesInput = {
   completionRate?: Prisma.FloatWithAggregatesFilter<"User"> | number
   responseRate?: Prisma.FloatWithAggregatesFilter<"User"> | number
   universityId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
+  membershipPlanId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
+  membershipExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -558,9 +592,11 @@ export type UserCreateInput = {
   avgRating?: number
   completionRate?: number
   responseRate?: number
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   university?: Prisma.UniversityCreateNestedOneWithoutUsersInput
+  membershipPlan?: Prisma.MembershipPlanCreateNestedOneWithoutUsersInput
   products?: Prisma.ProductCreateNestedManyWithoutSellerInput
   savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
   reviewsWritten?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
@@ -568,6 +604,7 @@ export type UserCreateInput = {
   conversationsInitiated?: Prisma.ConversationCreateNestedManyWithoutInitiatorInput
   conversationsReceived?: Prisma.ConversationCreateNestedManyWithoutRecipientInput
   messagesSent?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -593,6 +630,8 @@ export type UserUncheckedCreateInput = {
   completionRate?: number
   responseRate?: number
   universityId?: number | null
+  membershipPlanId?: number | null
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
@@ -602,6 +641,7 @@ export type UserUncheckedCreateInput = {
   conversationsInitiated?: Prisma.ConversationUncheckedCreateNestedManyWithoutInitiatorInput
   conversationsReceived?: Prisma.ConversationUncheckedCreateNestedManyWithoutRecipientInput
   messagesSent?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -625,9 +665,11 @@ export type UserUpdateInput = {
   avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   university?: Prisma.UniversityUpdateOneWithoutUsersNestedInput
+  membershipPlan?: Prisma.MembershipPlanUpdateOneWithoutUsersNestedInput
   products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
   savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
   reviewsWritten?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
@@ -635,6 +677,7 @@ export type UserUpdateInput = {
   conversationsInitiated?: Prisma.ConversationUpdateManyWithoutInitiatorNestedInput
   conversationsReceived?: Prisma.ConversationUpdateManyWithoutRecipientNestedInput
   messagesSent?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -660,6 +703,8 @@ export type UserUncheckedUpdateInput = {
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
   universityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipPlanId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
@@ -669,6 +714,7 @@ export type UserUncheckedUpdateInput = {
   conversationsInitiated?: Prisma.ConversationUncheckedUpdateManyWithoutInitiatorNestedInput
   conversationsReceived?: Prisma.ConversationUncheckedUpdateManyWithoutRecipientNestedInput
   messagesSent?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -694,6 +740,8 @@ export type UserCreateManyInput = {
   completionRate?: number
   responseRate?: number
   universityId?: number | null
+  membershipPlanId?: number | null
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -719,6 +767,7 @@ export type UserUpdateManyMutationInput = {
   avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -746,6 +795,8 @@ export type UserUncheckedUpdateManyInput = {
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
   universityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipPlanId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -773,6 +824,8 @@ export type UserCountOrderByAggregateInput = {
   completionRate?: Prisma.SortOrder
   responseRate?: Prisma.SortOrder
   universityId?: Prisma.SortOrder
+  membershipPlanId?: Prisma.SortOrder
+  membershipExpiresAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -785,6 +838,7 @@ export type UserAvgOrderByAggregateInput = {
   completionRate?: Prisma.SortOrder
   responseRate?: Prisma.SortOrder
   universityId?: Prisma.SortOrder
+  membershipPlanId?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -810,6 +864,8 @@ export type UserMaxOrderByAggregateInput = {
   completionRate?: Prisma.SortOrder
   responseRate?: Prisma.SortOrder
   universityId?: Prisma.SortOrder
+  membershipPlanId?: Prisma.SortOrder
+  membershipExpiresAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -837,6 +893,8 @@ export type UserMinOrderByAggregateInput = {
   completionRate?: Prisma.SortOrder
   responseRate?: Prisma.SortOrder
   universityId?: Prisma.SortOrder
+  membershipPlanId?: Prisma.SortOrder
+  membershipExpiresAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -849,6 +907,7 @@ export type UserSumOrderByAggregateInput = {
   completionRate?: Prisma.SortOrder
   responseRate?: Prisma.SortOrder
   universityId?: Prisma.SortOrder
+  membershipPlanId?: Prisma.SortOrder
 }
 
 export type UserListRelationFilter = {
@@ -954,6 +1013,62 @@ export type UserUncheckedUpdateManyWithoutUniversityNestedInput = {
   update?: Prisma.UserUpdateWithWhereUniqueWithoutUniversityInput | Prisma.UserUpdateWithWhereUniqueWithoutUniversityInput[]
   updateMany?: Prisma.UserUpdateManyWithWhereWithoutUniversityInput | Prisma.UserUpdateManyWithWhereWithoutUniversityInput[]
   deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+}
+
+export type UserCreateNestedManyWithoutMembershipPlanInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMembershipPlanInput, Prisma.UserUncheckedCreateWithoutMembershipPlanInput> | Prisma.UserCreateWithoutMembershipPlanInput[] | Prisma.UserUncheckedCreateWithoutMembershipPlanInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMembershipPlanInput | Prisma.UserCreateOrConnectWithoutMembershipPlanInput[]
+  createMany?: Prisma.UserCreateManyMembershipPlanInputEnvelope
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+}
+
+export type UserUncheckedCreateNestedManyWithoutMembershipPlanInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMembershipPlanInput, Prisma.UserUncheckedCreateWithoutMembershipPlanInput> | Prisma.UserCreateWithoutMembershipPlanInput[] | Prisma.UserUncheckedCreateWithoutMembershipPlanInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMembershipPlanInput | Prisma.UserCreateOrConnectWithoutMembershipPlanInput[]
+  createMany?: Prisma.UserCreateManyMembershipPlanInputEnvelope
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+}
+
+export type UserUpdateManyWithoutMembershipPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMembershipPlanInput, Prisma.UserUncheckedCreateWithoutMembershipPlanInput> | Prisma.UserCreateWithoutMembershipPlanInput[] | Prisma.UserUncheckedCreateWithoutMembershipPlanInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMembershipPlanInput | Prisma.UserCreateOrConnectWithoutMembershipPlanInput[]
+  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutMembershipPlanInput | Prisma.UserUpsertWithWhereUniqueWithoutMembershipPlanInput[]
+  createMany?: Prisma.UserCreateManyMembershipPlanInputEnvelope
+  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  update?: Prisma.UserUpdateWithWhereUniqueWithoutMembershipPlanInput | Prisma.UserUpdateWithWhereUniqueWithoutMembershipPlanInput[]
+  updateMany?: Prisma.UserUpdateManyWithWhereWithoutMembershipPlanInput | Prisma.UserUpdateManyWithWhereWithoutMembershipPlanInput[]
+  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+}
+
+export type UserUncheckedUpdateManyWithoutMembershipPlanNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMembershipPlanInput, Prisma.UserUncheckedCreateWithoutMembershipPlanInput> | Prisma.UserCreateWithoutMembershipPlanInput[] | Prisma.UserUncheckedCreateWithoutMembershipPlanInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMembershipPlanInput | Prisma.UserCreateOrConnectWithoutMembershipPlanInput[]
+  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutMembershipPlanInput | Prisma.UserUpsertWithWhereUniqueWithoutMembershipPlanInput[]
+  createMany?: Prisma.UserCreateManyMembershipPlanInputEnvelope
+  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  update?: Prisma.UserUpdateWithWhereUniqueWithoutMembershipPlanInput | Prisma.UserUpdateWithWhereUniqueWithoutMembershipPlanInput[]
+  updateMany?: Prisma.UserUpdateManyWithWhereWithoutMembershipPlanInput | Prisma.UserUpdateManyWithWhereWithoutMembershipPlanInput[]
+  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+}
+
+export type UserCreateNestedOneWithoutMembershipTransactionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMembershipTransactionsInput, Prisma.UserUncheckedCreateWithoutMembershipTransactionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMembershipTransactionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutMembershipTransactionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMembershipTransactionsInput, Prisma.UserUncheckedCreateWithoutMembershipTransactionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMembershipTransactionsInput
+  upsert?: Prisma.UserUpsertWithoutMembershipTransactionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMembershipTransactionsInput, Prisma.UserUpdateWithoutMembershipTransactionsInput>, Prisma.UserUncheckedUpdateWithoutMembershipTransactionsInput>
 }
 
 export type UserCreateNestedOneWithoutProductsInput = {
@@ -1075,8 +1190,10 @@ export type UserCreateWithoutUniversityInput = {
   avgRating?: number
   completionRate?: number
   responseRate?: number
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  membershipPlan?: Prisma.MembershipPlanCreateNestedOneWithoutUsersInput
   products?: Prisma.ProductCreateNestedManyWithoutSellerInput
   savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
   reviewsWritten?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
@@ -1084,6 +1201,7 @@ export type UserCreateWithoutUniversityInput = {
   conversationsInitiated?: Prisma.ConversationCreateNestedManyWithoutInitiatorInput
   conversationsReceived?: Prisma.ConversationCreateNestedManyWithoutRecipientInput
   messagesSent?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUniversityInput = {
@@ -1108,6 +1226,8 @@ export type UserUncheckedCreateWithoutUniversityInput = {
   avgRating?: number
   completionRate?: number
   responseRate?: number
+  membershipPlanId?: number | null
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
@@ -1117,6 +1237,7 @@ export type UserUncheckedCreateWithoutUniversityInput = {
   conversationsInitiated?: Prisma.ConversationUncheckedCreateNestedManyWithoutInitiatorInput
   conversationsReceived?: Prisma.ConversationUncheckedCreateNestedManyWithoutRecipientInput
   messagesSent?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUniversityInput = {
@@ -1171,8 +1292,265 @@ export type UserScalarWhereInput = {
   completionRate?: Prisma.FloatFilter<"User"> | number
   responseRate?: Prisma.FloatFilter<"User"> | number
   universityId?: Prisma.IntNullableFilter<"User"> | number | null
+  membershipPlanId?: Prisma.IntNullableFilter<"User"> | number | null
+  membershipExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+}
+
+export type UserCreateWithoutMembershipPlanInput = {
+  email: string
+  password?: string | null
+  fullName: string
+  phone?: string | null
+  avatar?: string
+  role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
+  isActive?: boolean
+  isBanned?: boolean
+  codeOtp?: string | null
+  codeOtpExpiration?: Date | string | null
+  isOtpVerified?: boolean
+  hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
+  membershipExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  university?: Prisma.UniversityCreateNestedOneWithoutUsersInput
+  products?: Prisma.ProductCreateNestedManyWithoutSellerInput
+  savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
+  reviewsWritten?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutSellerInput
+  conversationsInitiated?: Prisma.ConversationCreateNestedManyWithoutInitiatorInput
+  conversationsReceived?: Prisma.ConversationCreateNestedManyWithoutRecipientInput
+  messagesSent?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutMembershipPlanInput = {
+  id?: number
+  email: string
+  password?: string | null
+  fullName: string
+  phone?: string | null
+  avatar?: string
+  role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
+  isActive?: boolean
+  isBanned?: boolean
+  codeOtp?: string | null
+  codeOtpExpiration?: Date | string | null
+  isOtpVerified?: boolean
+  hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
+  universityId?: number | null
+  membershipExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
+  savedProducts?: Prisma.SavedProductUncheckedCreateNestedManyWithoutUserInput
+  reviewsWritten?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
+  conversationsInitiated?: Prisma.ConversationUncheckedCreateNestedManyWithoutInitiatorInput
+  conversationsReceived?: Prisma.ConversationUncheckedCreateNestedManyWithoutRecipientInput
+  messagesSent?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutMembershipPlanInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMembershipPlanInput, Prisma.UserUncheckedCreateWithoutMembershipPlanInput>
+}
+
+export type UserCreateManyMembershipPlanInputEnvelope = {
+  data: Prisma.UserCreateManyMembershipPlanInput | Prisma.UserCreateManyMembershipPlanInput[]
+  skipDuplicates?: boolean
+}
+
+export type UserUpsertWithWhereUniqueWithoutMembershipPlanInput = {
+  where: Prisma.UserWhereUniqueInput
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMembershipPlanInput, Prisma.UserUncheckedUpdateWithoutMembershipPlanInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMembershipPlanInput, Prisma.UserUncheckedCreateWithoutMembershipPlanInput>
+}
+
+export type UserUpdateWithWhereUniqueWithoutMembershipPlanInput = {
+  where: Prisma.UserWhereUniqueInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMembershipPlanInput, Prisma.UserUncheckedUpdateWithoutMembershipPlanInput>
+}
+
+export type UserUpdateManyWithWhereWithoutMembershipPlanInput = {
+  where: Prisma.UserScalarWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutMembershipPlanInput>
+}
+
+export type UserCreateWithoutMembershipTransactionsInput = {
+  email: string
+  password?: string | null
+  fullName: string
+  phone?: string | null
+  avatar?: string
+  role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
+  isActive?: boolean
+  isBanned?: boolean
+  codeOtp?: string | null
+  codeOtpExpiration?: Date | string | null
+  isOtpVerified?: boolean
+  hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
+  membershipExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  university?: Prisma.UniversityCreateNestedOneWithoutUsersInput
+  membershipPlan?: Prisma.MembershipPlanCreateNestedOneWithoutUsersInput
+  products?: Prisma.ProductCreateNestedManyWithoutSellerInput
+  savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
+  reviewsWritten?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutSellerInput
+  conversationsInitiated?: Prisma.ConversationCreateNestedManyWithoutInitiatorInput
+  conversationsReceived?: Prisma.ConversationCreateNestedManyWithoutRecipientInput
+  messagesSent?: Prisma.MessageCreateNestedManyWithoutSenderInput
+}
+
+export type UserUncheckedCreateWithoutMembershipTransactionsInput = {
+  id?: number
+  email: string
+  password?: string | null
+  fullName: string
+  phone?: string | null
+  avatar?: string
+  role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
+  isActive?: boolean
+  isBanned?: boolean
+  codeOtp?: string | null
+  codeOtpExpiration?: Date | string | null
+  isOtpVerified?: boolean
+  hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
+  universityId?: number | null
+  membershipPlanId?: number | null
+  membershipExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
+  savedProducts?: Prisma.SavedProductUncheckedCreateNestedManyWithoutUserInput
+  reviewsWritten?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
+  conversationsInitiated?: Prisma.ConversationUncheckedCreateNestedManyWithoutInitiatorInput
+  conversationsReceived?: Prisma.ConversationUncheckedCreateNestedManyWithoutRecipientInput
+  messagesSent?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+}
+
+export type UserCreateOrConnectWithoutMembershipTransactionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMembershipTransactionsInput, Prisma.UserUncheckedCreateWithoutMembershipTransactionsInput>
+}
+
+export type UserUpsertWithoutMembershipTransactionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMembershipTransactionsInput, Prisma.UserUncheckedUpdateWithoutMembershipTransactionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMembershipTransactionsInput, Prisma.UserUncheckedCreateWithoutMembershipTransactionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutMembershipTransactionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMembershipTransactionsInput, Prisma.UserUncheckedUpdateWithoutMembershipTransactionsInput>
+}
+
+export type UserUpdateWithoutMembershipTransactionsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  university?: Prisma.UniversityUpdateOneWithoutUsersNestedInput
+  membershipPlan?: Prisma.MembershipPlanUpdateOneWithoutUsersNestedInput
+  products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
+  savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
+  reviewsWritten?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
+  conversationsInitiated?: Prisma.ConversationUpdateManyWithoutInitiatorNestedInput
+  conversationsReceived?: Prisma.ConversationUpdateManyWithoutRecipientNestedInput
+  messagesSent?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMembershipTransactionsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  universityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipPlanId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
+  savedProducts?: Prisma.SavedProductUncheckedUpdateManyWithoutUserNestedInput
+  reviewsWritten?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
+  conversationsInitiated?: Prisma.ConversationUncheckedUpdateManyWithoutInitiatorNestedInput
+  conversationsReceived?: Prisma.ConversationUncheckedUpdateManyWithoutRecipientNestedInput
+  messagesSent?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 export type UserCreateWithoutProductsInput = {
@@ -1196,15 +1574,18 @@ export type UserCreateWithoutProductsInput = {
   avgRating?: number
   completionRate?: number
   responseRate?: number
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   university?: Prisma.UniversityCreateNestedOneWithoutUsersInput
+  membershipPlan?: Prisma.MembershipPlanCreateNestedOneWithoutUsersInput
   savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
   reviewsWritten?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutSellerInput
   conversationsInitiated?: Prisma.ConversationCreateNestedManyWithoutInitiatorInput
   conversationsReceived?: Prisma.ConversationCreateNestedManyWithoutRecipientInput
   messagesSent?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProductsInput = {
@@ -1230,6 +1611,8 @@ export type UserUncheckedCreateWithoutProductsInput = {
   completionRate?: number
   responseRate?: number
   universityId?: number | null
+  membershipPlanId?: number | null
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   savedProducts?: Prisma.SavedProductUncheckedCreateNestedManyWithoutUserInput
@@ -1238,6 +1621,7 @@ export type UserUncheckedCreateWithoutProductsInput = {
   conversationsInitiated?: Prisma.ConversationUncheckedCreateNestedManyWithoutInitiatorInput
   conversationsReceived?: Prisma.ConversationUncheckedCreateNestedManyWithoutRecipientInput
   messagesSent?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProductsInput = {
@@ -1277,15 +1661,18 @@ export type UserUpdateWithoutProductsInput = {
   avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   university?: Prisma.UniversityUpdateOneWithoutUsersNestedInput
+  membershipPlan?: Prisma.MembershipPlanUpdateOneWithoutUsersNestedInput
   savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
   reviewsWritten?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
   conversationsInitiated?: Prisma.ConversationUpdateManyWithoutInitiatorNestedInput
   conversationsReceived?: Prisma.ConversationUpdateManyWithoutRecipientNestedInput
   messagesSent?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProductsInput = {
@@ -1311,6 +1698,8 @@ export type UserUncheckedUpdateWithoutProductsInput = {
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
   universityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipPlanId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   savedProducts?: Prisma.SavedProductUncheckedUpdateManyWithoutUserNestedInput
@@ -1319,6 +1708,7 @@ export type UserUncheckedUpdateWithoutProductsInput = {
   conversationsInitiated?: Prisma.ConversationUncheckedUpdateManyWithoutInitiatorNestedInput
   conversationsReceived?: Prisma.ConversationUncheckedUpdateManyWithoutRecipientNestedInput
   messagesSent?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSavedProductsInput = {
@@ -1342,15 +1732,18 @@ export type UserCreateWithoutSavedProductsInput = {
   avgRating?: number
   completionRate?: number
   responseRate?: number
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   university?: Prisma.UniversityCreateNestedOneWithoutUsersInput
+  membershipPlan?: Prisma.MembershipPlanCreateNestedOneWithoutUsersInput
   products?: Prisma.ProductCreateNestedManyWithoutSellerInput
   reviewsWritten?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutSellerInput
   conversationsInitiated?: Prisma.ConversationCreateNestedManyWithoutInitiatorInput
   conversationsReceived?: Prisma.ConversationCreateNestedManyWithoutRecipientInput
   messagesSent?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSavedProductsInput = {
@@ -1376,6 +1769,8 @@ export type UserUncheckedCreateWithoutSavedProductsInput = {
   completionRate?: number
   responseRate?: number
   universityId?: number | null
+  membershipPlanId?: number | null
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
@@ -1384,6 +1779,7 @@ export type UserUncheckedCreateWithoutSavedProductsInput = {
   conversationsInitiated?: Prisma.ConversationUncheckedCreateNestedManyWithoutInitiatorInput
   conversationsReceived?: Prisma.ConversationUncheckedCreateNestedManyWithoutRecipientInput
   messagesSent?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSavedProductsInput = {
@@ -1423,15 +1819,18 @@ export type UserUpdateWithoutSavedProductsInput = {
   avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   university?: Prisma.UniversityUpdateOneWithoutUsersNestedInput
+  membershipPlan?: Prisma.MembershipPlanUpdateOneWithoutUsersNestedInput
   products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
   reviewsWritten?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
   conversationsInitiated?: Prisma.ConversationUpdateManyWithoutInitiatorNestedInput
   conversationsReceived?: Prisma.ConversationUpdateManyWithoutRecipientNestedInput
   messagesSent?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavedProductsInput = {
@@ -1457,6 +1856,8 @@ export type UserUncheckedUpdateWithoutSavedProductsInput = {
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
   universityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipPlanId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
@@ -1465,6 +1866,7 @@ export type UserUncheckedUpdateWithoutSavedProductsInput = {
   conversationsInitiated?: Prisma.ConversationUncheckedUpdateManyWithoutInitiatorNestedInput
   conversationsReceived?: Prisma.ConversationUncheckedUpdateManyWithoutRecipientNestedInput
   messagesSent?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReviewsWrittenInput = {
@@ -1488,15 +1890,18 @@ export type UserCreateWithoutReviewsWrittenInput = {
   avgRating?: number
   completionRate?: number
   responseRate?: number
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   university?: Prisma.UniversityCreateNestedOneWithoutUsersInput
+  membershipPlan?: Prisma.MembershipPlanCreateNestedOneWithoutUsersInput
   products?: Prisma.ProductCreateNestedManyWithoutSellerInput
   savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutSellerInput
   conversationsInitiated?: Prisma.ConversationCreateNestedManyWithoutInitiatorInput
   conversationsReceived?: Prisma.ConversationCreateNestedManyWithoutRecipientInput
   messagesSent?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsWrittenInput = {
@@ -1522,6 +1927,8 @@ export type UserUncheckedCreateWithoutReviewsWrittenInput = {
   completionRate?: number
   responseRate?: number
   universityId?: number | null
+  membershipPlanId?: number | null
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
@@ -1530,6 +1937,7 @@ export type UserUncheckedCreateWithoutReviewsWrittenInput = {
   conversationsInitiated?: Prisma.ConversationUncheckedCreateNestedManyWithoutInitiatorInput
   conversationsReceived?: Prisma.ConversationUncheckedCreateNestedManyWithoutRecipientInput
   messagesSent?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsWrittenInput = {
@@ -1558,15 +1966,18 @@ export type UserCreateWithoutReviewsReceivedInput = {
   avgRating?: number
   completionRate?: number
   responseRate?: number
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   university?: Prisma.UniversityCreateNestedOneWithoutUsersInput
+  membershipPlan?: Prisma.MembershipPlanCreateNestedOneWithoutUsersInput
   products?: Prisma.ProductCreateNestedManyWithoutSellerInput
   savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
   reviewsWritten?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   conversationsInitiated?: Prisma.ConversationCreateNestedManyWithoutInitiatorInput
   conversationsReceived?: Prisma.ConversationCreateNestedManyWithoutRecipientInput
   messagesSent?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsReceivedInput = {
@@ -1592,6 +2003,8 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   completionRate?: number
   responseRate?: number
   universityId?: number | null
+  membershipPlanId?: number | null
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
@@ -1600,6 +2013,7 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   conversationsInitiated?: Prisma.ConversationUncheckedCreateNestedManyWithoutInitiatorInput
   conversationsReceived?: Prisma.ConversationUncheckedCreateNestedManyWithoutRecipientInput
   messagesSent?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsReceivedInput = {
@@ -1639,15 +2053,18 @@ export type UserUpdateWithoutReviewsWrittenInput = {
   avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   university?: Prisma.UniversityUpdateOneWithoutUsersNestedInput
+  membershipPlan?: Prisma.MembershipPlanUpdateOneWithoutUsersNestedInput
   products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
   savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
   conversationsInitiated?: Prisma.ConversationUpdateManyWithoutInitiatorNestedInput
   conversationsReceived?: Prisma.ConversationUpdateManyWithoutRecipientNestedInput
   messagesSent?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsWrittenInput = {
@@ -1673,6 +2090,8 @@ export type UserUncheckedUpdateWithoutReviewsWrittenInput = {
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
   universityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipPlanId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
@@ -1681,6 +2100,7 @@ export type UserUncheckedUpdateWithoutReviewsWrittenInput = {
   conversationsInitiated?: Prisma.ConversationUncheckedUpdateManyWithoutInitiatorNestedInput
   conversationsReceived?: Prisma.ConversationUncheckedUpdateManyWithoutRecipientNestedInput
   messagesSent?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReviewsReceivedInput = {
@@ -1715,15 +2135,18 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   university?: Prisma.UniversityUpdateOneWithoutUsersNestedInput
+  membershipPlan?: Prisma.MembershipPlanUpdateOneWithoutUsersNestedInput
   products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
   savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
   reviewsWritten?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   conversationsInitiated?: Prisma.ConversationUpdateManyWithoutInitiatorNestedInput
   conversationsReceived?: Prisma.ConversationUpdateManyWithoutRecipientNestedInput
   messagesSent?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
@@ -1749,6 +2172,8 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
   universityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipPlanId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
@@ -1757,6 +2182,7 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   conversationsInitiated?: Prisma.ConversationUncheckedUpdateManyWithoutInitiatorNestedInput
   conversationsReceived?: Prisma.ConversationUncheckedUpdateManyWithoutRecipientNestedInput
   messagesSent?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutConversationsInitiatedInput = {
@@ -1780,15 +2206,18 @@ export type UserCreateWithoutConversationsInitiatedInput = {
   avgRating?: number
   completionRate?: number
   responseRate?: number
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   university?: Prisma.UniversityCreateNestedOneWithoutUsersInput
+  membershipPlan?: Prisma.MembershipPlanCreateNestedOneWithoutUsersInput
   products?: Prisma.ProductCreateNestedManyWithoutSellerInput
   savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
   reviewsWritten?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutSellerInput
   conversationsReceived?: Prisma.ConversationCreateNestedManyWithoutRecipientInput
   messagesSent?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutConversationsInitiatedInput = {
@@ -1814,6 +2243,8 @@ export type UserUncheckedCreateWithoutConversationsInitiatedInput = {
   completionRate?: number
   responseRate?: number
   universityId?: number | null
+  membershipPlanId?: number | null
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
@@ -1822,6 +2253,7 @@ export type UserUncheckedCreateWithoutConversationsInitiatedInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
   conversationsReceived?: Prisma.ConversationUncheckedCreateNestedManyWithoutRecipientInput
   messagesSent?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutConversationsInitiatedInput = {
@@ -1850,15 +2282,18 @@ export type UserCreateWithoutConversationsReceivedInput = {
   avgRating?: number
   completionRate?: number
   responseRate?: number
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   university?: Prisma.UniversityCreateNestedOneWithoutUsersInput
+  membershipPlan?: Prisma.MembershipPlanCreateNestedOneWithoutUsersInput
   products?: Prisma.ProductCreateNestedManyWithoutSellerInput
   savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
   reviewsWritten?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutSellerInput
   conversationsInitiated?: Prisma.ConversationCreateNestedManyWithoutInitiatorInput
   messagesSent?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutConversationsReceivedInput = {
@@ -1884,6 +2319,8 @@ export type UserUncheckedCreateWithoutConversationsReceivedInput = {
   completionRate?: number
   responseRate?: number
   universityId?: number | null
+  membershipPlanId?: number | null
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
@@ -1892,6 +2329,7 @@ export type UserUncheckedCreateWithoutConversationsReceivedInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
   conversationsInitiated?: Prisma.ConversationUncheckedCreateNestedManyWithoutInitiatorInput
   messagesSent?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutConversationsReceivedInput = {
@@ -1931,15 +2369,18 @@ export type UserUpdateWithoutConversationsInitiatedInput = {
   avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   university?: Prisma.UniversityUpdateOneWithoutUsersNestedInput
+  membershipPlan?: Prisma.MembershipPlanUpdateOneWithoutUsersNestedInput
   products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
   savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
   reviewsWritten?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
   conversationsReceived?: Prisma.ConversationUpdateManyWithoutRecipientNestedInput
   messagesSent?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationsInitiatedInput = {
@@ -1965,6 +2406,8 @@ export type UserUncheckedUpdateWithoutConversationsInitiatedInput = {
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
   universityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipPlanId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
@@ -1973,6 +2416,7 @@ export type UserUncheckedUpdateWithoutConversationsInitiatedInput = {
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
   conversationsReceived?: Prisma.ConversationUncheckedUpdateManyWithoutRecipientNestedInput
   messagesSent?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutConversationsReceivedInput = {
@@ -2007,15 +2451,18 @@ export type UserUpdateWithoutConversationsReceivedInput = {
   avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   university?: Prisma.UniversityUpdateOneWithoutUsersNestedInput
+  membershipPlan?: Prisma.MembershipPlanUpdateOneWithoutUsersNestedInput
   products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
   savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
   reviewsWritten?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
   conversationsInitiated?: Prisma.ConversationUpdateManyWithoutInitiatorNestedInput
   messagesSent?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutConversationsReceivedInput = {
@@ -2041,6 +2488,8 @@ export type UserUncheckedUpdateWithoutConversationsReceivedInput = {
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
   universityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipPlanId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
@@ -2049,6 +2498,7 @@ export type UserUncheckedUpdateWithoutConversationsReceivedInput = {
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
   conversationsInitiated?: Prisma.ConversationUncheckedUpdateManyWithoutInitiatorNestedInput
   messagesSent?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMessagesSentInput = {
@@ -2072,15 +2522,18 @@ export type UserCreateWithoutMessagesSentInput = {
   avgRating?: number
   completionRate?: number
   responseRate?: number
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   university?: Prisma.UniversityCreateNestedOneWithoutUsersInput
+  membershipPlan?: Prisma.MembershipPlanCreateNestedOneWithoutUsersInput
   products?: Prisma.ProductCreateNestedManyWithoutSellerInput
   savedProducts?: Prisma.SavedProductCreateNestedManyWithoutUserInput
   reviewsWritten?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutSellerInput
   conversationsInitiated?: Prisma.ConversationCreateNestedManyWithoutInitiatorInput
   conversationsReceived?: Prisma.ConversationCreateNestedManyWithoutRecipientInput
+  membershipTransactions?: Prisma.MembershipTransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMessagesSentInput = {
@@ -2106,6 +2559,8 @@ export type UserUncheckedCreateWithoutMessagesSentInput = {
   completionRate?: number
   responseRate?: number
   universityId?: number | null
+  membershipPlanId?: number | null
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutSellerInput
@@ -2114,6 +2569,7 @@ export type UserUncheckedCreateWithoutMessagesSentInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutSellerInput
   conversationsInitiated?: Prisma.ConversationUncheckedCreateNestedManyWithoutInitiatorInput
   conversationsReceived?: Prisma.ConversationUncheckedCreateNestedManyWithoutRecipientInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMessagesSentInput = {
@@ -2153,15 +2609,18 @@ export type UserUpdateWithoutMessagesSentInput = {
   avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   university?: Prisma.UniversityUpdateOneWithoutUsersNestedInput
+  membershipPlan?: Prisma.MembershipPlanUpdateOneWithoutUsersNestedInput
   products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
   savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
   reviewsWritten?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
   conversationsInitiated?: Prisma.ConversationUpdateManyWithoutInitiatorNestedInput
   conversationsReceived?: Prisma.ConversationUpdateManyWithoutRecipientNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessagesSentInput = {
@@ -2187,6 +2646,8 @@ export type UserUncheckedUpdateWithoutMessagesSentInput = {
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
   universityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipPlanId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
@@ -2195,6 +2656,7 @@ export type UserUncheckedUpdateWithoutMessagesSentInput = {
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
   conversationsInitiated?: Prisma.ConversationUncheckedUpdateManyWithoutInitiatorNestedInput
   conversationsReceived?: Prisma.ConversationUncheckedUpdateManyWithoutRecipientNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyUniversityInput = {
@@ -2219,6 +2681,8 @@ export type UserCreateManyUniversityInput = {
   avgRating?: number
   completionRate?: number
   responseRate?: number
+  membershipPlanId?: number | null
+  membershipExpiresAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2244,8 +2708,10 @@ export type UserUpdateWithoutUniversityInput = {
   avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  membershipPlan?: Prisma.MembershipPlanUpdateOneWithoutUsersNestedInput
   products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
   savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
   reviewsWritten?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
@@ -2253,6 +2719,7 @@ export type UserUpdateWithoutUniversityInput = {
   conversationsInitiated?: Prisma.ConversationUpdateManyWithoutInitiatorNestedInput
   conversationsReceived?: Prisma.ConversationUpdateManyWithoutRecipientNestedInput
   messagesSent?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUniversityInput = {
@@ -2277,6 +2744,8 @@ export type UserUncheckedUpdateWithoutUniversityInput = {
   avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  membershipPlanId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
@@ -2286,6 +2755,7 @@ export type UserUncheckedUpdateWithoutUniversityInput = {
   conversationsInitiated?: Prisma.ConversationUncheckedUpdateManyWithoutInitiatorNestedInput
   conversationsReceived?: Prisma.ConversationUncheckedUpdateManyWithoutRecipientNestedInput
   messagesSent?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutUniversityInput = {
@@ -2310,6 +2780,135 @@ export type UserUncheckedUpdateManyWithoutUniversityInput = {
   avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
   completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
   responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  membershipPlanId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type UserCreateManyMembershipPlanInput = {
+  id?: number
+  email: string
+  password?: string | null
+  fullName: string
+  phone?: string | null
+  avatar?: string
+  role?: $Enums.UserRole
+  provinceCode?: number | null
+  provinceName?: string | null
+  wardCode?: number | null
+  wardName?: string | null
+  addressDetail?: string | null
+  isActive?: boolean
+  isBanned?: boolean
+  codeOtp?: string | null
+  codeOtpExpiration?: Date | string | null
+  isOtpVerified?: boolean
+  hashedRefreshToken?: string | null
+  avgRating?: number
+  completionRate?: number
+  responseRate?: number
+  universityId?: number | null
+  membershipExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type UserUpdateWithoutMembershipPlanInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  university?: Prisma.UniversityUpdateOneWithoutUsersNestedInput
+  products?: Prisma.ProductUpdateManyWithoutSellerNestedInput
+  savedProducts?: Prisma.SavedProductUpdateManyWithoutUserNestedInput
+  reviewsWritten?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutSellerNestedInput
+  conversationsInitiated?: Prisma.ConversationUpdateManyWithoutInitiatorNestedInput
+  conversationsReceived?: Prisma.ConversationUpdateManyWithoutRecipientNestedInput
+  messagesSent?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMembershipPlanInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  universityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  products?: Prisma.ProductUncheckedUpdateManyWithoutSellerNestedInput
+  savedProducts?: Prisma.SavedProductUncheckedUpdateManyWithoutUserNestedInput
+  reviewsWritten?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutSellerNestedInput
+  conversationsInitiated?: Prisma.ConversationUncheckedUpdateManyWithoutInitiatorNestedInput
+  conversationsReceived?: Prisma.ConversationUncheckedUpdateManyWithoutRecipientNestedInput
+  messagesSent?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  membershipTransactions?: Prisma.MembershipTransactionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateManyWithoutMembershipPlanInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  provinceCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  provinceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  wardCode?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  wardName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addressDetail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isBanned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  codeOtp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  codeOtpExpiration?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOtpVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hashedRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  completionRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  responseRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  universityId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  membershipExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2327,6 +2926,7 @@ export type UserCountOutputType = {
   conversationsInitiated: number
   conversationsReceived: number
   messagesSent: number
+  membershipTransactions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2337,6 +2937,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   conversationsInitiated?: boolean | UserCountOutputTypeCountConversationsInitiatedArgs
   conversationsReceived?: boolean | UserCountOutputTypeCountConversationsReceivedArgs
   messagesSent?: boolean | UserCountOutputTypeCountMessagesSentArgs
+  membershipTransactions?: boolean | UserCountOutputTypeCountMembershipTransactionsArgs
 }
 
 /**
@@ -2398,6 +2999,13 @@ export type UserCountOutputTypeCountMessagesSentArgs<ExtArgs extends runtime.Typ
   where?: Prisma.MessageWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMembershipTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MembershipTransactionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2422,9 +3030,12 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   completionRate?: boolean
   responseRate?: boolean
   universityId?: boolean
+  membershipPlanId?: boolean
+  membershipExpiresAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   university?: boolean | Prisma.User$universityArgs<ExtArgs>
+  membershipPlan?: boolean | Prisma.User$membershipPlanArgs<ExtArgs>
   products?: boolean | Prisma.User$productsArgs<ExtArgs>
   savedProducts?: boolean | Prisma.User$savedProductsArgs<ExtArgs>
   reviewsWritten?: boolean | Prisma.User$reviewsWrittenArgs<ExtArgs>
@@ -2432,6 +3043,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   conversationsInitiated?: boolean | Prisma.User$conversationsInitiatedArgs<ExtArgs>
   conversationsReceived?: boolean | Prisma.User$conversationsReceivedArgs<ExtArgs>
   messagesSent?: boolean | Prisma.User$messagesSentArgs<ExtArgs>
+  membershipTransactions?: boolean | Prisma.User$membershipTransactionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2458,9 +3070,12 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   completionRate?: boolean
   responseRate?: boolean
   universityId?: boolean
+  membershipPlanId?: boolean
+  membershipExpiresAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   university?: boolean | Prisma.User$universityArgs<ExtArgs>
+  membershipPlan?: boolean | Prisma.User$membershipPlanArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2486,9 +3101,12 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   completionRate?: boolean
   responseRate?: boolean
   universityId?: boolean
+  membershipPlanId?: boolean
+  membershipExpiresAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   university?: boolean | Prisma.User$universityArgs<ExtArgs>
+  membershipPlan?: boolean | Prisma.User$membershipPlanArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -2514,13 +3132,16 @@ export type UserSelectScalar = {
   completionRate?: boolean
   responseRate?: boolean
   universityId?: boolean
+  membershipPlanId?: boolean
+  membershipExpiresAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "fullName" | "phone" | "avatar" | "role" | "provinceCode" | "provinceName" | "wardCode" | "wardName" | "addressDetail" | "isActive" | "isBanned" | "codeOtp" | "codeOtpExpiration" | "isOtpVerified" | "hashedRefreshToken" | "avgRating" | "completionRate" | "responseRate" | "universityId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "fullName" | "phone" | "avatar" | "role" | "provinceCode" | "provinceName" | "wardCode" | "wardName" | "addressDetail" | "isActive" | "isBanned" | "codeOtp" | "codeOtpExpiration" | "isOtpVerified" | "hashedRefreshToken" | "avgRating" | "completionRate" | "responseRate" | "universityId" | "membershipPlanId" | "membershipExpiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   university?: boolean | Prisma.User$universityArgs<ExtArgs>
+  membershipPlan?: boolean | Prisma.User$membershipPlanArgs<ExtArgs>
   products?: boolean | Prisma.User$productsArgs<ExtArgs>
   savedProducts?: boolean | Prisma.User$savedProductsArgs<ExtArgs>
   reviewsWritten?: boolean | Prisma.User$reviewsWrittenArgs<ExtArgs>
@@ -2528,19 +3149,23 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   conversationsInitiated?: boolean | Prisma.User$conversationsInitiatedArgs<ExtArgs>
   conversationsReceived?: boolean | Prisma.User$conversationsReceivedArgs<ExtArgs>
   messagesSent?: boolean | Prisma.User$messagesSentArgs<ExtArgs>
+  membershipTransactions?: boolean | Prisma.User$membershipTransactionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   university?: boolean | Prisma.User$universityArgs<ExtArgs>
+  membershipPlan?: boolean | Prisma.User$membershipPlanArgs<ExtArgs>
 }
 export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   university?: boolean | Prisma.User$universityArgs<ExtArgs>
+  membershipPlan?: boolean | Prisma.User$membershipPlanArgs<ExtArgs>
 }
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
     university: Prisma.$UniversityPayload<ExtArgs> | null
+    membershipPlan: Prisma.$MembershipPlanPayload<ExtArgs> | null
     products: Prisma.$ProductPayload<ExtArgs>[]
     savedProducts: Prisma.$SavedProductPayload<ExtArgs>[]
     reviewsWritten: Prisma.$ReviewPayload<ExtArgs>[]
@@ -2548,6 +3173,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     conversationsInitiated: Prisma.$ConversationPayload<ExtArgs>[]
     conversationsReceived: Prisma.$ConversationPayload<ExtArgs>[]
     messagesSent: Prisma.$MessagePayload<ExtArgs>[]
+    membershipTransactions: Prisma.$MembershipTransactionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2572,6 +3198,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     completionRate: number
     responseRate: number
     universityId: number | null
+    membershipPlanId: number | null
+    membershipExpiresAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -2969,6 +3597,7 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   university<T extends Prisma.User$universityArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$universityArgs<ExtArgs>>): Prisma.Prisma__UniversityClient<runtime.Types.Result.GetResult<Prisma.$UniversityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  membershipPlan<T extends Prisma.User$membershipPlanArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$membershipPlanArgs<ExtArgs>>): Prisma.Prisma__MembershipPlanClient<runtime.Types.Result.GetResult<Prisma.$MembershipPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   products<T extends Prisma.User$productsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$productsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   savedProducts<T extends Prisma.User$savedProductsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savedProductsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviewsWritten<T extends Prisma.User$reviewsWrittenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewsWrittenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2976,6 +3605,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   conversationsInitiated<T extends Prisma.User$conversationsInitiatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$conversationsInitiatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   conversationsReceived<T extends Prisma.User$conversationsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$conversationsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   messagesSent<T extends Prisma.User$messagesSentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$messagesSentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  membershipTransactions<T extends Prisma.User$membershipTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$membershipTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MembershipTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3027,6 +3657,8 @@ export interface UserFieldRefs {
   readonly completionRate: Prisma.FieldRef<"User", 'Float'>
   readonly responseRate: Prisma.FieldRef<"User", 'Float'>
   readonly universityId: Prisma.FieldRef<"User", 'Int'>
+  readonly membershipPlanId: Prisma.FieldRef<"User", 'Int'>
+  readonly membershipExpiresAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -3449,6 +4081,25 @@ export type User$universityArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
+ * User.membershipPlan
+ */
+export type User$membershipPlanArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MembershipPlan
+   */
+  select?: Prisma.MembershipPlanSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MembershipPlan
+   */
+  omit?: Prisma.MembershipPlanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MembershipPlanInclude<ExtArgs> | null
+  where?: Prisma.MembershipPlanWhereInput
+}
+
+/**
  * User.products
  */
 export type User$productsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3614,6 +4265,30 @@ export type User$messagesSentArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.MessageScalarFieldEnum | Prisma.MessageScalarFieldEnum[]
+}
+
+/**
+ * User.membershipTransactions
+ */
+export type User$membershipTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MembershipTransaction
+   */
+  select?: Prisma.MembershipTransactionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MembershipTransaction
+   */
+  omit?: Prisma.MembershipTransactionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MembershipTransactionInclude<ExtArgs> | null
+  where?: Prisma.MembershipTransactionWhereInput
+  orderBy?: Prisma.MembershipTransactionOrderByWithRelationInput | Prisma.MembershipTransactionOrderByWithRelationInput[]
+  cursor?: Prisma.MembershipTransactionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MembershipTransactionScalarFieldEnum | Prisma.MembershipTransactionScalarFieldEnum[]
 }
 
 /**

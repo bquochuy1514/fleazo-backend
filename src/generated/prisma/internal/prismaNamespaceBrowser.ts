@@ -57,6 +57,8 @@ export const ModelName = {
   University: 'University',
   Province: 'Province',
   Ward: 'Ward',
+  MembershipPlan: 'MembershipPlan',
+  MembershipTransaction: 'MembershipTransaction',
   Product: 'Product',
   ProductImage: 'ProductImage',
   ProductRevision: 'ProductRevision',
@@ -106,6 +108,8 @@ export const UserScalarFieldEnum = {
   completionRate: 'completionRate',
   responseRate: 'responseRate',
   universityId: 'universityId',
+  membershipPlanId: 'membershipPlanId',
+  membershipExpiresAt: 'membershipExpiresAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -163,6 +167,38 @@ export const WardScalarFieldEnum = {
 } as const
 
 export type WardScalarFieldEnum = (typeof WardScalarFieldEnum)[keyof typeof WardScalarFieldEnum]
+
+
+export const MembershipPlanScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  name: 'name',
+  price: 'price',
+  durationDays: 'durationDays',
+  maxActiveListings: 'maxActiveListings',
+  listingDurationDays: 'listingDurationDays',
+  maxImagesPerListing: 'maxImagesPerListing',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MembershipPlanScalarFieldEnum = (typeof MembershipPlanScalarFieldEnum)[keyof typeof MembershipPlanScalarFieldEnum]
+
+
+export const MembershipTransactionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  planId: 'planId',
+  amount: 'amount',
+  status: 'status',
+  payosOrderCode: 'payosOrderCode',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MembershipTransactionScalarFieldEnum = (typeof MembershipTransactionScalarFieldEnum)[keyof typeof MembershipTransactionScalarFieldEnum]
 
 
 export const ProductScalarFieldEnum = {

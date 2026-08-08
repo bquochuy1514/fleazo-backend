@@ -32,6 +32,13 @@ enum ProductStatus {
   CANCELLED
 }
 
+enum MembershipTransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELLED
+}
+
 model User {
   // — Identity —
   id       Int     @id @default(autoincrement())
@@ -74,14 +81,20 @@ model User {
   universityId Int?        @map("university_id")
   university   University? @relation(fields: [universityId], references: [id])
 
+  // — Membership (null plan = Free tier; resolved via MembershipPlan key "FREE", not a hardcoded default so the row stays configurable) —
+  membershipPlanId    Int?            @map("membership_plan_id")
+  membershipPlan      MembershipPlan? @relation(fields: [membershipPlanId], references: [id])
+  membershipExpiresAt DateTime?       @map("membership_expires_at")
+
   // — Relations —
   products               Product[]
   savedProducts          SavedProduct[]
-  reviewsWritten         Review[]       @relation("ReviewsWritten")
-  reviewsReceived        Review[]       @relation("ReviewsReceived")
-  conversationsInitiated Conversation[] @relation("ConversationsInitiated")
-  conversationsReceived  Conversation[] @relation("ConversationsReceived")
-  messagesSent           Message[]      @relation("MessagesSent")
+  reviewsWritten         Review[]                @relation("ReviewsWritten")
+  reviewsReceived        Review[]                @relation("ReviewsReceived")
+  conversationsInitiated Conversation[]          @relation("ConversationsInitiated")
+  conversationsReceived  Conversation[]          @relation("ConversationsReceived")
+  messagesSent           Message[]               @relation("MessagesSent")
+  membershipTransactions MembershipTransaction[]
 
   // — Timestamps —
   createdAt DateTime @default(now()) @map("created_at")
@@ -92,9 +105,9 @@ model User {
 
 model Category {
   // — Identity —
-  id   Int    @id @default(autoincrement())
-  name String
-  slug String @unique
+  id    Int     @id @default(autoincrement())
+  name  String
+  slug  String  @unique
   // Transparent PNG cutout for the homepage category circles. Root
   // categories only — the frontend section that renders these never shows
   // leaf categories. Recommended source: 1:1 square, subject centered with
@@ -164,6 +177,69 @@ model Ward {
 
   @@index([provinceCode])
   @@map("wards")
+}
+
+// Configurable membership tier, including Free — keeping Free here too (not a
+// hardcoded constant) means every tier's limits can change without a deploy.
+// Seller-facing limits (see Products module): active-listing cap, listing
+// duration, image count per listing.
+model MembershipPlan {
+  // — Identity —
+  id   Int    @id @default(autoincrement())
+  // Stable identifier the backend keys logic off of ("FREE", "BASIC",
+  // "PREMIUM") — separate from `name`, which is just display copy.
+  key  String @unique @db.VarChar(20)
+  name String
+
+  // — Pricing (0 for Free; a duration-pass, not an auto-renewing subscription — see Money Flow) —
+  price        Decimal @db.Decimal(12, 0)
+  durationDays Int     @map("duration_days")
+
+  // — Seller limits —
+  maxActiveListings   Int @map("max_active_listings")
+  listingDurationDays Int @map("listing_duration_days")
+  maxImagesPerListing Int @map("max_images_per_listing")
+
+  // Lets admin retire a plan from sale without deleting purchase history tied to it.
+  isActive  Boolean @default(true) @map("is_active")
+  sortOrder Int     @default(0) @map("sort_order")
+
+  // — Relations —
+  users        User[]
+  transactions MembershipTransaction[]
+
+  // — Timestamps —
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("membership_plans")
+}
+
+// One purchase attempt of a MembershipPlan via PayOS. On SUCCESS (webhook),
+// the service resets User.membershipPlanId/membershipExpiresAt to this plan
+// and now + durationDays — buying early does not stack remaining time.
+model MembershipTransaction {
+  // — Identity —
+  id Int @id @default(autoincrement())
+
+  // — Relations —
+  userId Int            @map("user_id")
+  user   User           @relation(fields: [userId], references: [id])
+  planId Int            @map("plan_id")
+  plan   MembershipPlan @relation(fields: [planId], references: [id])
+
+  // — Payment —
+  amount         Decimal                     @db.Decimal(12, 0)
+  status         MembershipTransactionStatus @default(PENDING)
+  // PayOS orderCode, used to reconcile the webhook callback against this row.
+  payosOrderCode String                      @unique @map("payos_order_code")
+
+  // — Timestamps —
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("membership_transactions")
 }
 
 model Product {

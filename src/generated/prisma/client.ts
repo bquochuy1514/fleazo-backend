@@ -70,6 +70,16 @@ export type Province = Prisma.ProvinceModel
  */
 export type Ward = Prisma.WardModel
 /**
+ * Model MembershipPlan
+ * 
+ */
+export type MembershipPlan = Prisma.MembershipPlanModel
+/**
+ * Model MembershipTransaction
+ * 
+ */
+export type MembershipTransaction = Prisma.MembershipTransactionModel
+/**
  * Model Product
  * 
  */

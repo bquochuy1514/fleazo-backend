@@ -6,6 +6,7 @@ import { normalizeSearchText } from '../src/common/utils/normalize-search-text.u
 import { categoriesSeedData } from './seed-data/categories';
 import { locationsSeedData } from './seed-data/locations';
 import { universitiesSeedData } from './seed-data/universities';
+import { membershipPlansSeedData } from './seed-data/membership-plans';
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
@@ -96,6 +97,20 @@ async function seedLocations() {
   console.log(`Seeded ${wards.length} wards.`);
 }
 
+async function seedMembershipPlans() {
+  console.log('Seeding membership plans...');
+
+  for (const plan of membershipPlansSeedData) {
+    await prisma.membershipPlan.upsert({
+      where: { key: plan.key },
+      update: plan,
+      create: plan,
+    });
+  }
+
+  console.log('Seeded membership plans.');
+}
+
 async function seedAdmin() {
   console.log('Seeding admin account...');
 
@@ -121,6 +136,7 @@ async function main() {
   await seedCategories();
   await seedUniversities();
   await seedLocations();
+  await seedMembershipPlans();
   await seedAdmin();
   console.log('Seeding completed.');
 }

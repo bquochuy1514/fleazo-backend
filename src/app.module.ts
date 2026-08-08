@@ -11,11 +11,13 @@ import { ChatModule } from './modules/chat/chat.module';
 import { UniversitiesModule } from './modules/universities/universities.module';
 import { LocationsModule } from './modules/locations/locations.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
+import { MembershipModule } from './modules/membership/membership.module';
 import jwtConfig from './config/jwt.config';
 import googleConfig from './config/google.config';
 import mailConfig from './config/mail.config';
 import cloudinaryConfig from './config/cloudinary.config';
 import fleazoAiConfig from './config/fleazo-ai.config';
+import payosConfig from './config/payos.config';
 
 @Module({
   imports: [
@@ -31,6 +33,7 @@ import fleazoAiConfig from './config/fleazo-ai.config';
         mailConfig,
         cloudinaryConfig,
         fleazoAiConfig,
+        payosConfig,
       ],
     }),
     CategoriesModule,
@@ -39,6 +42,7 @@ import fleazoAiConfig from './config/fleazo-ai.config';
     UniversitiesModule,
     LocationsModule,
     ReviewsModule,
+    MembershipModule,
   ],
   controllers: [AppController],
   providers: [AppService],
