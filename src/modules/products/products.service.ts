@@ -40,7 +40,9 @@ import { ACTIVE_LISTING_STATUSES } from '../../common/constants/listing-limit.co
 
 // Not a seller-facing listing limit — caps how many images go into one AI
 // suggestion call (cost/latency guard), unrelated to membership tiers.
-export const MAX_IMAGES_PER_UPLOAD = 5;
+// Sellers can still upload up to plan.maxImagesPerListing; only the AI call
+// itself is capped, and silently so (no user-facing error).
+export const MAX_IMAGES_FOR_AI_SUGGEST = 3;
 
 // Shared select shape so createProduct and updateProductStatus check the same fields.
 const SELLER_PROFILE_SELECT = {
@@ -1206,19 +1208,16 @@ export class ProductsService {
   }
 
   async suggestListing(files: Express.Multer.File[]) {
-    // 1. Guard: at least one image required, at most MAX_IMAGES_PER_UPLOAD
+    // 1. Guard: at least one image required; only the first
+    //    MAX_IMAGES_FOR_AI_SUGGEST are actually sent to the AI.
     if (!files || files.length === 0) {
       throw new BadRequestException('Vui lòng chọn ít nhất 1 ảnh để AI gợi ý.');
     }
-    if (files.length > MAX_IMAGES_PER_UPLOAD) {
-      throw new BadRequestException(
-        `Chỉ được chọn tối đa ${MAX_IMAGES_PER_UPLOAD} ảnh để AI gợi ý`,
-      );
-    }
+    const filesToAnalyze = files.slice(0, MAX_IMAGES_FOR_AI_SUGGEST);
 
     // 2. Build multipart request body for fleazo-ai
     const form = new FormData();
-    for (const file of files) {
+    for (const file of filesToAnalyze) {
       form.append('images', file.buffer, {
         filename: file.originalname,
         contentType: file.mimetype,

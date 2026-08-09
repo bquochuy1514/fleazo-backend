@@ -92,6 +92,31 @@ export class ReviewsService {
     };
   }
 
+  async getReviewerReviews(reviewerId: number, query: QueryReviewsDto) {
+    const { page = 1, limit = 20 } = query;
+
+    const [data, total] = await Promise.all([
+      this.prisma.review.findMany({
+        where: { reviewerId },
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+        include: {
+          seller: { select: { id: true, fullName: true, avatar: true } },
+        },
+      }),
+      this.prisma.review.count({ where: { reviewerId } }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
   // Computed live from the reviews table on every call — not cached on
   // User.avgRating. At Fleazo's actual scale a live AVG is fast enough, and
   // this avoids a second source of truth that could drift out of sync.

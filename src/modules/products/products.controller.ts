@@ -31,7 +31,7 @@ import { UpdateProductStatusDto } from './dto/update-product-status.dto';
 import { RejectProductDto } from './dto/reject-product.dto';
 import { QueryQueueDto } from './dto/query-queue.dto';
 
-// Generous ceiling multer enforces before parsing; the real business limit (MAX_IMAGES_PER_UPLOAD) is checked in the service.
+// Generous ceiling multer enforces before parsing; the real business limits (plan.maxImagesPerListing, MAX_IMAGES_FOR_AI_SUGGEST) are checked in the service.
 const MULTER_FILE_COUNT_CEILING = 20;
 
 @Controller('products')

@@ -26,4 +26,13 @@ export class ReviewsController {
   ) {
     return this.reviewsService.getSellerReviews(sellerId, query);
   }
+
+  @Get('me/given')
+  @UseGuards(JwtAuthGuard)
+  getMyGivenReviews(
+    @CurrentUser() user: JwtPayload,
+    @Query() query: QueryReviewsDto,
+  ) {
+    return this.reviewsService.getReviewerReviews(user.id, query);
+  }
 }
