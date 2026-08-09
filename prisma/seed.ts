@@ -82,15 +82,21 @@ async function seedLocations() {
     })),
   );
 
-  for (let index = 0; index < wards.length; index += 500) {
+  // Batch size 200 + an explicit generous timeout — the default 5s
+  // interactive-transaction timeout is fine against a local Postgres but
+  // too tight against a remote/serverless one like Neon, where per-query
+  // latency is much higher.
+  const WARD_BATCH_SIZE = 200;
+  for (let index = 0; index < wards.length; index += WARD_BATCH_SIZE) {
     await prisma.$transaction(
-      wards.slice(index, index + 500).map((ward) =>
+      wards.slice(index, index + WARD_BATCH_SIZE).map((ward) =>
         prisma.ward.upsert({
           where: { code: ward.code },
           update: { name: ward.name, provinceCode: ward.provinceCode },
           create: ward,
         }),
       ),
+      { timeout: 30_000 },
     );
   }
 

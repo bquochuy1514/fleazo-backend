@@ -6,7 +6,7 @@ Backend API for **Fleazo** — a secondhand marketplace for Vietnamese universit
 
 ## Tech Stack
 
-| Layer        | Technology                                                             |
+| Layer        | Technology                                                              |
 | ------------ | ----------------------------------------------------------------------- |
 | Framework    | NestJS (Node.js + TypeScript)                                           |
 | Database     | PostgreSQL                                                              |
@@ -21,7 +21,7 @@ Backend API for **Fleazo** — a secondhand marketplace for Vietnamese universit
 
 ## Core Features
 
-- **Listings** — create/edit/draft a listing, multi-image upload, category + location picker. New listings and edits to *live* listings both go through an admin approval queue.
+- **Listings** — create/edit/draft a listing, multi-image upload, category + location picker. New listings and edits to _live_ listings both go through an admin approval queue.
 - **AI-assisted listing creation** — upload photos and get an AI-drafted title, description and category via `fleazo-ai` (Gemini), capped to a few images per call to keep it cheap; the seller reviews before publishing.
 - **Membership tiers** (Free / Basic / Premium) — differ in max active listings, listing duration, and max images per listing. Upgrades are paid through PayOS.
 - **Realtime chat** — 1-to-1 messaging over Socket.IO with read receipts, message recall, and online status.
@@ -71,7 +71,7 @@ To wipe and reseed everything from scratch: `npx prisma migrate reset` (drops th
 ```
 src/
 ├── modules/
-│   ├── auth/            # JWT auth, Google OAuth, email OTP
+│   ├── auth/             # JWT auth, Google OAuth, email OTP
 │   ├── users/            # Profile, avatar upload
 │   ├── products/         # Listings: CRUD, images, AI suggest, admin moderation
 │   ├── categories/       # Category tree + search aliases
