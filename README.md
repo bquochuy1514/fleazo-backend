@@ -134,16 +134,13 @@ Swagger UI is served at `/api/docs` while the server is running.
 
 ## Deployment
 
-Ships as a Docker image (`Dockerfile` in this repo), deployed to [Fly.io](https://fly.io) with a [Neon](https://neon.tech) Postgres database.
+Deployed to [Render](https://render.com) (free tier, Node runtime — no Dockerfile needed) with a [Neon](https://neon.tech) Postgres database.
 
-```bash
-fly auth login
-fly apps create fleazo-backend   # first time only
-fly secrets set DATABASE_URL=... JWT_ACCESS_SECRET=... # ...all vars above
-fly deploy
-```
+- Build command: `npm install && npx prisma generate && npm run build`
+- Start command: `node dist/src/main.js`
+- Env vars: same as [Environment Variables](#environment-variables) above, set in Render's dashboard (Render supplies `PORT` itself, no need to set it).
 
-`fly.toml` pins `min_machines_running = 1` so the API stays warm (no cold-start on first request) — see that file for the rest of the config.
+Free tier sleeps after 15 minutes of no traffic — the first request after that takes ~30-50s to wake up.
 
 ## License
 
