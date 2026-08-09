@@ -14,7 +14,7 @@ Backend API for **Fleazo** — a secondhand marketplace for Vietnamese universit
 | Auth         | JWT (access + refresh rotation), Google OAuth, email OTP                |
 | Payment      | PayOS (membership plan upgrades only — not order/checkout)              |
 | Realtime     | Socket.IO                                                               |
-| Email        | Nodemailer (SMTP)                                                       |
+| Email        | Resend (HTTP API — SMTP is blocked outbound on most PaaS free tiers)   |
 | File Storage | Cloudinary                                                              |
 | Address data | provinces.open-api.vn (Tỉnh/Thành phố → Phường/Xã, 2-level)             |
 | AI           | Gemini via `fleazo-ai` — AI-assisted listing fill, LLM shopping chatbot |
@@ -81,7 +81,7 @@ src/
 │   ├── reviews/          # Seller ratings + comments
 │   ├── chat/             # 1-to-1 realtime chat (Socket.IO)
 │   ├── chatbot/          # Thin proxy to fleazo-ai's LLM chatbot
-│   ├── mail/             # Nodemailer (OTP, password reset)
+│   ├── mail/             # Resend (OTP, password reset)
 │   └── upload/           # Cloudinary upload service
 ├── common/               # Decorators, guards, filters, interceptors, pipes, utils, types
 ├── config/               # Typed config (jwt, google, mail, cloudinary, fleazo-ai)
@@ -113,10 +113,8 @@ CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
 
-MAIL_HOST=
-MAIL_PORT=587
-MAIL_USER=
-MAIL_PASSWORD=
+RESEND_API_KEY=
+MAIL_FROM=
 
 PAYOS_CLIENT_ID=
 PAYOS_API_KEY=
@@ -137,7 +135,7 @@ Swagger UI is served at `/api/docs` while the server is running.
 Deployed to [Render](https://render.com) (free tier, Node runtime — no Dockerfile needed) with a [Neon](https://neon.tech) Postgres database.
 
 - Build command: `npm install && npx prisma generate && npm run build`
-- Start command: `node dist/src/main.js`
+- Start command: `npm run start:prod`
 - Env vars: same as [Environment Variables](#environment-variables) above, set in Render's dashboard (Render supplies `PORT` itself, no need to set it).
 
 Free tier sleeps after 15 minutes of no traffic — the first request after that takes ~30-50s to wake up.

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import mailConfig from '../../config/mail.config';
 import type { ConfigType } from '@nestjs/config';
 import { otpVerificationTemplate } from './templates/otp-verification.template';
@@ -7,39 +7,35 @@ import { forgotPasswordOtpTemplate } from './templates/forgot-password-otp.templ
 
 @Injectable()
 export class MailService {
-  private transporter: nodemailer.Transporter;
+  private readonly resend: Resend;
 
   constructor(
     @Inject(mailConfig.KEY)
     private readonly mailConfiguration: ConfigType<typeof mailConfig>,
   ) {
-    this.transporter = nodemailer.createTransport({
-      host: process.env.MAIL_HOST,
-      port: Number(process.env.MAIL_PORT),
-      secure: false,
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASSWORD,
-      },
-      tls: { rejectUnauthorized: false },
-    });
+    this.resend = new Resend(this.mailConfiguration.resendApiKey);
   }
 
+  // Resend's SDK resolves with { error } instead of throwing — re-throw so
+  // callers (auth.service.ts's fire-and-forget .catch() calls) still see
+  // failures the way they did with Nodemailer.
   async sendOtpVerification(email: string, otp: string) {
-    await this.transporter.sendMail({
-      from: `"Fleazo" <${process.env.MAIL_USER}>`,
+    const { error } = await this.resend.emails.send({
+      from: this.mailConfiguration.from,
       to: email,
       subject: '[Fleazo] Xác thực tài khoản của bạn',
       html: otpVerificationTemplate(otp),
     });
+    if (error) throw new Error(error.message);
   }
 
   async sendForgotPasswordOtp(email: string, otp: string) {
-    await this.transporter.sendMail({
-      from: `"Fleazo" <${process.env.MAIL_USER}>`,
+    const { error } = await this.resend.emails.send({
+      from: this.mailConfiguration.from,
       to: email,
       subject: '[Fleazo] Mã OTP đặt lại mật khẩu',
       html: forgotPasswordOtpTemplate(otp),
     });
+    if (error) throw new Error(error.message);
   }
 }
