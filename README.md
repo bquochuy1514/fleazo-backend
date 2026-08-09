@@ -1,39 +1,40 @@
 # Fleazo Backend
 
-Backend service for **Fleazo** — a secondhand marketplace platform for Vietnamese university students, featuring an AI-powered recommendation engine and shopping chatbot.
+Backend API for **Fleazo** — a secondhand marketplace for Vietnamese university students to buy and sell within their own campus community.
 
-> Frontend: `fleazo-frontend` · AI Service: `fleazo-ai`
+> Frontend: [`fleazo-frontend`](https://github.com/bquochuy1514/fleazo-frontend) · AI Service: [`fleazo-ai`](https://github.com/bquochuy1514/fleazo-ai)
 
 ## Tech Stack
 
-| Layer        | Technology                                                              |
+| Layer        | Technology                                                             |
 | ------------ | ----------------------------------------------------------------------- |
 | Framework    | NestJS (Node.js + TypeScript)                                           |
 | Database     | PostgreSQL                                                              |
-| ORM          | Prisma v7                                                               |
-| Auth         | JWT (access + refresh token rotation), Google OAuth                     |
-| Payment      | PayOS                                                                   |
+| ORM          | Prisma v7 (driver adapter, no query-engine binary at runtime)           |
+| Auth         | JWT (access + refresh rotation), Google OAuth, email OTP                |
+| Payment      | PayOS (membership plan upgrades only — not order/checkout)              |
 | Realtime     | Socket.IO                                                               |
-| Email        | Nodemailer (Gmail SMTP)                                                 |
+| Email        | Nodemailer (SMTP)                                                       |
 | File Storage | Cloudinary                                                              |
-| Address API  | provinces.open-api.vn `/api/v2/` (Tỉnh/Thành phố → Phường/Xã, 2-level)  |
-| AI/ML        | Recommendation Engine (session-based + content-based + quality scoring) |
-| Chatbot      | LLM-powered shopping assistant (function calling)                       |
+| Address data | provinces.open-api.vn (Tỉnh/Thành phố → Phường/Xã, 2-level)             |
+| AI           | Gemini via `fleazo-ai` — AI-assisted listing fill, LLM shopping chatbot |
 
 ## Core Features
 
-- **Secondhand marketplace** — students buy and sell within the university community
-- **Recommendation engine** — session-based filtering for cold-start/anonymous users, content-based filtering ranked by Quality Score
-- **Quality Score** — automatic listing scoring based on image count, description completeness, seller reputation, engagement, and freshness. Prevents spam and surfaces genuinely good listings
-- **Listing monetization** — membership tiers (Free/Basic/Premium), boost (temporary feed priority), extend (renew expired listing without re-posting). Payments (via PayOS) only cover these — product sales happen directly between buyer and seller, off-platform
-- **LLM chatbot** — natural language shopping assistant using function calling into the recommendation engine (powered by `fleazo-ai` Python FastAPI service)
-- **Realtime chat** — 1-to-1 messaging (Socket.IO) with read receipts, message recall, online status, and cross-conversation notifications
+- **Listings** — create/edit/draft a listing, multi-image upload, category + location picker. New listings and edits to *live* listings both go through an admin approval queue.
+- **AI-assisted listing creation** — upload photos and get an AI-drafted title, description and category via `fleazo-ai` (Gemini), capped to a few images per call to keep it cheap; the seller reviews before publishing.
+- **Membership tiers** (Free / Basic / Premium) — differ in max active listings, listing duration, and max images per listing. Upgrades are paid through PayOS.
+- **Realtime chat** — 1-to-1 messaging over Socket.IO with read receipts, message recall, and online status.
+- **Reviews** — rate + comment a seller (1–5 stars), gated on having exchanged at least one message with them first. One review per reviewer–seller pair — reviewing again updates it instead of creating a duplicate.
+- **Saved listings** — a buyer's personal shortlist.
+- **LLM chatbot** — natural-language shopping assistant (`fleazo-ai`) that can call a real `search_listings` function against this API instead of hallucinating results, grounded on a small set of hand-written help docs for policy/how-to questions.
+- **Admin moderation** — approve/reject new listings and edits to live listings, with a reason surfaced back to the seller.
 
 ## Prerequisites
 
 - Node.js >= 20
 - PostgreSQL >= 15
-- npm or yarn
+- npm
 
 ## Getting Started
 
@@ -51,32 +52,39 @@ cp .env.example .env
 # 4. Generate Prisma Client
 npx prisma generate
 
-# 5. Push schema to database
+# 5. Push the schema to your database (this project doesn't use
+#    Prisma Migrate — schema changes go straight through `db push`)
 npx prisma db push
 
-# 6. Start dev server
+# 6. Seed categories, universities, provinces/wards, membership plans and
+#    an admin account (admin@fleazo.com / Fleazoadmin123!)
+npx prisma db seed
+
+# 7. Start the dev server
 npm run start:dev
 ```
+
+To wipe and reseed everything from scratch: `npx prisma migrate reset` (drops the DB, re-applies the schema, and reseeds automatically).
 
 ## Project Structure
 
 ```
 src/
 ├── modules/
-│   ├── auth/             # JWT auth, Google OAuth, email OTP
-│   ├── mail/             # Email service (Nodemailer + Gmail SMTP)
-│   ├── upload/           # Cloudinary upload service
-│   ├── users/            # User profile, avatar upload
-│   ├── products/         # Listings, image upload, quality scoring
-│   ├── categories/       # Product categories
-│   ├── universities/     # University list for seller student-identity field (optional)
-│   ├── payments/         # PayOS transactions for Membership/Boost/Extend only
+│   ├── auth/            # JWT auth, Google OAuth, email OTP
+│   ├── users/            # Profile, avatar upload
+│   ├── products/         # Listings: CRUD, images, AI suggest, admin moderation
+│   ├── categories/       # Category tree + search aliases
+│   ├── locations/        # Provinces/wards
+│   ├── universities/     # University list for the seller's optional student-identity field
+│   ├── membership/       # Plans + PayOS payment for upgrades
+│   ├── reviews/          # Seller ratings + comments
 │   ├── chat/             # 1-to-1 realtime chat (Socket.IO)
-│   ├── reviews/          # Seller reputation (rating + reply)
-│   ├── recommendation/   # Session-based + content-based engine
-│   └── chatbot/          # LLM shopping assistant (function calling)
+│   ├── chatbot/          # Thin proxy to fleazo-ai's LLM chatbot
+│   ├── mail/             # Nodemailer (OTP, password reset)
+│   └── upload/           # Cloudinary upload service
 ├── common/               # Decorators, guards, filters, interceptors, pipes, utils, types
-├── config/               # Typed config files (jwt, google, mail, cloudinary)
+├── config/               # Typed config (jwt, google, mail, cloudinary, fleazo-ai)
 ├── generated/prisma/     # Auto-generated Prisma Client (gitignored)
 ├── prisma.service.ts
 └── main.ts
@@ -84,45 +92,58 @@ src/
 
 ## Environment Variables
 
+See [`.env.example`](.env.example) for the full list with comments. Summary:
+
 ```env
-DATABASE_URL=postgresql://user:password@localhost:5432/fleazo
+PORT=8080
+FRONTEND_URL=
+
+DATABASE_URL=
+
 JWT_ACCESS_SECRET=
-JWT_REFRESH_SECRET=
 JWT_ACCESS_EXPIRES_IN=1h
+JWT_REFRESH_SECRET=
 JWT_REFRESH_EXPIRES_IN=7d
+
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
-GOOGLE_CALLBACK_URL=http://localhost:8080/api/auth/google/callback
-PAYOS_CLIENT_ID=
-PAYOS_API_KEY=
-PAYOS_CHECKSUM_KEY=
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USER=
-MAIL_PASSWORD=
+GOOGLE_CALLBACK_URL=
+
 CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
+
+MAIL_HOST=
+MAIL_PORT=587
+MAIL_USER=
+MAIL_PASSWORD=
+
+PAYOS_CLIENT_ID=
+PAYOS_API_KEY=
+PAYOS_CHECKSUM_KEY=
+
+# Shared-secret auth with fleazo-ai — FLEAZO_AI_INTERNAL_API_KEY here must
+# match fleazo-ai's BACKEND_INTERNAL_API_KEY exactly.
+FLEAZO_AI_BASE_URL=
+FLEAZO_AI_INTERNAL_API_KEY=
 ```
 
 ## API Documentation
 
-Available at `/api/docs` (Swagger UI) when the server is running.
+Swagger UI is served at `/api/docs` while the server is running.
 
-## Development Status
+## Deployment
 
-| Module         | Status      |
-| -------------- | ----------- |
-| Auth           | Done        |
-| Users          | Done        |
-| Categories     | Done        |
-| Universities   | Done        |
-| Products       | Done        |
-| Chat           | Done        |
-| Reviews        | Design only |
-| Payments       | Planned     |
-| Recommendation | Planned     |
-| Chatbot        | Planned     |
+Ships as a Docker image (`Dockerfile` in this repo), deployed to [Fly.io](https://fly.io) with a [Neon](https://neon.tech) Postgres database.
+
+```bash
+fly auth login
+fly apps create fleazo-backend   # first time only
+fly secrets set DATABASE_URL=... JWT_ACCESS_SECRET=... # ...all vars above
+fly deploy
+```
+
+`fly.toml` pins `min_machines_running = 1` so the API stays warm (no cold-start on first request) — see that file for the rest of the config.
 
 ## License
 
