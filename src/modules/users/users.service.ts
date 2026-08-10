@@ -119,12 +119,13 @@ export class UsersService {
       throw new BadRequestException('Không tìm thấy người dùng.');
     }
 
-    // 2. Delete old avatar from Cloudinary (skip if default)
+    // 2. Delete old avatar from Cloudinary (skip if default, or not a Cloudinary
+    // URL — e.g. Google OAuth users start with their Google profile photo)
     const defaultAvatar =
       'https://res.cloudinary.com/dazcuspid/image/upload/default-avatar_v8w01n.png';
-    if (user.avatar && user.avatar !== defaultAvatar) {
+    const afterUpload = user.avatar?.split('/upload/')[1];
+    if (user.avatar && user.avatar !== defaultAvatar && afterUpload) {
       // Extracts the Cloudinary public_id (e.g. "fleazo/avatars/abc") from the URL
-      const afterUpload = user.avatar.split('/upload/')[1];
       const withoutVersion = afterUpload.replace(/^v\d+\//, '');
       const publicId = withoutVersion.replace(/\.[^/.]+$/, '');
       await this.uploadService.deleteImage(publicId);
