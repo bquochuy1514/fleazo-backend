@@ -121,7 +121,7 @@ export class UsersService {
 
     // 2. Delete old avatar from Cloudinary (skip if default)
     const defaultAvatar =
-      'https://res.cloudinary.com/dazcuspid/image/upload/default_avatar_nj9oa5.avif';
+      'https://res.cloudinary.com/dazcuspid/image/upload/default-avatar_v8w01n.png';
     if (user.avatar && user.avatar !== defaultAvatar) {
       // Extracts the Cloudinary public_id (e.g. "fleazo/avatars/abc") from the URL
       const afterUpload = user.avatar.split('/upload/')[1];
