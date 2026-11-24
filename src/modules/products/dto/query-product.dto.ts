@@ -2,6 +2,13 @@ import { Type } from 'class-transformer';
 import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { ProductCondition } from '../../../generated/prisma/client';
 
+export enum ProductSort {
+  RELEVANCE = 'relevance',
+  NEWEST = 'newest',
+  PRICE_ASC = 'price_asc',
+  PRICE_DESC = 'price_desc',
+}
+
 export class QueryProductDto {
   @IsOptional()
   @Type(() => Number)
@@ -47,6 +54,11 @@ export class QueryProductDto {
   @IsOptional()
   @IsString({ message: 'Từ khóa tìm kiếm phải là chuỗi ký tự' })
   keyword?: string;
+
+  // Omitted = relevance (title match first when searching, otherwise newest first).
+  @IsOptional()
+  @IsEnum(ProductSort, { message: 'Kiểu sắp xếp không hợp lệ' })
+  sort?: ProductSort;
 
   @IsOptional()
   @Type(() => Number)

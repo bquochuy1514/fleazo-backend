@@ -20,7 +20,7 @@ import { UploadService } from '../upload/upload.service';
 import { CategoriesService } from '../categories/categories.service';
 import { parseJsonArray } from '../../common/utils/parse-json-array.util';
 import { CreateProductDto } from './dto/create-product.dto';
-import { QueryProductDto } from './dto/query-product.dto';
+import { ProductSort, QueryProductDto } from './dto/query-product.dto';
 import { QueryMyProductsDto } from './dto/query-my-products.dto';
 import { QuerySavedProductsDto } from './dto/query-saved-products.dto';
 import { QueryQueueDto } from './dto/query-queue.dto';
@@ -901,6 +901,7 @@ export class ProductsService {
       keyword,
       sellerUniversityId,
       sellerId,
+      sort,
       page = 1,
       limit = 20,
     } = query;
@@ -989,12 +990,21 @@ export class ProductsService {
           : Prisma.sql`0`;
       }
 
+      const orderSql =
+        sort === ProductSort.NEWEST
+          ? Prisma.sql`p.created_at DESC`
+          : sort === ProductSort.PRICE_ASC
+            ? Prisma.sql`p.price ASC, p.created_at DESC`
+            : sort === ProductSort.PRICE_DESC
+              ? Prisma.sql`p.price DESC, p.created_at DESC`
+              : Prisma.sql`${rank}, p.created_at DESC`;
+
       const whereSql = Prisma.join(conditions, ' AND ');
       const [{ total }] = await this.prisma.$queryRaw<{ total: number }[]>(
         Prisma.sql`SELECT COUNT(*)::int AS total FROM products p WHERE ${whereSql}`,
       );
       const rows = await this.prisma.$queryRaw<{ id: number }[]>(
-        Prisma.sql`SELECT p.id FROM products p WHERE ${whereSql} ORDER BY ${rank}, p.created_at DESC LIMIT ${limit} OFFSET ${(page - 1) * limit}`,
+        Prisma.sql`SELECT p.id FROM products p WHERE ${whereSql} ORDER BY ${orderSql} LIMIT ${limit} OFFSET ${(page - 1) * limit}`,
       );
       const ids = rows.map((row) => row.id);
       const data = ids.length
@@ -1064,7 +1074,12 @@ export class ProductsService {
             select: { productId: true },
           },
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy:
+          sort === ProductSort.PRICE_ASC
+            ? [{ price: 'asc' }, { createdAt: 'desc' }]
+            : sort === ProductSort.PRICE_DESC
+              ? [{ price: 'desc' }, { createdAt: 'desc' }]
+              : { createdAt: 'desc' },
         skip: (page - 1) * limit,
         take: limit,
       }),
